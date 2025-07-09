@@ -1,0 +1,337 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: rgb(55, 65, 81);
+
+}
+
+/* Navbar*/
+header {
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+    border-bottom: 2px solid lightgrey;
+}
+
+nav {
+    display: flex;
+    height: 8vh;
+}
+
+nav div {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+nav div:hover {
+    background-color: rgb(219, 234, 254);
+    border-radius: 10px;
+}
+
+nav div a {
+    text-decoration: none;
+    color: rgb(55, 65, 81);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/*nav div a:hover{*/
+/*    color: rgb(29, 78, 216);*/
+/*}*/
+#logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.connexion {
+    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.connexion a {
+    text-decoration: none;
+    color: rgb(55, 65, 81);
+    gap: 5px;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+
+}
+
+/* Main */
+main {
+    background-color: rgb(229, 231, 235);
+}
+
+.intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    font-size: 3vh;
+    color: rgb(55, 65, 81);
+    margin-top: 2vh;
+}
+
+.description p {
+    font-size: 2vh;
+    color: rgb(55, 65, 81);
+    /*text-align: center;*/
+}
+
+/* Grille statistique */
+.tickets, .temps, .satisfaction, .files {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /*width: 100%;*/
+}
+
+.ticket-info, .temps-info, .satisfaction-info, .files-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    color: rgb(55, 65, 81);
+}
+
+.ticket-info p, .temps-info p, .satisfaction-info p, .files-info p {
+    margin: 0;
+}
+
+.nombreTicket, .nombreTemps, .nombreSatisfaction, .nombreFiles {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.grille {
+    display: grid;
+    grid-template-columns: 300px 300px 300px 300px;
+    grid-template-rows: 100px;
+    gap: 50px;
+    justify-content: center;
+}
+
+.header-statistiques{
+    margin-bottom: 50px;
+}
+/* Modules */
+
+.modules{
+    padding-bottom: 100px;
+  }
+.grille_module {
+    display: grid;
+    grid-template-columns: 600px 600px;
+    grid-template-rows: 300px 300px;
+    gap: 50px;
+    justify-content: center;
+}
+
+.borneAccueil, .affichageSalle, .interfaceAgent, .administration {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 50px;
+    padding-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 200px;
+}
+
+.borneAccueil:hover, .affichageSalle:hover, .interfaceAgent:hover, .administration:hover {
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.titre{
+    font-size: 2vh;
+    font-weight: bold;
+}
+.borneAccueil-descriptionParent, .affichageSalle-descriptionParent, .interfaceAgent-descriptionParent, .administration-descriptionParent {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+}
+
+.borneAccueil-description, .affichageSalle-description, .interfaceAgent-description, .administration-description {
+    margin-left: 10px;
+}
+
+.borneAccueil-description p, .affichageSalle-description p, .interfaceAgent-description p, .administration-description p {
+    margin: 0;
+}
+
+.borneAccueil-bulletPoint {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+#borneAccueil-btn {
+    background-color: rgb(59 130 246);
+    color: white;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    border: none;
+    border-radius: .5rem;
+    cursor: pointer;
+    width: 90%;
+    margin: 0 auto;
+    display: block;
+}
+
+#affichageSalle-btn {
+    background-color: rgb(34 197 94);
+    color: white;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    border: none;
+    border-radius: .5rem;
+    cursor: pointer;
+    width: 90%;
+    margin: 0 auto;
+    display: block;
+}
+
+#interfaceAgent-btn {
+    background-color: rgb(249 115 22);
+    color: white;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    border: none;
+    border-radius: .5rem;
+    cursor: pointer;
+    width: 90%;
+    margin: 0 auto;
+    display: block;
+}
+
+#administration-btn {
+    background-color: rgb(168 85 247);
+    color: white;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    border: none;
+    border-radius: .5rem;
+    cursor: pointer;
+    width: 90%;
+    margin: 0 auto;
+    display: block;
+}
+
+#borneAccueil-btn:hover {
+    animation: fadeIn 0.3s ease-out;
+    background-color: rgb(37 99 235);
+}
+
+#interfaceAgent-btn:hover {
+    animation: fadeIn 0.3s ease-out;
+    background-color: rgb(234 88 12);
+
+}
+
+ #affichageSalle-btn:hover {
+    animation: fadeIn 0.3s ease-out;
+    background-color: green;
+}
+
+
+#administration-btn:hover {
+    animation: fadeIn 0.3s ease-out;
+    background-color: rgb(126 34 206);
+}
+
+
+/* Responsive*/
+@media screen and (max-width: 1400px) {
+    .grille {
+        grid-template-columns: repeat(2, 300px);
+        gap: 30px;
+        padding: 20px;
+    }
+
+    .grille_module {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, auto);
+        gap: 30px;
+    }
+
+    .borneAccueil, .affichageSalle, .interfaceAgent, .administration {
+        margin: 20px 20px;
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    header {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    nav {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .grille {
+        grid-template-columns: 1fr;
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .tickets, .temps, .satisfaction, .files {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .borneAccueil-descriptionParent,
+    .affichageSalle-descriptionParent,
+    .interfaceAgent-descriptionParent,
+    .administration-descriptionParent {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .borneAccueil-description,
+    .affichageSalle-description,
+    .interfaceAgent-description,
+    .administration-description {
+        margin: 10px 0;
+    }
+
+    #borneAccueil-btn,
+    #affichageSalle-btn,
+    #interfaceAgent-btn,
+    #administration-btn {
+        width: 90%;
+    }
+
+    h1 {
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .description p {
+        font-size: 16px;
+        text-align: center;
+        padding: 0 15px;
+    }
+}
+
