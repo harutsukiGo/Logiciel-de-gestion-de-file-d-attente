@@ -1,6 +1,9 @@
 <?php
 
+namespace App\file\Modele\Repository;
+
 use App\file\Modele\DataObject\AbstractDataObject;
+use App\file\Modele\DataObject\Service;
 
 class ServiceRepository extends AbstractRepository
 {
@@ -17,7 +20,7 @@ class ServiceRepository extends AbstractRepository
 
     protected function getNomTable(): string
     {
-        return "service";
+        return "services";
     }
 
     protected function getNomClePrimaire(): string
@@ -40,5 +43,19 @@ class ServiceRepository extends AbstractRepository
             "horaireFin" => $service->getHoraireFin()->format('Y-m-d H:i:s'),
             "statutService" => (int)$service->getStatutService()
         ];
+    }
+
+    public function getNbPersonneAttente(String $idService): int
+    {
+        $sql = "SELECT COUNT(*)
+            FROM client_attentes c
+            JOIN services s ON s.idService = c.idService
+            WHERE c.idService = :idService";
+
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $pdoStatement->bindValue(':idService', $idService);
+        $pdoStatement->execute();
+
+        return $pdoStatement->fetchColumn();
     }
 }

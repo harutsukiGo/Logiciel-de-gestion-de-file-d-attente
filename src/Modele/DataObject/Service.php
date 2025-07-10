@@ -1,7 +1,7 @@
 <?php
 namespace App\file\Modele\DataObject;
 
-class Service
+class Service extends AbstractDataObject
 {
     private int $idService;
     private string $nomService;

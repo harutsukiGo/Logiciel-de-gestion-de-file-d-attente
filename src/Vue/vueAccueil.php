@@ -56,8 +56,7 @@
                 <li>Sélection service</li>
             </ul>
         </div>
-        <button id="borneAccueil-btn"> Accéder au module </button>
-    </div>
+        <button id="borneAccueil-btn" onclick="window.location.href='/fileAttente/web/controleurFrontal.php?action=afficherService&controleur=service'">Accéder au module</button>    </div>
 
 
         <div class="affichageSalle">

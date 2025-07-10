@@ -1,7 +1,7 @@
 <?php
 
 namespace App\file\Modele\Repository;
-use App\file\Modele\Repository\ConnexionBaseDeDonnees;
+use App\file\Modele\DataObject\AbstractDataObject;
 use PDOException;
 
 

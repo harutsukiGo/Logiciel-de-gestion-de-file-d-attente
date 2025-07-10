@@ -2,9 +2,8 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    color: rgb(55, 65, 81);
-
-}
+    background-color: rgb(229, 231, 235);
+ }
 
 /* Navbar*/
 header {
@@ -12,12 +11,12 @@ header {
     justify-content: space-between;
     background-color: white;
     border-bottom: 2px solid lightgrey;
+    padding: 20px;
 }
 
 nav {
     display: flex;
-    height: 8vh;
-}
+ }
 
 nav div {
     padding: 10px;
@@ -136,25 +135,30 @@ h1 {
   }
 .grille_module {
     display: grid;
-    grid-template-columns: 600px 600px;
-    grid-template-rows: 300px 300px;
+    grid-template-columns: repeat(2, minmax(300px, 600px));
+    grid-template-rows: auto auto;
     gap: 50px;
     justify-content: center;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
 .borneAccueil, .affichageSalle, .interfaceAgent, .administration {
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin: 50px;
-    padding-bottom: 40px;
+    margin: 20px 0;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 200px;
+    min-height: 200px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.borneAccueil:hover, .affichageSalle:hover, .interfaceAgent:hover, .administration:hover {
+.borneAccueil:hover, .affichageSalle:hover, .interfaceAgent:hover, .administration:hover, .liste-service-item:hover {
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -259,6 +263,79 @@ h1 {
 }
 
 
+/* Borne d'accueil */
+.header-bienvenue{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    flex-direction: column;
+}
+
+/*.sectionBorneBienvenue{*/
+/*    background-color: #e0e7ff;*/
+/*    padding: 20px 0;*/
+/*    width: 100%;*/
+/*}*/
+
+.grilleService{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(300px, 600px));
+    grid-template-rows: auto auto;
+    gap: 50px;
+    justify-content: center;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.titreService{
+    font-weight: bold;
+    font-size: 1.5rem;
+
+}
+
+.liste-service-item{
+    background-color: white;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+     min-height: 200px;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.statutActif{
+    border: 2px solid green;
+    color: green;
+    border-radius: 10px;
+    padding: 5px;
+    width: fit-content; /* Ajuste la taille de la div selon la taille du contenu */
+ }
+
+.statutInactif{
+    border: 2px solid red;
+    color: red;
+    border-radius: 10px;
+    padding: 5px;
+    width: fit-content; /* Ajuste la taille de la div selon la taille du contenu */
+ }
+
+.nbPersonneAttente{
+    color: rgb(55, 65, 81);
+    font-weight: bold;
+}
+
+.service-info {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: rgb(55, 65, 81);
+}
 /* Responsive*/
 @media screen and (max-width: 1400px) {
     .grille {
@@ -276,6 +353,13 @@ h1 {
     .borneAccueil, .affichageSalle, .interfaceAgent, .administration {
         margin: 20px 20px;
         height: auto;
+    }
+
+    /* Borne d'accueil */
+    .grilleService{
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, auto);
+        gap: 30px;
     }
 }
 
@@ -333,5 +417,8 @@ h1 {
         text-align: center;
         padding: 0 15px;
     }
+
+
+
 }
 
