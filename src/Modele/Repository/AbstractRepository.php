@@ -32,13 +32,12 @@ abstract class AbstractRepository
 
     public function ajouter(AbstractDataObject $objet): bool
     {
-        try {
+         try {
             $sql = "INSERT INTO " . $this->getNomTable() . " (" . join(",", $this->getNomsColonnes()) . ") VALUES (:" . join("Tag, :", $this->getNomsColonnes()) . "Tag)";
             $creerObject = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
             $creerObject->execute($this->formatTableauSQL($objet));
         } catch (PDOException $e) {
-            MessageFlash::ajouter("warning", $e);
-            return false;
+             return false;
         }
         return true;
     }

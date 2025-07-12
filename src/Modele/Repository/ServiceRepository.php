@@ -58,4 +58,14 @@ class ServiceRepository extends AbstractRepository
 
         return $pdoStatement->fetchColumn();
     }
+
+    public function getNomService(int $idService): ?string
+    {
+        $sql = "SELECT nomService FROM " . $this->getNomTable() . " WHERE " . $this->getNomClePrimaire() . " = :idServiceTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $pdoStatement->bindValue(':idServiceTag', $idService);
+        $pdoStatement->execute();
+
+        return $pdoStatement->fetchColumn() ?: null;
+    }
 }

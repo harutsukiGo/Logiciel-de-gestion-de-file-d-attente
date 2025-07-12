@@ -22,13 +22,13 @@
         </div>
 
 
-        <div class="satisfaction">
-            <div class="satisfaction-info">
-                <p>Satisfaction client</p>
-                <p class="nombreSatisfaction">94 %</p>
-            </div>
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up w-8 h-8 text-orange-600"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
-        </div>
+<!--        <div class="satisfaction">-->
+<!--            <div class="satisfaction-info">-->
+<!--                <p>Satisfaction client</p>-->
+<!--                <p class="nombreSatisfaction">94 %</p>-->
+<!--            </div>-->
+<!--            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up w-8 h-8 text-orange-600"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>-->
+<!--        </div>-->
         <div class="files">
             <div class="files-info">
                 <p>Files actives</p>

@@ -3,7 +3,7 @@ body {
     padding: 0;
     font-family: Arial, sans-serif;
     background-color: rgb(229, 231, 235);
- }
+}
 
 /* Navbar*/
 header {
@@ -16,7 +16,7 @@ header {
 
 nav {
     display: flex;
- }
+}
 
 nav div {
     padding: 10px;
@@ -86,7 +86,6 @@ h1 {
 .description p {
     font-size: 2vh;
     color: rgb(55, 65, 81);
-    /*text-align: center;*/
 }
 
 /* Grille statistique */
@@ -119,20 +118,22 @@ h1 {
 
 .grille {
     display: grid;
-    grid-template-columns: 300px 300px 300px 300px;
+    grid-template-columns: 300px 300px 300px;
     grid-template-rows: 100px;
     gap: 50px;
     justify-content: center;
 }
 
-.header-statistiques{
+.header-statistiques {
     margin-bottom: 50px;
 }
+
 /* Modules */
 
-.modules{
+.modules {
     padding-bottom: 100px;
-  }
+}
+
 .grille_module {
     display: grid;
     grid-template-columns: repeat(2, minmax(300px, 600px));
@@ -164,10 +165,11 @@ h1 {
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-.titre{
+.titre {
     font-size: 2vh;
     font-weight: bold;
 }
+
 .borneAccueil-descriptionParent, .affichageSalle-descriptionParent, .interfaceAgent-descriptionParent, .administration-descriptionParent {
     display: flex;
     align-items: center;
@@ -186,9 +188,9 @@ h1 {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-  }
+}
 
-#borneAccueil-btn {
+#borneAccueil-btn, #confirmation-btn {
     background-color: rgb(59 130 246);
     color: white;
     padding-top: .75rem;
@@ -240,7 +242,7 @@ h1 {
     display: block;
 }
 
-#borneAccueil-btn:hover {
+#borneAccueil-btn:hover, #confirmation-btn:hover {
     animation: fadeIn 0.3s ease-out;
     background-color: rgb(37 99 235);
 }
@@ -251,7 +253,7 @@ h1 {
 
 }
 
- #affichageSalle-btn:hover {
+#affichageSalle-btn:hover {
     animation: fadeIn 0.3s ease-out;
     background-color: green;
 }
@@ -264,7 +266,7 @@ h1 {
 
 
 /* Borne d'accueil */
-.header-bienvenue{
+.header-bienvenue {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -278,7 +280,7 @@ h1 {
 /*    width: 100%;*/
 /*}*/
 
-.grilleService{
+.grilleService {
     display: grid;
     grid-template-columns: repeat(2, minmax(300px, 600px));
     grid-template-rows: auto auto;
@@ -289,13 +291,14 @@ h1 {
     padding: 0 20px;
 }
 
-.titreService{
+.titreService {
     font-weight: bold;
     font-size: 1.5rem;
+    color: black;
 
 }
 
-.liste-service-item{
+.liste-service-item {
     background-color: white;
     border-radius: 1.5rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -303,30 +306,30 @@ h1 {
     padding: 20px;
     display: flex;
     flex-direction: column;
-     min-height: 200px;
+    min-height: 200px;
     width: 100%;
     box-sizing: border-box;
     cursor: pointer;
 }
 
-.statutActif{
+.statutActif {
     border: 2px solid green;
     color: green;
     border-radius: 10px;
     padding: 5px;
     width: fit-content; /* Ajuste la taille de la div selon la taille du contenu */
- }
+}
 
-.statutInactif{
+.statutInactif {
     border: 2px solid red;
     color: red;
     border-radius: 10px;
     padding: 5px;
     width: fit-content; /* Ajuste la taille de la div selon la taille du contenu */
- }
+}
 
-.nbPersonneAttente{
-    color: rgb(55, 65, 81);
+.nbPersonneAttente {
+    /*color: rgb(55, 65, 81);*/
     font-weight: bold;
 }
 
@@ -336,6 +339,94 @@ h1 {
     gap: 5px;
     color: rgb(55, 65, 81);
 }
+
+.aService {
+    text-decoration: none;
+    color: rgb(55, 65, 81);
+}
+
+
+/* Création d'un ticket */
+
+.sectionDetailService {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.descriptionService {
+    background-color: white;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+}
+
+.descriptionServiceBorne{
+    margin: 0;
+}
+/*.detailService {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    align-items: center;*/
+/*    padding: 20px;*/
+/*}*/
+
+
+.div-tempsAttente {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+
+}
+
+
+.div-tempsAttente p {
+    margin: 0;
+}
+
+.service-informations {
+    display: flex;
+    justify-content: space-between;
+}
+
+.divButton {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+
+}
+
+#annuler-btn {
+    background-color: rgb(229, 231, 235);
+    color: black;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    border: none;
+    border-radius: .5rem;
+    cursor: pointer;
+    width: 90%;
+    display: block;
+    margin: 10px;
+}
+
+#annuler-btn:hover {
+    animation: fadeIn 0.3s ease-out;
+    background-color: rgb(209, 213, 219);
+}
+
+/* Ticket créé */
+.titreServiceTicket{
+    font-weight: bold;
+    font-size: 10vh;
+    color: black;
+    text-align: center;
+}
+
 /* Responsive*/
 @media screen and (max-width: 1400px) {
     .grille {
@@ -356,7 +447,7 @@ h1 {
     }
 
     /* Borne d'accueil */
-    .grilleService{
+    .grilleService {
         grid-template-columns: 1fr;
         grid-template-rows: repeat(4, auto);
         gap: 30px;
@@ -417,7 +508,6 @@ h1 {
         text-align: center;
         padding: 0 15px;
     }
-
 
 
 }
