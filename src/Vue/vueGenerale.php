@@ -6,7 +6,7 @@
     <title>
         <?php /** @var string $titre */
         echo $titre; ?></title>
-    <script defer src="/fileAttente/ressources/js/script.js"></script>
+    <script src="/fileAttente/ressources/js/script.js"></script>
     <link rel="stylesheet" href="/fileAttente/ressources/css/style.css">
 </head>
 <body>
@@ -28,5 +28,6 @@
     require __DIR__ . "/{$cheminCorpsVue}";
     ?>
 </main>
+
 </body>
 </html>

@@ -81,6 +81,7 @@ h1 {
     font-size: 3vh;
     color: rgb(55, 65, 81);
     margin-top: 2vh;
+    margin-bottom: 0;
 }
 
 .description p {
@@ -242,7 +243,7 @@ h1 {
     display: block;
 }
 
-#borneAccueil-btn:hover, #confirmation-btn:hover {
+#borneAccueil-btn:hover, #confirmation-btn:hover, #btnSimuler:hover {
     animation: fadeIn 0.3s ease-out;
     background-color: rgb(37 99 235);
 }
@@ -295,7 +296,7 @@ h1 {
     font-weight: bold;
     font-size: 1.5rem;
     color: black;
-
+    margin-bottom: 0;
 }
 
 .liste-service-item {
@@ -317,7 +318,7 @@ h1 {
     color: green;
     border-radius: 10px;
     padding: 5px;
-    width: fit-content; /* Ajuste la taille de la div selon la taille du contenu */
+    width: fit-content;
 }
 
 .statutInactif {
@@ -325,7 +326,8 @@ h1 {
     color: red;
     border-radius: 10px;
     padding: 5px;
-    width: fit-content; /* Ajuste la taille de la div selon la taille du contenu */
+    width: fit-content;
+    margin: 0;
 }
 
 .nbPersonneAttente {
@@ -365,9 +367,10 @@ h1 {
     padding: 30px;
 }
 
-.descriptionServiceBorne{
-    margin: 0;
+.descriptionServiceBorne {
+    /*margin: 0;*/
 }
+
 /*.detailService {*/
 /*    display: flex;*/
 /*    flex-direction: column;*/
@@ -420,13 +423,239 @@ h1 {
 }
 
 /* Ticket créé */
-.titreServiceTicket{
+
+#retourAccueil-btn {
+    background-color: lightgrey;
+    color: black;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    border: none;
+    border-radius: .5rem;
+    cursor: pointer;
+    display: block;
+    margin: 10px auto;
+}
+
+#retourAccueil-btn:hover {
+    animation: fadeIn 0.3s ease-out;
+    background-color: rgb(209, 213, 219);
+}
+
+.divRetourAccueil {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.titreServiceTicket {
     font-weight: bold;
     font-size: 10vh;
     color: black;
     text-align: center;
 }
 
+
+/*Affichage dynamique */
+.headerDynamique {
+    display: flex;
+    background-color: rgb(31 41 55);
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+#btnRetour {
+    border: none;
+    color: white;
+    background: none;
+    cursor: pointer;
+}
+
+.h1SalleAttente {
+    color: white;
+    margin: 0;
+}
+
+
+#btnSimuler {
+    background-color: rgb(59 130 246);
+    color: white;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    border: none;
+    border-radius: .5rem;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.divDynamique {
+    display: grid;
+    background-color: rgb(17 24 39);
+    padding: 20px;
+    min-height: 100vh;
+    margin: 0;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 20px;
+}
+
+.colonneGauche, .colonneMilieu, .colonneDroite {
+    display: flex;
+    flex-direction: column;
+}
+
+.divAppelEnCours {
+    background-color: rgb(31 41 55);
+    color: rgb(37 99 235);
+    padding: 20px;
+    border-radius: 1rem;
+    margin-bottom: 20px;
+}
+
+.divAppelEnCours h2 {
+    font-size: 2vh;
+    text-align: center;
+    margin-top: 0;
+}
+
+#numTicketCourant{
+    font-size: 3.5vh;
+    font-weight: 600;
+    text-align: center;
+}
+.ticketCourant, .publiciteCourant {
+    background-color: rgb(37 99 235);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    border-radius: 1rem;
+}
+
+.ticketCourant h1 {
+    color: white;
+    font-size: 3.5vh;
+    margin-bottom: 0;
+}
+
+#nomServiceCourant {
+    font-size: 2.2vh;
+    font-weight: bold;
+}
+
+.ticketCourant p {
+    margin: 0;
+    padding: 5px;
+}
+
+#numeroGuichet {
+    font-size: 1.45vh;
+    color: rgb(191 219 254)
+
+}
+
+.divPublicite {
+    background-color: rgb(31 41 55);
+    padding: 20px;
+    border-radius: 1rem;
+}
+
+
+/* colonne de droite*/
+
+.fileAttente,.derniersAppels {
+    background-color: rgb(31 41 55);
+    padding: 20px;
+    border-radius: 1rem;
+    margin-bottom: 20px;
+}
+
+.fileAttente h2 {
+    color: rgb(251 146 60);
+    font-size: 2vh;
+    margin-top: 0;
+}
+
+.service-div {
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(55 65 81);
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+
+.h3Service {
+    margin-top: 0;
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+
+
+
+.nbPersonneAttenteDiv {
+    text-align: center;
+}
+
+
+.nbPersonneAttenteFile {
+    margin: 0;
+    color: rgb(251 146 60);
+    font-weight: 600;
+}
+
+
+.texteEnAttente {
+    margin-top: 0;
+    color: rgb(156 163 175);
+    margin-bottom: 0;
+}
+
+
+/* Derniers appels */
+
+.derniersAppels h2 {
+    color: rgb(74 222 128);
+    font-size: 2vh;
+    margin-top: 0;
+}
+
+.numTicketNomServiceDiv{
+    display: flex;
+    flex-direction: column;
+}
+
+.numTicketNomServiceDiv p,.numGuichetStatutDiv p{
+    color: rgb(156 163 175);
+    margin:0 ;
+}
+
+.numGuichetStatutDiv{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+.statutEnAttente{
+    background-color: orange;
+    color: white;
+    border-radius: .25rem;
+    width: fit-content;
+    padding: .25rem .5rem;
+}
+
+.statutTermine{
+    background-color: green;
+    color: white;
+    border-radius: .25rem;
+    width: fit-content;
+    padding: .25rem .5rem;
+}
 /* Responsive*/
 @media screen and (max-width: 1400px) {
     .grille {

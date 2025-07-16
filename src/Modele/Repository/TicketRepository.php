@@ -1,9 +1,11 @@
 <?php
+
 namespace App\file\Modele\Repository;
 
 use App\file\Modele\DataObject\AbstractDataObject;
 use App\file\Modele\DataObject\Ticket;
 use DateTime;
+use http\Env\Request;
 use PDOException;
 
 
@@ -56,7 +58,7 @@ class TicketRepository extends AbstractRepository
     public function ajouterTicket(AbstractDataObject $objet): ?AbstractDataObject
     {
         try {
-            $colonnes = array_filter($this->getNomsColonnes(), function($colonne) {
+            $colonnes = array_filter($this->getNomsColonnes(), function ($colonne) {
                 return $colonne !== 'idTicket';
             });
 
@@ -71,9 +73,9 @@ class TicketRepository extends AbstractRepository
 
             $creerObject->execute($values);
 
-             $dernierID = $pdo->lastInsertId();
+            $dernierID = $pdo->lastInsertId();
 
-             return $this->recupererParClePrimaire($dernierID);
+            return $this->recupererParClePrimaire($dernierID);
         } catch (PDOException $e) {
             return null;
         }
@@ -90,4 +92,69 @@ class TicketRepository extends AbstractRepository
         ];
         $pdoStatement->execute($values);
     }
+
+    public function compteTicket()
+    {
+        $sql = "SELECT COUNT(*)  FROM " . $this->getNomTable();
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
+        return $pdoStatement->fetch()[0];
+    }
+
+
+    public function recupererTickets(): array
+    {
+        $sql = "SELECT t.idTicket, t.num_ticket, g.nom_guichet, s.nomService, t.statutTicket
+            FROM tickets t 
+             JOIN client_attentes c ON c.idTicket = t.idTicket
+             JOIN services s ON s.idService = c.idService
+             JOIN avoir a ON a.idService = s.idService
+             JOIN guichets g ON g.idGuichet = a.idGuichet
+          ";
+
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
+        return $pdoStatement->fetchAll();
+    }
+
+    public function retournePlusPetitTicket(): array
+    {
+        $sql = "SELECT t.idTicket,t.num_ticket, g.nom_guichet, s.nomService
+            FROM tickets t
+            JOIN client_attentes c ON c.idTicket = t.idTicket
+            JOIN services s ON s.idService = c.idService
+            JOIN avoir a ON a.idService = s.idService
+            JOIN guichets g ON g.idGuichet = a.idGuichet
+            WHERE t.statutTicket = 'en attente' 
+            AND t.idTicket = (
+                SELECT MIN(t2.idTicket)
+                FROM tickets t2
+                WHERE t2.statutTicket = 'en attente'
+            )";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
+
+        return $pdoStatement->fetchAll();
+    }
+
+    public function mettreAJourStatut(int $idTicket): bool
+    {
+        try {
+            $sql = "UPDATE " . $this->getNomTable() . " SET statutTicket = :statutTag WHERE idTicket = :idTicketTag";
+            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+            $values = [
+                "statutTag" => "terminé",
+                "idTicketTag" => $idTicket
+            ];
+            return $pdoStatement->execute($values);
+        } catch (PDOException $e) {
+            return false;
+        }
+
+    }
+
+    public function recupererNbTicketsEnAttente(): int
+    {
+        $sql = "SELECT COUNT(*) FROM " . $this->getNomTable() . " WHERE statutTicket = 'en attente'";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
+        return (int) $pdoStatement->fetchColumn();
+    }
+
 }

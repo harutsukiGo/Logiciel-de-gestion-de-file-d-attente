@@ -2,8 +2,6 @@
 
 namespace App\file\Controleur;
 
-use App\file\Controleur\ControleurGenerique;
-use App\file\Modele\DataObject\Agents;
 use App\file\Modele\DataObject\ClientAttentes;
 use App\file\Modele\DataObject\Historique;
 use App\file\Modele\DataObject\Ticket;
@@ -12,6 +10,8 @@ use App\file\Modele\Repository\ClientAttentesRepository;
 use App\file\Modele\Repository\HistoriqueRepository;
 use App\file\Modele\Repository\ServiceRepository;
 use App\file\Modele\Repository\TicketRepository;
+use DateTime;
+use DateTimeZone;
 
 class ControleurTicket extends ControleurGenerique
 {
@@ -20,7 +20,7 @@ class ControleurTicket extends ControleurGenerique
         if (!isset($_REQUEST['idService'])) {
             return;
         }
-        $date = new \DateTime('now');
+        $date = new DateTime('now', new DateTimeZone('Europe/Paris'));
         $agent = (new AgentRepository())->recupererParClePrimaire($this->recupereAgentRandom());
 
         $ticket = new Ticket(
@@ -37,14 +37,13 @@ class ControleurTicket extends ControleurGenerique
             return;
         }
 
-        $clientAttente= new ClientAttentes(
+        $clientAttente = new ClientAttentes(
             null,
             $ticketInsere,
             (new ServiceRepository())->recupererParClePrimaire($_REQUEST['idService']),
             "en attente",
             $date
         );
-
 
 
         $historique = new Historique(
@@ -55,7 +54,7 @@ class ControleurTicket extends ControleurGenerique
             $ticketInsere,
             $agent
         );
-        $historiqueInsere= (new HistoriqueRepository())->ajouterHistorique($historique);
+        $historiqueInsere = (new HistoriqueRepository())->ajouterHistorique($historique);
         if (!$historiqueInsere) {
             return;
         }
@@ -68,6 +67,36 @@ class ControleurTicket extends ControleurGenerique
             "idService" => $_REQUEST['idService'],
             "ticket" => $ticketInsere,
         ]);
+    }
+
+
+    public function affichageSalleAttente()
+    {
+        $service = (new ServiceRepository())->recuperer();
+        $tickets = (new TicketRepository())->recupererTickets();
+        $premierTicket = (new TicketRepository())->retournePlusPetitTicket();
+        ControleurGenerique::afficherVue('vueGenerale.php', [
+            "titre" => "Affichage salle d'attente",
+            "cheminCorpsVue" => "Ticket/affichageDynamique.php", "service" => $service, "tickets" => $tickets, "premierTicket" => $premierTicket
+        ]);
+    }
+
+
+    public function nbTicketsEnAttente()
+    {
+        echo json_encode((new TicketRepository())->recupererNbTicketsEnAttente());
+    }
+
+    public function mettreAJourStatutTicket(): void
+    {
+        (new TicketRepository())->mettreAJourStatut($_REQUEST['idTicket']);
+    }
+
+    public function mettreAJourTicketCourant(): void
+    {
+        $premierTicket = (new TicketRepository())->retournePlusPetitTicket();
+        header('Content-Type: application/json');
+        echo json_encode($premierTicket);
     }
 
     public function premiereLettre(string $chaine): string
@@ -86,5 +115,6 @@ class ControleurTicket extends ControleurGenerique
         $randomIndex = random_int(0, count($agents) - 1);
         return $agents[$randomIndex]->getIdAgent();
     }
+
 
 }

@@ -68,4 +68,26 @@ class ServiceRepository extends AbstractRepository
 
         return $pdoStatement->fetchColumn() ?: null;
     }
+
+    public function retourneNombreServices()
+    {
+        $sql = "SELECT COUNT(*)  FROM " . $this->getNomTable();
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
+        return $pdoStatement->fetch()[0];
+    }
+
+    public function getTempsAttenteMoyen(): string
+    {
+        $sql = "SELECT 
+        ROUND(
+            AVG(TIMESTAMPDIFF(MINUTE, dateArrive, NOW())) * COUNT(*)
+        ) as temps_moyen
+    FROM client_attentes 
+    WHERE statut = 'en attente'";
+
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
+        $resultat = $pdoStatement->fetchColumn();
+
+        return $resultat ? $resultat . " min" : "0 min";
+    }
 }

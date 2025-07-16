@@ -7,8 +7,13 @@ use App\file\Modele\Repository\ServiceRepository;
 
 ?>
 
-
+<div class="divRetourAccueil">
+<button id="retourAccueil-btn" onclick="window.location.href='/fileAttente/web/controleurFrontal.php'">
+    Retour à l'accueil
+</button>
+</div>
 <section class="sectionDetailService">
+
     <div class="descriptionService">
         <h1 class="titreService">Ticket généré </h1>
         <p class="descriptionServiceBorne">Votre ticket a été créé avec succès</p>
