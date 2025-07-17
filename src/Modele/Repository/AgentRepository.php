@@ -2,14 +2,12 @@
 
 namespace App\file\Modele\Repository;
 use App\file\Modele\DataObject\AbstractDataObject;
-use App\file\Modele\Repository\GuichetsRepository;
 use App\file\Modele\DataObject\Agents;
 
 class AgentRepository extends AbstractRepository
 {
     protected function construireDepuisTableauSQL(array $objetFormatTableau): Agents
     {
-        // Créer d'abord l'objet Guichets
         $guichet = (new GuichetsRepository())->recupererParClePrimaire($objetFormatTableau['idGuichet']);
 
         return new Agents(
@@ -20,7 +18,7 @@ class AgentRepository extends AbstractRepository
             $objetFormatTableau['login'],
             $objetFormatTableau['motDePasse'],
             $objetFormatTableau['role'],
-            $guichet  // Passer l'objet Guichets au lieu de l'ID
+            $guichet
         );
     }
 

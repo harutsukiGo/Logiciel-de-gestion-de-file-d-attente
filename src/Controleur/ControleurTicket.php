@@ -8,6 +8,7 @@ use App\file\Modele\DataObject\Ticket;
 use App\file\Modele\Repository\AgentRepository;
 use App\file\Modele\Repository\ClientAttentesRepository;
 use App\file\Modele\Repository\HistoriqueRepository;
+use App\file\Modele\Repository\PubliciteRepository;
 use App\file\Modele\Repository\ServiceRepository;
 use App\file\Modele\Repository\TicketRepository;
 use DateTime;
@@ -72,12 +73,14 @@ class ControleurTicket extends ControleurGenerique
 
     public function affichageSalleAttente()
     {
+        $publicites = (new PubliciteRepository())->recupererPublicitesActives();
         $service = (new ServiceRepository())->recuperer();
         $tickets = (new TicketRepository())->recupererTickets();
         $premierTicket = (new TicketRepository())->retournePlusPetitTicket();
         ControleurGenerique::afficherVue('vueGenerale.php', [
             "titre" => "Affichage salle d'attente",
-            "cheminCorpsVue" => "Ticket/affichageDynamique.php", "service" => $service, "tickets" => $tickets, "premierTicket" => $premierTicket
+            "cheminCorpsVue" => "Ticket/affichageDynamique.php", "service" => $service, "tickets" => $tickets, "premierTicket" => $premierTicket,
+            "publicites" => $publicites
         ]);
     }
 

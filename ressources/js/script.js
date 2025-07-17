@@ -6,7 +6,6 @@ async function simuler(){
     const numGuichet = document.getElementById("numeroGuichet");
 
     if (!idTicket) {
-        console.log("Aucun ticket en cours à traiter");
         if (numTicket) {
             numTicket.textContent = "Aucun tickets à traiter actuellement";
         }
@@ -69,3 +68,39 @@ async function retourneNbTicketsAttente() {
             return data;
         });
 }
+
+function actualiserHorloge() {
+    const maintenant = new Date();
+    const jour =  maintenant.toLocaleDateString('fr-FR', { weekday: 'long' });
+    const numero =  maintenant.getDate();
+    const mois = maintenant.toLocaleDateString('fr-FR', { month: 'long' });
+    const annee = maintenant.getFullYear();
+    const heures = String(maintenant.getHours()).padStart(2, '0');
+    const minutes = String(maintenant.getMinutes()).padStart(2, '0');
+    const secondes = String(maintenant.getSeconds()).padStart(2, '0');
+
+    document.getElementById('horloge').innerHTML = `<p>${jour} ${numero} ${mois}</p>  <p>${heures}:${minutes}:${secondes}</p>`;
+}
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+   const horloge =document.getElementById('horloge');
+   const imgPub = document.querySelectorAll('.imgPub');
+
+   if (horloge && imgPub) {
+       let currentIndex = 0;
+       setInterval(function() {
+           imgPub[currentIndex].classList.remove('active');
+           currentIndex = (currentIndex + 1) % imgPub.length;
+           imgPub[currentIndex].classList.add('active');
+       }, 3000);
+       setInterval(actualiserHorloge, 1000);
+       actualiserHorloge();
+   }
+
+
+
+
+});

@@ -8,7 +8,8 @@
         </svg>
         <span>Retour</span>
     </button>
-    <h1 class="h1SalleAttente"> Écran de salle d'attente</h1>
+
+    <h1 class="h1SalleAttente"> Écran de salle d'attente </h1>
     <button id="btnSimuler" onclick="simuler()"> Simuler l'appel</button>
 </section>
 <?php
@@ -35,12 +36,23 @@
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
-        </div>
+         </div>
 
+    <?php
+    /** @var Publicite[] $publicites * */
+    ?>
         <div class="divPublicite">
-            <div class="publiciteCourant">
-                <h1 class="h1TicketCourant"> Publicité</h1>
+                <?php foreach ($publicites as $key => $publicite): ?>
+                    <img class="imgPub <?= $key === 0 ? 'active' : 'hidden' ?>"
+                         src="<?= $publicite->getFichier() ?>"
+                         alt="Publicité"
+                         data-index="<?= $key ?>">
+                <?php endforeach;?>
+            <div class="divTemperature">
+                <p id="horloge"> </p>
             </div>
+
+
         </div>
     </div>
 
@@ -51,6 +63,7 @@
             <?php
             /** @var Service[] $service */
 
+            use App\file\Modele\DataObject\Publicite;
             use App\file\Modele\DataObject\Service;
             use App\file\Modele\DataObject\Ticket;
             use App\file\Modele\Repository\ServiceRepository;

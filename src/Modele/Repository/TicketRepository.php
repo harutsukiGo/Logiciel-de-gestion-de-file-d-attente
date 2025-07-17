@@ -109,6 +109,7 @@ class TicketRepository extends AbstractRepository
              JOIN services s ON s.idService = c.idService
              JOIN avoir a ON a.idService = s.idService
              JOIN guichets g ON g.idGuichet = a.idGuichet
+            WHERE t.statutTicket = 'en attente' OR t.statutTicket = 'en cours'
           ";
 
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
