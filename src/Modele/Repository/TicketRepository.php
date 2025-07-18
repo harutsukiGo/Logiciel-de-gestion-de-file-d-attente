@@ -135,13 +135,13 @@ class TicketRepository extends AbstractRepository
         return $pdoStatement->fetchAll();
     }
 
-    public function mettreAJourStatut(int $idTicket): bool
+    public function mettreAJourStatut(int $idTicket, string $staut): bool
     {
         try {
             $sql = "UPDATE " . $this->getNomTable() . " SET statutTicket = :statutTag WHERE idTicket = :idTicketTag";
             $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
             $values = [
-                "statutTag" => "terminé",
+                "statutTag" => "$staut",
                 "idTicketTag" => $idTicket
             ];
             return $pdoStatement->execute($values);

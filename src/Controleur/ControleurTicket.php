@@ -92,7 +92,7 @@ class ControleurTicket extends ControleurGenerique
 
     public function mettreAJourStatutTicket(): void
     {
-        (new TicketRepository())->mettreAJourStatut($_REQUEST['idTicket']);
+        (new TicketRepository())->mettreAJourStatut($_REQUEST['idTicket'], $_REQUEST['statutTicket']);
     }
 
     public function mettreAJourTicketCourant(): void

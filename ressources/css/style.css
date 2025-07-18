@@ -569,7 +569,7 @@ h1 {
     height: 250px;
     position: absolute;
     border-radius: 1rem;
-    transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.5s ease-in-out;
     opacity: 0;
     object-fit: cover;
 }
@@ -592,10 +592,11 @@ h1 {
     left: 515px;
 }
 
-.divTemperature p{
+.divTemperature p {
     font-size: 2vh;
     text-align: center;
 }
+
 /* colonne de droite*/
 
 .fileAttente, .derniersAppels {
@@ -690,6 +691,178 @@ h1 {
     padding: .25rem .5rem;
 }
 
+
+/* Interface agent */
+.header-interfaceAgent {
+    display: flex;
+    justify-content: space-between;
+}
+
+.titreInterfaceAgent h1 {
+    color: black;
+}
+
+.titreInterfaceAgent p {
+    color: rgb(55, 65, 81);
+    margin-top: 0;
+
+}
+
+.divButtonAgent {
+    padding: 20px;
+}
+
+#btnRetourAgent {
+    border: none;
+    color: #000;
+    background: none;
+    cursor: pointer;
+}
+
+
+.agentInfo {
+    display: flex;
+    align-items: center;
+    color: rgb(55, 65, 81);
+
+}
+
+.statutAgentOuvert {
+    background-color: rgb(34 197 94);
+    color: white;
+    border-radius: 9999px;
+    width: fit-content;
+    padding: .25rem .5rem;
+    margin: 20px;
+}
+
+.statutAgentFerme {
+    background-color: rgb(239 68 68);
+    color: white;
+    border-radius: 9999px;
+    width: fit-content;
+    padding: .25rem .5rem;
+    margin: 20px;
+}
+
+.titreClientActuel h2 {
+    margin: 0;
+}
+
+.divInterfaceAgent {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.sectionInterfaceAgent {
+    margin-right: 100px;
+    margin-left: 100px;
+}
+
+.divClientActuel, .redirectionTickets, .controlePosteAgent, .sessionActuel {
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.titreClientActuel {
+    display: flex;
+    gap: 8px;
+}
+
+.infoTicketCourant {
+    /*background-color: rgb(239 246 255);*/
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+#appellerSuivant,#btnRediriger {
+    background-color: #000000;
+    color: white;
+    border: none;
+    border-radius: .5rem;
+    cursor: pointer;
+    padding: .75rem 30px;
+}
+
+
+.controlePosteAgent h2 {
+    margin-top: 0;
+}
+
+.divBoutonPosteAgent {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0px, 1fr));
+    gap: 10px;
+}
+
+#btnOuvrir, #btnPause, #btnFermer {
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    border-radius: .5rem;
+    cursor: pointer;
+    width: 100%;
+    border: 1px solid lightgray;
+}
+
+.redirectionTickets h2{
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.redirectionTickets p {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.divInput{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap:20px;
+    margin-bottom: 20px;
+}
+
+.divNumTicket, .divServiceOuGuichet {
+    display: flex;
+    flex-direction: column;
+}
+
+.divNumTicket p,  .divServiceOuGuichet p {
+    margin-bottom: 5px;
+}
+
+
+#numTicketRedirection, #serviceOuGuichet{
+    width: 100%;
+    height: 3vh;
+    border-radius: .5rem;
+    border: 1px solid lightgray;
+}
+
+#btnRediriger{
+    width: 100%;
+}
+
+.divSessionActuel{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+
+.sessionActuel h2{
+    margin-top: 0;
+}
 /* Responsive*/
 @media screen and (max-width: 1400px) {
     .grille {

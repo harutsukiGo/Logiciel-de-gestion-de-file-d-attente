@@ -52,7 +52,45 @@ class AgentRepository extends AbstractRepository
             "idGuichet" => $idAgent->getIdGuichet()
         ];
     }
+    public function retournePlusPetitTicketAgent(): array
+    {
 
+        $sql = "SELECT t.idTicket,t.num_ticket, s.nomService,t.statutTicket
+            FROM tickets t
+             JOIN agents a ON t.idAgent = a.idAgent AND a.idAgent = :idAgentTag
+             JOIN client_attentes c ON c.idTicket= t.idTicket
+             JOIN services s ON s.idService= c.idService
+            WHERE t.statutTicket = 'en attente' 
+            AND t.idTicket = (
+                SELECT MIN(t2.idTicket)
+                FROM tickets t2
+                 JOIN agents a ON t2.idAgent = a.idAgent
+                WHERE t2.statutTicket = 'en attente'
+            );
+";
 
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = [
+            "idAgentTag" => $_REQUEST['idAgent']
+        ];
 
+        $pdoStatement->execute($values);
+        return $pdoStatement->fetchAll();
+    }
+
+    public function mettreAJourStatut(int $idAgent, string $statut): bool
+    {
+        try {
+            $sql = "UPDATE " . $this->getNomTable() . " SET statut = :statutTag WHERE idAgent = :idAgentTag";
+            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+            $values = [
+                "statutTag" => "$statut",
+                "idAgentTag" => $idAgent
+            ];
+            return $pdoStatement->execute($values);
+        } catch (PDOException $e) {
+            return false;
+        }
+
+    }
 }
