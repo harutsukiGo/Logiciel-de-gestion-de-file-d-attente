@@ -11,16 +11,31 @@ class Ticket extends AbstractDataObject{
     private string $statutTicket;
     private ?Historique $idHistorique;
     private ?Agents $idAgent;
+    private ?DateTime $date_arrivee;
+    private ?DateTime $date_terminee;
 
-
-    public function __construct(?int $idTicket, string $num_ticket, DateTime $date_heure, string $statutTicket, ?Historique $idHistorique, ?Agents $idAgent) {
+    /**
+     * @param int|null $idTicket
+     * @param string $num_ticket
+     * @param DateTime $date_heure
+     * @param string $statutTicket
+     * @param Historique|null $idHistorique
+     * @param Agents|null $idAgent
+     * @param DateTime|null $date_arrivee
+     * @param DateTime|null $date_terminee
+     */
+    public function __construct(?int $idTicket, string $num_ticket, DateTime $date_heure, string $statutTicket, ?Historique $idHistorique, ?Agents $idAgent, ?DateTime $date_arrivee, ?DateTime $date_terminee)
+    {
         $this->idTicket = $idTicket;
         $this->num_ticket = $num_ticket;
         $this->date_heure = $date_heure;
         $this->statutTicket = $statutTicket;
         $this->idHistorique = $idHistorique;
         $this->idAgent = $idAgent;
+        $this->date_arrivee = $date_arrivee;
+        $this->date_terminee = $date_terminee;
     }
+
 
     public function getIdTicket(): ?int {
         return $this->idTicket;
@@ -39,6 +54,12 @@ class Ticket extends AbstractDataObject{
     }
     public function getIdAgent(): ?Agents {
         return $this->idAgent;
+    }
+    public function getDateArrivee(): ?DateTime {
+        return $this->date_arrivee;
+    }
+    public function getDateTerminee(): ?DateTime {
+        return $this->date_terminee;
     }
 
 

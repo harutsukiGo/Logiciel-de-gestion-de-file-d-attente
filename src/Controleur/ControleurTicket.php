@@ -30,7 +30,9 @@ class ControleurTicket extends ControleurGenerique
             $date,
             "en attente",
             null,
-            $agent
+            $agent,
+            null,
+            null
         );
 
         $ticketInsere = (new TicketRepository())->ajouterTicket($ticket);
@@ -93,6 +95,16 @@ class ControleurTicket extends ControleurGenerique
     public function mettreAJourStatutTicket(): void
     {
         (new TicketRepository())->mettreAJourStatut($_REQUEST['idTicket'], $_REQUEST['statutTicket']);
+    }
+
+    public function mettreAJourDateArriveeTicket()
+    {
+        (new TicketRepository())->mettreAJourDateArrivee($_REQUEST['idTicket'], new DateTime('now', new DateTimeZone('Europe/Paris')));
+    }
+
+    public function mettreAJourDateTermineeTicket()
+    {
+        (new TicketRepository())->mettreAJourDateTerminee($_REQUEST['idTicket'], new DateTime('now', new DateTimeZone('Europe/Paris')));
     }
 
     public function mettreAJourTicketCourant(): void

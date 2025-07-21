@@ -77,5 +77,21 @@ class HistoriqueRepository extends AbstractRepository
         }
     }
 
+    public function recupererHistoriqueParAgent($idAgent): array
+    {
+        $sql = "SELECT num_ticket, nomService, historique.date_heure  
+                FROM " . $this->getNomTable() .
+                " JOIN tickets t ON t.idTicket = historique.idTicket " .
+                " JOIN client_attentes c ON t.idTicket = c.idTicket " .
+                " JOIN services s ON c.idService = s.idService " .
+                "WHERE t.idAgent = :idAgentTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = [
+            "idAgentTag" => $idAgent
+        ];
+
+        $pdoStatement->execute($values);
+        return $pdoStatement->fetchAll();
+    }
 
 }

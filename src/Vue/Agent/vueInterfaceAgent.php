@@ -2,6 +2,7 @@
 /** @var Agents $agent */
 
 use App\file\Modele\DataObject\Agents;
+use App\file\Modele\DataObject\Historique;
 use App\file\Modele\DataObject\Ticket;
 
 ?>
@@ -56,15 +57,12 @@ use App\file\Modele\DataObject\Ticket;
                 </div>
 
 
-                <?php /** @var Ticket[] $premierTicket
-                 **/?>
 
 
-
-                <div class="infoTicketCourant">
+                <div id="infoTicketCourant">
                     <p> Aucun client en cours de service
                     </p>
-                    <button id="appellerSuivant"
+                    <button id="appelerSuivant" onclick="appelerSuivant()"
                             style="display: flex; align-items: center; gap: 8px; justify-content: center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2"
@@ -153,7 +151,47 @@ use App\file\Modele\DataObject\Ticket;
             </div>
 
 
-        </div>
+            <div>
+                <?php
+                /** @var Ticket[] $tickets */
+                ?>
+                <div class="fileAttenteAgent">
+                <h2> File d'attente</h2>
+                    <?php if (count($tickets) == 0): ?>
+                        <p>Aucun ticket en attente</p>
+
+                    <?php else: ?>
+                    <?php foreach ($tickets as $ticket): ?>
+                    <div class="divFilAttente">
+                        <div class="divNumTicket">
+                            <span><?php echo $ticket["num_ticket"]; ?></span>
+                        </div>
+                        <p class="nomServiceAgent"><?php echo $ticket["nomService"]?> </p>
+                    </div>
+                    <?php endforeach; ?>
+
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <?php
+            /** @var Historique[] $historique */
+            ?>
+            <div class="historiqueAgent">
+                <h2> Historique des actions</h2>
+                <?php if (count($historique)==0):?>
+                <p>Aucun ticket dans l'historique</p>
+                <?php else: ?>
+                    <?php foreach ($historique as $ticket): ?>
+                <div class="divHistorique">
+                    <div class="divNumTicket">
+                        <span><?php echo $ticket["num_ticket"]; ?></span>
+                    </div>
+                    <p class="nomServiceAgent"><?php echo $ticket["nomService"]?> </p>
+                </div>
+            <?php endforeach;?>
+                <?php endif; ?>
+            </div>
 
     </div>
 </section>

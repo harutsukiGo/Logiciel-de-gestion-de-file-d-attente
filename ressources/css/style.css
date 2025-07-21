@@ -760,7 +760,7 @@ h1 {
     margin-left: 100px;
 }
 
-.divClientActuel, .redirectionTickets, .controlePosteAgent, .sessionActuel {
+.divClientActuel, .redirectionTickets, .controlePosteAgent, .sessionActuel, .fileAttenteAgent,.historiqueAgent, .divHistorique {
     background-color: white;
     border-radius: 1rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -773,7 +773,7 @@ h1 {
     gap: 8px;
 }
 
-.infoTicketCourant {
+#infoTicketCourant {
     /*background-color: rgb(239 246 255);*/
     border-radius: 1rem;
     display: flex;
@@ -781,9 +781,10 @@ h1 {
     align-items: center;
     padding-top: 2rem;
     padding-bottom: 2rem;
+    margin-top: 20px;
 }
 
-#appellerSuivant,#btnRediriger {
+#appelerSuivant,#btnRediriger {
     background-color: #000000;
     color: white;
     border: none;
@@ -803,7 +804,7 @@ h1 {
     gap: 10px;
 }
 
-#btnOuvrir, #btnPause, #btnFermer {
+#btnOuvrir, #btnPause, #btnFermer, #btnTerminer, #btnRappeler, #btnAbsent {
     background-color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding-top: .75rem;
@@ -863,6 +864,46 @@ h1 {
 .sessionActuel h2{
     margin-top: 0;
 }
+
+
+#statutCourant{
+    color: #000;
+}
+
+
+#numTicketCourantAgent{
+    color: rgb(37 99 235);
+    font-size: 3.5vh;
+    font-weight: 600;
+    text-align: center;
+}
+
+.divBoutonStatutTicket{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+
+
+.divFilAttente{
+    background-color: rgb(249 250 251);
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.nomServiceAgent{
+    margin: 0;
+    color:rgb(107 114 128)
+}
+
+
 /* Responsive*/
 @media screen and (max-width: 1400px) {
     .grille {

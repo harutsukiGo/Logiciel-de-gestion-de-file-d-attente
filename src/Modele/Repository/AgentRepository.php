@@ -65,7 +65,7 @@ class AgentRepository extends AbstractRepository
                 SELECT MIN(t2.idTicket)
                 FROM tickets t2
                  JOIN agents a ON t2.idAgent = a.idAgent
-                WHERE t2.statutTicket = 'en attente'
+                WHERE t2.statutTicket = 'en attente' AND a.idAgent = :idAgentTag
             );
 ";
 
@@ -91,6 +91,24 @@ class AgentRepository extends AbstractRepository
         } catch (PDOException $e) {
             return false;
         }
+
+    }
+
+
+    public function afficherFileAttente($idAgent): array
+    {
+            $sql = "SELECT num_ticket, s.nomService 
+            FROM tickets t
+            JOIN client_attentes c ON t.idTicket = c.idTicket
+            JOIN services s ON c.idService = s.idService
+            WHERE t.statutTicket = 'en attente' AND t.idAgent = :idAgentTag";
+
+            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+            $values = [
+                "idAgentTag" => $idAgent
+            ];
+            $pdoStatement->execute($values);
+            return $pdoStatement->fetchAll();
 
     }
 }

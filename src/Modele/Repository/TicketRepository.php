@@ -5,7 +5,6 @@ namespace App\file\Modele\Repository;
 use App\file\Modele\DataObject\AbstractDataObject;
 use App\file\Modele\DataObject\Ticket;
 use DateTime;
-use http\Env\Request;
 use PDOException;
 
 
@@ -21,6 +20,8 @@ class TicketRepository extends AbstractRepository
             new DateTime($objetFormatTableau['date_heure']),
             $objetFormatTableau['statutTicket'],
             null,
+            null,
+            null,
             null
         );
     }
@@ -34,7 +35,9 @@ class TicketRepository extends AbstractRepository
             "date_heure" => $objet->getDateHeure()->format('Y-m-d H:i:s'),
             "statutTicket" => $objet->getStatutTicket(),
             "idHistorique" => $objet->getIdHistorique()?->getIdHistorique(),
-            "idAgent" => $objet->getIdAgent()?->getIdAgent()
+            "idAgent" => $objet->getIdAgent()?->getIdAgent(),
+            "date_arrivee" => $objet->getDateArrivee()?->format('Y-m-d H:i:s'),
+            "date_terminee" => $objet->getDateTerminee()?->format('Y-m-d H:i:s')
         ];
     }
 
@@ -51,7 +54,7 @@ class TicketRepository extends AbstractRepository
 
     protected function getNomsColonnes(): array
     {
-        return ["idTicket", "num_ticket", "date_heure", "statutTicket", "idHistorique", "idAgent"];
+        return ["idTicket", "num_ticket", "date_heure", "statutTicket", "idHistorique", "idAgent", "date_arrivee", "date_terminee"];
     }
 
 
@@ -109,7 +112,7 @@ class TicketRepository extends AbstractRepository
              JOIN services s ON s.idService = c.idService
              JOIN avoir a ON a.idService = s.idService
              JOIN guichets g ON g.idGuichet = a.idGuichet
-            WHERE t.statutTicket = 'en attente' OR t.statutTicket = 'en cours'
+            WHERE t.statutTicket = 'en attente'
           ";
 
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
@@ -156,6 +159,50 @@ class TicketRepository extends AbstractRepository
         $sql = "SELECT COUNT(*) FROM " . $this->getNomTable() . " WHERE statutTicket = 'en attente'";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
         return (int) $pdoStatement->fetchColumn();
+    }
+
+    public function mettreAJourDateArrivee(int $idTicket, DateTime $date): bool
+    {
+        try {
+            $sql = "UPDATE " . $this->getNomTable() . " SET date_arrivee = :date_arriveeTag WHERE idTicket = :idTicketTag";
+            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+            $values = [
+                "date_arriveeTag" => $date->format('Y-m-d H:i:s'),
+                "idTicketTag" => $idTicket
+            ];
+            return $pdoStatement->execute($values);
+        } catch (PDOException $e) {
+            return false;
+        }
+
+    }
+
+    public function mettreAJourDateTerminee(int $idTicket, DateTime $date): bool
+    {
+        try {
+            $sql = "UPDATE " . $this->getNomTable() . " SET date_terminee = :date_termineeTag WHERE idTicket = :idTicketTag";
+            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+            $values = [
+                "date_termineeTag" => $date->format('Y-m-d H:i:s'),
+                "idTicketTag" => $idTicket
+            ];
+            return $pdoStatement->execute($values);
+        } catch (PDOException $e) {
+            return false;
+        }
+
+    }
+
+    public function getTempsAttenteMoyen(): string
+    {
+        $sql = "SELECT ROUND(AVG(TIMESTAMPDIFF(MINUTE, date_arrivee, date_terminee))) AS temps_moyen
+            FROM  tickets t
+            WHERE statutTicket = 'terminé'";
+
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
+        $resultat = $pdoStatement->fetchColumn();
+
+        return $resultat ? $resultat . " min" : "0 min";
     }
 
 }
