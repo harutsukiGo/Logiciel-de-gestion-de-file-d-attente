@@ -760,7 +760,7 @@ h1 {
     margin-left: 100px;
 }
 
-.divClientActuel, .redirectionTickets, .controlePosteAgent, .sessionActuel, .fileAttenteAgent,.historiqueAgent, .divHistorique {
+.divClientActuel, .redirectionTickets, .controlePosteAgent, .sessionActuel, .fileAttenteAgent, .historiqueAgent, .divHistorique {
     background-color: white;
     border-radius: 1rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -784,7 +784,7 @@ h1 {
     margin-top: 20px;
 }
 
-#appelerSuivant,#btnRediriger {
+#appelerSuivant, #btnRediriger, #btnConnexion {
     background-color: #000000;
     color: white;
     border: none;
@@ -815,7 +815,7 @@ h1 {
     border: 1px solid lightgray;
 }
 
-.redirectionTickets h2{
+.redirectionTickets h2 {
     margin-top: 0;
     margin-bottom: 0;
 }
@@ -825,10 +825,10 @@ h1 {
     margin-bottom: 20px;
 }
 
-.divInput{
+.divInput {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap:20px;
+    gap: 20px;
     margin-bottom: 20px;
 }
 
@@ -837,23 +837,23 @@ h1 {
     flex-direction: column;
 }
 
-.divNumTicket p,  .divServiceOuGuichet p {
+.divNumTicket p, .divServiceOuGuichet p {
     margin-bottom: 5px;
 }
 
 
-#numTicketRedirection, #serviceOuGuichet{
+#numTicketRedirection, #serviceOuGuichet {
     width: 100%;
     height: 3vh;
     border-radius: .5rem;
     border: 1px solid lightgray;
 }
 
-#btnRediriger{
+#btnRediriger {
     width: 100%;
 }
 
-.divSessionActuel{
+.divSessionActuel {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
@@ -861,24 +861,24 @@ h1 {
 }
 
 
-.sessionActuel h2{
+.sessionActuel h2 {
     margin-top: 0;
 }
 
 
-#statutCourant{
+#statutCourant {
     color: #000;
 }
 
 
-#numTicketCourantAgent{
+#numTicketCourantAgent {
     color: rgb(37 99 235);
     font-size: 3.5vh;
     font-weight: 600;
     text-align: center;
 }
 
-.divBoutonStatutTicket{
+.divBoutonStatutTicket {
     display: flex;
     justify-content: center;
     gap: 10px;
@@ -886,8 +886,7 @@ h1 {
 }
 
 
-
-.divFilAttente{
+.divFilAttente {
     background-color: rgb(249 250 251);
     border-radius: 1rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -898,11 +897,47 @@ h1 {
     text-align: center;
 }
 
-.nomServiceAgent{
+.nomServiceAgent {
     margin: 0;
-    color:rgb(107 114 128)
+    color: rgb(107 114 128)
 }
 
+
+/* Connexion */
+
+.sectionAuthentification {
+    height: 100vh;
+    background: aliceblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.divConnexion {
+    background-color: white;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;;
+}
+
+.divConnexion h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: rgb(55, 65, 81);
+}
+
+#login, #motDePasse {
+    border: none;
+    outline: none;
+    border-bottom: 1px solid black;
+    margin-bottom: 20px;
+    width: 100%;
+    height: 3rem;
+}
 
 /* Responsive*/
 @media screen and (max-width: 1400px) {

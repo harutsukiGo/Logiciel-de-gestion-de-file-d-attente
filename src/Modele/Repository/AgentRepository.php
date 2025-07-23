@@ -111,4 +111,23 @@ class AgentRepository extends AbstractRepository
             return $pdoStatement->fetchAll();
 
     }
+
+    public function recupererParLogin(string $login): ?AbstractDataObject
+    {
+        $sql = "SELECT * from " . $this->getNomTable() . " WHERE " ."login" . " = :loginTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+
+        $values = array(
+            "loginTag" => $login,
+        );
+        $pdoStatement->execute($values);
+
+        $objectFormatTableau = $pdoStatement->fetch();
+
+        if (!$objectFormatTableau) {
+            return null;
+        } else {
+            return $this->construireDepuisTableauSQL($objectFormatTableau);
+        }
+    }
 }

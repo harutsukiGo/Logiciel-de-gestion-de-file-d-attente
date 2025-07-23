@@ -84,7 +84,7 @@ class HistoriqueRepository extends AbstractRepository
                 " JOIN tickets t ON t.idTicket = historique.idTicket " .
                 " JOIN client_attentes c ON t.idTicket = c.idTicket " .
                 " JOIN services s ON c.idService = s.idService " .
-                "WHERE t.idAgent = :idAgentTag";
+                "WHERE t.idAgent = :idAgentTag LIMIT 3";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = [
             "idAgentTag" => $idAgent
