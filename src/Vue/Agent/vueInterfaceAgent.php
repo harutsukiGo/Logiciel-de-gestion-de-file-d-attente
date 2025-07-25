@@ -1,8 +1,11 @@
 <?php
 /** @var Agents $agent */
 
+use App\file\Controleur\ControleurTicket;
+use App\file\Lib\ConnexionUtilisateur;
 use App\file\Modele\DataObject\Agents;
 use App\file\Modele\DataObject\Historique;
+use App\file\Modele\DataObject\Service;
 use App\file\Modele\DataObject\Ticket;
 
 ?>
@@ -22,8 +25,6 @@ use App\file\Modele\DataObject\Ticket;
         <div class="titreInterfaceAgent">
             <h1 class=>Interface Agent</h1>
             <?php echo "<p class=''>" . "Poste de travail : " . "Guichet " . $agent->getIdGuichet()->getIdGuichet() . "</p>"; ?>
-
-
         </div>
 
         <div class="agentInfo">
@@ -31,9 +32,9 @@ use App\file\Modele\DataObject\Ticket;
 
             <?php $statut = $agent->getStatut();
             if ($statut): ?>
-            <?php echo "<div class='statutAgentOuvert'  id='divStatutAgent' >" . "Ouvert" . "</div>"; ?>
+                <?php echo "<div class='statutAgentOuvert'  id='divStatutAgent' >" . "Ouvert" . "</div>"; ?>
             <?php else: ?>
-            <?php echo "<div class='statutAgentFerme' id='divStatutAgent'>" . "Fermé" . "</div>"; ?>
+                <?php echo "<div class='statutAgentFerme' id='divStatutAgent'>" . "Fermé" . "</div>"; ?>
             <?php endif; ?>
             <?php echo "<span class=''>" . "Agent : " . $agent->getNomAgent() . "</span>"; ?>
         </div>
@@ -57,8 +58,6 @@ use App\file\Modele\DataObject\Ticket;
                 </div>
 
 
-
-
                 <div id="infoTicketCourant">
                     <p> Aucun client en cours de service
                     </p>
@@ -78,7 +77,8 @@ use App\file\Modele\DataObject\Ticket;
             <div class="controlePosteAgent">
                 <h2>Contrôle du poste </h2>
                 <div class="divBoutonPosteAgent">
-                    <button id="btnOuvrir" data-statut="1" data-info="Ouvert" class="btnOuvrir" onclick="mettreAJourStatutAgentOuvert()"
+                    <button id="btnOuvrir" data-statut="1" data-info="Ouvert" class="btnOuvrir"
+                            onclick="mettreAJourStatutAgentOuvert()"
                             style="display: flex; align-items: center; gap: 8px;     justify-content: center;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -87,7 +87,8 @@ use App\file\Modele\DataObject\Ticket;
                         </svg>
                         <span>Ouvrir</span>
                     </button>
-                    <button id="btnFermer" data-statut="0" data-info="Fermé" class="btnFermer" onclick="mettreAJourStatutAgentFermer()"
+                    <button id="btnFermer" data-statut="0" data-info="Fermé" class="btnFermer"
+                            onclick="mettreAJourStatutAgentFermer()"
                             style="display: flex; align-items: center; gap: 8px; justify-content: center;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -102,31 +103,46 @@ use App\file\Modele\DataObject\Ticket;
 
             <div class="redirectionTickets">
                 <h2> Redirection de ticket</h2>
-                <p>Rediriger un client vers un autre service ou guichet</p>
+                <p>Rediriger un client vers un autre service</p>
 
                 <div class="divInput">
                     <div class="divNumTicket">
                         <p> Numéro du ticket</p>
                         <label for="numTicketRedirection">
-                        <input type="text" id="numTicketRedirection" placeholder="Numéro du ticket">
+                            <select id="numTicketRedirection">
+                                <?php /** @var Ticket[] $tickets * */ ?>
+                                <?php foreach ($tickets as $ticket): ?>
+                                    <option value="<?php echo $ticket["num_ticket"]; ?>">
+                                        <?php echo $ticket["num_ticket"]; ?>
+                                    </option>
+                                    <input type="hidden" id="idTicketRedirection" value="<?php echo $ticket["idTicket"]; ?>">
+                                <?php endforeach; ?>
+                            </select>
                         </label>
                     </div>
 
-                    <div class="divServiceOuGuichet">
-                        <p> Service ou guichet</p>
-                        <label for="serviceOuGuichet">
-                            <select id="serviceOuGuichet">
-                                <option value="service1">Service 1</option>
-                                <option value="service2">Service 2</option>
-                                <option value="guichet1">Guichet 1</option>
-                                <option value="guichet2">Guichet 2</option>
+                    <div class="divServiceDeroulant">
+                        <p> Services </p>
+                        <label for="serviceDeroulant">
+                            <select id="serviceDeroulant">
+                                <?php /** @var Service[] $services * */ ?>
+                                <?php foreach ($services as $service): ?>
+                                    <option value="<?php echo $service->getIdService(); ?>">
+                                        <?php echo $service->getNomService(); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </label>
                     </div>
                 </div>
                 <button id="btnRediriger" class="btnRediriger"
-                        style="display: flex; align-items: center; gap: 8px; justify-content: center;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-forward h-4 w-4 mr-2"><polyline points="15 17 20 12 15 7"></polyline><path d="M4 18v-2a4 4 0 0 1 4-4h12"></path></svg>
+                        style="display: flex; align-items: center; gap: 8px; justify-content: center;" onclick="redirigerTicket()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="lucide lucide-forward h-4 w-4 mr-2">
+                        <polyline points="15 17 20 12 15 7"></polyline>
+                        <path d="M4 18v-2a4 4 0 0 1 4-4h12"></path>
+                    </svg>
                     Rediriger
                 </button>
             </div>
@@ -137,16 +153,17 @@ use App\file\Modele\DataObject\Ticket;
             <div class="sessionActuel">
                 <h2> Session actuelle</h2>
                 <div class="divSessionActuel">
-                <span> Début session :</span>
-                    <span> 14:10</span>
+                    <span> Début session :</span>
+                    <span><?php echo ConnexionUtilisateur::retourneHeureConnexionAgent() ?></span>
                 </div>
                 <div class="divSessionActuel">
                     <span> Clients servis :</span>
-                    <span> 12</span>
+                    <span>                    <?php echo (new ControleurTicket())->compterClientServi() ?>
+</span>
                 </div>
                 <div class="divSessionActuel">
                     <span> Temps moyen :</span>
-                    <span> 12 mn</span>
+                    <span> <?php echo ConnexionUtilisateur::tempsMoyen() ?></span>
                 </div>
             </div>
 
@@ -156,19 +173,19 @@ use App\file\Modele\DataObject\Ticket;
                 /** @var Ticket[] $tickets */
                 ?>
                 <div class="fileAttenteAgent">
-                <h2> File d'attente</h2>
+                    <h2> File d'attente</h2>
                     <?php if (count($tickets) == 0): ?>
                         <p>Aucun ticket en attente</p>
 
                     <?php else: ?>
-                    <?php foreach ($tickets as $ticket): ?>
-                    <div class="divFilAttente">
-                        <div class="divNumTicket">
-                            <span><?php echo $ticket["num_ticket"]; ?></span>
-                        </div>
-                        <p class="nomServiceAgent"><?php echo $ticket["nomService"]?> </p>
-                    </div>
-                    <?php endforeach; ?>
+                        <?php foreach ($tickets as $ticket): ?>
+                            <div class="divFilAttente">
+                                <div class="divNumTicket">
+                                    <span><?php echo $ticket["num_ticket"]; ?></span>
+                                </div>
+                                <p class="nomServiceAgent"><?php echo $ticket["nomService"] ?> </p>
+                            </div>
+                        <?php endforeach; ?>
 
                     <?php endif; ?>
                 </div>
@@ -179,19 +196,19 @@ use App\file\Modele\DataObject\Ticket;
             ?>
             <div class="historiqueAgent">
                 <h2> Historique des actions</h2>
-                <?php if (count($historique)==0):?>
-                <p>Aucun ticket dans l'historique</p>
+                <?php if (count($historique) == 0): ?>
+                    <p>Aucun ticket dans l'historique</p>
                 <?php else: ?>
                     <?php foreach ($historique as $ticket): ?>
-                <div class="divHistorique">
-                    <div class="divNumTicket">
-                        <span><?php echo $ticket["num_ticket"]; ?></span>
-                    </div>
-                    <p class="nomServiceAgent"><?php echo $ticket["nomService"]?> </p>
-                </div>
-            <?php endforeach;?>
+                        <div class="divHistorique">
+                            <div class="divNumTicket">
+                                <span><?php echo $ticket["num_ticket"]; ?></span>
+                            </div>
+                            <p class="nomServiceAgent"><?php echo $ticket["nomService"] ?> </p>
+                        </div>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </div>
 
-    </div>
+        </div>
 </section>

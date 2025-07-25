@@ -9,12 +9,11 @@
         <div class="tickets">
             <div class="ticket-info">
                 <p>Tickets aujourd'hui</p>
-                <p class="nombreTicket"><?php
-
+                <p class="nombreTicket">
+                    <?php
+                    use App\file\Lib\ConnexionUtilisateur;
                     use App\file\Modele\Repository\ServiceRepository;
                     use App\file\Modele\Repository\TicketRepository;
-
-                    $date = new DateTime('now');
                     echo (new TicketRepository())->compteTicket(); ?>
                 </p>
             </div>
@@ -114,51 +113,51 @@
                 Accéder au module</button>
         </div>
 
-        <div class="interfaceAgent">
-            <div class="interfaceAgent-descriptionParent">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
-                     stroke="orange" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                     class="lucide lucide-user w-4 h-4">
-                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-                <div class="interfaceAgent-description">
-                    <p class="titre">Interface agent</p>
-                    <p>Poste de travail pour les agents</p>
+        <?php if (ConnexionUtilisateur::estConnecte()): ?>
+            <div class="interfaceAgent">
+                <div class="interfaceAgent-descriptionParent">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                         stroke="orange" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="lucide lucide-user w-4 h-4">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <div class="interfaceAgent-description">
+                        <p class="titre">Interface agent</p>
+                        <p>Poste de travail pour les agents</p>
+                    </div>
                 </div>
-            </div>
-            <div class="interfaceAgent-bulletPoint">
-                <ul>
-                    <li>Appels tickets</li>
-                    <li>Gestion file</li>
-                    <li>Historique</li>
-                </ul>
-            </div>
-            <button id="interfaceAgent-btn"> Accéder au module</button>
-        </div>
-
-
-        <div class="administration">
-            <div class="administration-descriptionParent">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
-                     stroke="purple" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                     class="lucide lucide-settings w-4 h-4">
-                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-                <div class="administration-description">
-                    <p class="titre">Administration </p>
-                    <p>Poste de travail pour les agents</p>
+                <div class="interfaceAgent-bulletPoint">
+                    <ul>
+                        <li>Appels tickets</li>
+                        <li>Gestion file</li>
+                        <li>Historique</li>
+                    </ul>
                 </div>
+                <button id="interfaceAgent-btn" onclick="window.location.href='/fileAttente/web/controleurFrontal.php?action=afficherAgent&controleur=agent&idAgent=<?php echo ConnexionUtilisateur::getLoginUtilisateurConnecte(); ?>'"> Accéder au module</button>            </div>
+
+            <div class="administration">
+                <div class="administration-descriptionParent">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                         stroke="purple" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="lucide lucide-settings w-4 h-4">
+                        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <div class="administration-description">
+                        <p class="titre">Administration </p>
+                        <p>Poste de travail pour les agents</p>
+                    </div>
+                </div>
+                <div class="administration-bulletPoint">
+                    <ul>
+                        <li>Configuration</li>
+                        <li>Statistiques</li>
+                        <li>Utilisateurs</li>
+                    </ul>
+                </div>
+                <button id="administration-btn" onclick="window.location.href='/fileAttente/web/controleurFrontal.php?action=afficherAdministration&controleur=administration'"> Accéder au module</button>
             </div>
-            <div class="administration-bulletPoint">
-                <ul>
-                    <li>Configuration</li>
-                    <li>Statistiques</li>
-                    <li>Utilisateurs</li>
-                </ul>
-            </div>
-            <button id="administration-btn"> Accéder au module</button>
-        </div>
+        <?php endif; ?>
     </div>
 </section>

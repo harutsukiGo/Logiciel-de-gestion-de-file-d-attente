@@ -66,4 +66,17 @@ class ClientAttentesRepository extends AbstractRepository
             throw new \Exception("Error while adding ClientAttentes: " . $e->getMessage());
         }
     }
+
+
+    public function mettreAJourService($idTicket, $idService): void
+    {
+        try {
+            $pdo = ConnexionBaseDeDonnees::getPdo();
+            $sql = "UPDATE " . $this->getNomTable() . " SET idService = :idService WHERE idTicket = :idTicket";
+            $resultat = $pdo->prepare($sql);
+            $resultat->execute(['idService' => $idService, 'idTicket' => $idTicket]);
+        } catch (\PDOException $e) {
+            throw new \Exception("Error while updating service: " . $e->getMessage());
+        }
+    }
 }

@@ -12,8 +12,6 @@ class TicketRepository extends AbstractRepository
 {
     protected function construireDepuisTableauSQL(array $objetFormatTableau): Ticket
     {
-
-
         return new Ticket(
             $objetFormatTableau['idTicket'],
             $objetFormatTableau['num_ticket'],
@@ -158,7 +156,7 @@ class TicketRepository extends AbstractRepository
     {
         $sql = "SELECT COUNT(*) FROM " . $this->getNomTable() . " WHERE statutTicket = 'en attente'";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
-        return (int) $pdoStatement->fetchColumn();
+        return (int)$pdoStatement->fetchColumn();
     }
 
     public function mettreAJourDateArrivee(int $idTicket, DateTime $date): bool
@@ -205,4 +203,21 @@ class TicketRepository extends AbstractRepository
         return $resultat ? $resultat . " min" : "0 min";
     }
 
+    public function compterNombreClient($idAgent): int
+    {
+        $sql = "SELECT COUNT(*) FROM " . $this->getNomTable() . " WHERE idAgent =:idAgentTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $pdoStatement->execute(['idAgentTag' => $idAgent]);
+        return $pdoStatement->fetch()[0];
+    }
+
+    public function nbTicketParService($idService): int
+    {
+        $sql = "SELECT COUNT(*) FROM " . $this->getNomTable() . " t
+            JOIN client_attentes c ON c.idTicket = t.idTicket
+            WHERE c.idService = :idServiceTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $pdoStatement->execute(['idServiceTag' => $idService]);
+        return (int)$pdoStatement->fetchColumn();
+    }
 }

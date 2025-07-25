@@ -2,6 +2,7 @@
 
 namespace App\file\Controleur;
 
+use App\file\Lib\ConnexionUtilisateur;
 use App\file\Modele\DataObject\ClientAttentes;
 use App\file\Modele\DataObject\Historique;
 use App\file\Modele\DataObject\Ticket;
@@ -16,17 +17,17 @@ use DateTimeZone;
 
 class ControleurTicket extends ControleurGenerique
 {
-    public function genererTicket()
+    public static function genererTicket()
     {
         if (!isset($_REQUEST['idService'])) {
             return;
         }
         $date = new DateTime('now', new DateTimeZone('Europe/Paris'));
-        $agent = (new AgentRepository())->recupererParClePrimaire($this->recupereAgentRandom());
+        $agent = (new AgentRepository())->recupererParClePrimaire((new ControleurTicket)->recupereAgentRandom());
 
         $ticket = new Ticket(
             null,
-            $this->premiereLettre((new ServiceRepository())->getNomService($_REQUEST['idService'])),
+            (new ControleurTicket())->premiereLettre((new ServiceRepository())->getNomService($_REQUEST['idService'])),
             $date,
             "en attente",
             null,
@@ -73,7 +74,7 @@ class ControleurTicket extends ControleurGenerique
     }
 
 
-    public function affichageSalleAttente()
+    public static function affichageSalleAttente()
     {
         $publicites = (new PubliciteRepository())->recupererPublicitesActives();
         $service = (new ServiceRepository())->recuperer();
@@ -87,39 +88,39 @@ class ControleurTicket extends ControleurGenerique
     }
 
 
-    public function nbTicketsEnAttente()
+    public static function nbTicketsEnAttente()
     {
         echo json_encode((new TicketRepository())->recupererNbTicketsEnAttente());
     }
 
-    public function mettreAJourStatutTicket(): void
+    public static function mettreAJourStatutTicket(): void
     {
         (new TicketRepository())->mettreAJourStatut($_REQUEST['idTicket'], $_REQUEST['statutTicket']);
     }
 
-    public function mettreAJourDateArriveeTicket()
+    public static function mettreAJourDateArriveeTicket()
     {
         (new TicketRepository())->mettreAJourDateArrivee($_REQUEST['idTicket'], new DateTime('now', new DateTimeZone('Europe/Paris')));
     }
 
-    public function mettreAJourDateTermineeTicket()
+    public static function mettreAJourDateTermineeTicket()
     {
         (new TicketRepository())->mettreAJourDateTerminee($_REQUEST['idTicket'], new DateTime('now', new DateTimeZone('Europe/Paris')));
     }
 
-    public function mettreAJourTicketCourant(): void
+    public static function mettreAJourTicketCourant(): void
     {
         $premierTicket = (new TicketRepository())->retournePlusPetitTicket();
         header('Content-Type: application/json');
         echo json_encode($premierTicket);
     }
 
-    public function premiereLettre(string $chaine): string
+    public static function premiereLettre(string $chaine): string
     {
         return strtoupper($chaine[0]) . str_pad(random_int(0, 999), 3, '0', STR_PAD_LEFT);
     }
 
-    public function recupereAgentRandom()
+    public static function recupereAgentRandom()
     {
         $agents = (new AgentRepository())->recuperer();
 
@@ -131,5 +132,9 @@ class ControleurTicket extends ControleurGenerique
         return $agents[$randomIndex]->getIdAgent();
     }
 
+    public static function compterClientServi(): int
+    {
+        return (new TicketRepository())->compterNombreClient(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+    }
 
 }

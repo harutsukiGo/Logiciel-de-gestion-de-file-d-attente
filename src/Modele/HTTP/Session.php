@@ -1,7 +1,7 @@
 <?php
 namespace App\file\Modele\HTTP;
-
 use App\file\Configuration\ConfigurationSite;
+use Cassandra\Date;
 use Exception;
 
 class Session
@@ -14,22 +14,22 @@ class Session
     private function __construct()
     {
         if (session_start() === false) {
-            throw new Exception("La session n'a pas réussi à démarrer.");
-        }
-    }
+                throw new Exception("La session n'a pas réussi à démarrer.");
+            }
+      }
 
     public static function getInstance(): Session
     {
-        if (is_null(Session::$instance)) {
-            Session::$instance = new Session();
-            Session::$instance->verifierDerniereActivite();
-        }
+        Session::verifierDerniereActivite();
+        if (is_null(Session::$instance))
+        Session::$instance = new Session();
         return Session::$instance;
+
     }
 
     public function contient($nom): bool
     {
-        return array_key_exists($nom, $_SESSION);
+        return isset($_SESSION[$nom]);
     }
 
     public function enregistrer(string $nom, mixed $valeur): void
@@ -48,7 +48,7 @@ class Session
     public function supprimer($nom): void
     {
         unset($_SESSION[$nom]);
-        $this->detruire();
+//        $this->detruire();
     }
 
     public static function verifierDerniereActivite()
@@ -68,4 +68,25 @@ class Session
 // Il faudra reconstruire la session au prochain appel de getInstance()
         Session::$instance = null;
     }
+
+    public function heureDeConnexion(): string
+    {
+        date_default_timezone_set('Europe/Paris');
+        if (!isset($_SESSION['heureDeConnexion'])) {
+            $_SESSION['heureDeConnexion'] = time();
+        }
+        return date('H:i:s', $_SESSION['heureDeConnexion']);
+    }
+
+    public function tempsMoyen():string
+    {
+        date_default_timezone_set('Europe/Paris');
+        if (!isset($_SESSION['heureDeConnexion'])) {
+            return "0 min";
+        }
+        $duree = time() - $_SESSION['heureDeConnexion'];
+        $minutes = floor($duree / 60);
+        return "$minutes min";
+    }
 }
+

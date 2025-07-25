@@ -1,5 +1,4 @@
 <?php
-
 namespace App\file\Modele\Repository;
 use App\file\Modele\DataObject\AbstractDataObject;
 use App\file\Modele\DataObject\Agents;
@@ -97,7 +96,7 @@ class AgentRepository extends AbstractRepository
 
     public function afficherFileAttente($idAgent): array
     {
-            $sql = "SELECT num_ticket, s.nomService 
+            $sql = "SELECT t.idTicket, num_ticket, s.nomService 
             FROM tickets t
             JOIN client_attentes c ON t.idTicket = c.idTicket
             JOIN services s ON c.idService = s.idService

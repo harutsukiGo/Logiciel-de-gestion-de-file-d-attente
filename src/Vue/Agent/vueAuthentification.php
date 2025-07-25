@@ -13,7 +13,7 @@
 
         <div class="divMotDePasse">
             <label for="motDePasse">
-                <input type="text" id="motDePasse" placeholder="Mot de passe" name="motDePasse" required>
+                <input type="password" id="motDePasse" placeholder="Mot de passe" name="motDePasse" required>
             </label>
         </div>
         <input type="submit" value="Connecter" id="btnConnexion"/>

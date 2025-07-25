@@ -7,4 +7,6 @@ class ControleurAccueil extends ControleurGenerique
     {
         ControleurAccueil::afficherVue('vueGenerale.php', ["titre" => "Accueil", "cheminCorpsVue" => "vueAccueil.php"]);
     }
+
+
 }

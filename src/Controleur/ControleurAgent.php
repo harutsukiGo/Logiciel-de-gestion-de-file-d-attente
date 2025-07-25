@@ -3,40 +3,41 @@
 namespace App\file\Controleur;
 
 use App\file\Lib\ConnexionUtilisateur;
-use App\file\Modele\HTTP\Cookie;
 use App\file\Modele\Repository\AgentRepository;
 use App\file\Modele\Repository\HistoriqueRepository;
+use App\file\Modele\Repository\ServiceRepository;
 
 class ControleurAgent extends ControleurGenerique
 {
-    public function afficherAgent()
+    public static function afficherAgent()
     {
+        $services = (new ServiceRepository())->recuperer();
         $historique = (new HistoriqueRepository())->recupererHistoriqueParAgent($_REQUEST["idAgent"]);
         $tickets = (new AgentRepository())->afficherFileAttente($_REQUEST["idAgent"]);
         ControleurGenerique::afficherVue('vueGenerale.php', [
             "titre" => "Interface Agent",
-            "cheminCorpsVue" => "Agent/vueInterfaceAgent.php", "agent" => (new AgentRepository())->recupererParClePrimaire($_REQUEST["idAgent"]), "tickets" => $tickets, "historique" => $historique
+            "cheminCorpsVue" => "Agent/vueInterfaceAgent.php", "agent" => (new AgentRepository())->recupererParClePrimaire(ConnexionUtilisateur::getLoginUtilisateurConnecte()), "tickets" => $tickets, "historique" => $historique,"services" => $services
         ]);
     }
 
-    public function mettreAJourStatutAgent()
+    public static function mettreAJourStatutAgent()
     {
-        (new AgentRepository())->mettreAJourStatut($_REQUEST["idAgent"], $_REQUEST["statut"]);
+        (new AgentRepository())->mettreAJourStatut(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $_REQUEST["statut"]);
     }
 
-    public function recupereTicketAgent()
+    public static function recupereTicketAgent()
     {
         $ticketAgent = (new AgentRepository())->retournePlusPetitTicketAgent();
         header('Content-Type: application/json');
         echo json_encode($ticketAgent);
     }
 
-    public function recupererFileAttente()
+    public static function recupererFileAttente()
     {
-        (new AgentRepository())->afficherFileAttente($_REQUEST["idAgent"]);
+        (new AgentRepository())->afficherFileAttente(ConnexionUtilisateur::getLoginUtilisateurConnecte());
     }
 
-    public function afficherAuthentification()
+    public static function afficherAuthentification()
     {
         ControleurGenerique::afficherVue('vueGenerale.php', [
             "titre" => "Authentification Agent",
@@ -46,37 +47,28 @@ class ControleurAgent extends ControleurGenerique
 
 
 
-    public function connecter()
+    public static function connecter()
     {
-
         if (!isset($_REQUEST['login']) && !isset($_REQUEST['motDePasse'])) {
             ControleurAgent::redirectionVersURL("?action=afficherAuthentification&controleur=agent");
             return;
         }
-//
         $agent = (new AgentRepository())->recupererParLogin($_REQUEST['login']);
-             if (is_null($agent)) {
+        if (is_null($agent)) {
             ControleurAgent::redirectionVersURL("?action=afficherAuthentification&controleur=agent");
             return;
         }
-//
-//        if (!VerificationEmail::aValideEmail($utilisateur)) {
-//            MessageFlash::ajouter("warning", "vous n'avez pas valider votre email");
-//            ControleurUtilisateur::redirectionVersURL("?action=afficherListe&controleur=utilisateur");
-//            return;
-//        }
-//
-        if (!$_REQUEST['motDePasse'] == $agent->getMotDePasse()) {
-             ControleurAgent::redirectionVersURL("?action=afficherAuthentification&controleur=agent");
+        if ($_REQUEST['motDePasse'] !== $agent->getMotDePasse()) {
+            ControleurAgent::redirectionVersURL("?action=afficherAuthentification&controleur=agent");
         }
-         ConnexionUtilisateur::connecter($agent->getIdAgent());
-         ControleurAgent::redirectionVersURL("?action=afficherDetail&controleur=agent&idAgent=" . $agent->getIdAgent());
+        ConnexionUtilisateur::connecter($agent->getIdAgent());
+        ControleurAgent::redirectionVersURL("?action=afficherDetail&controleur=agent&idAgent=" . $agent->getIdAgent());
     }
 
 
-    public function afficherDetail()
+    public static function afficherDetail()
     {
-         ControleurGenerique::afficherVue('vueGenerale.php', [
+        ControleurGenerique::afficherVue('vueGenerale.php', [
             "titre" => "Détail Agent",
             "cheminCorpsVue" => "Agent/vueDetail.php",
             "agent" =>  (new AgentRepository())->recupererParClePrimaire($_REQUEST['idAgent'])]);
@@ -85,14 +77,9 @@ class ControleurAgent extends ControleurGenerique
     public static function deconnecter()
     {
         ConnexionUtilisateur::deconnecter();
-//        MessageFlash::ajouter("info", "utilisateur deconnecter");
         ControleurAgent::redirectionVersURL("?action=afficherAccueil&controleur=accueil");
     }
 
 
-    public function test()
-    {
-
-    }
 }
 

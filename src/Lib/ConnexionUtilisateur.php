@@ -11,7 +11,7 @@ class ConnexionUtilisateur
 
     public static function connecter(string $loginUtilisateur): void
     {
-        Session::getInstance()->enregistrer(ConnexionUtilisateur::$cleConnexion, $loginUtilisateur);
+         Session::getInstance()->enregistrer(ConnexionUtilisateur::$cleConnexion, $loginUtilisateur);
     }
 
     public static function estConnecte(): bool
@@ -41,7 +41,15 @@ class ConnexionUtilisateur
         return false;
     }
 
+public static function retourneHeureConnexionAgent()
+{
+    return Session::getInstance()->heureDeConnexion();
+}
 
+public static function tempsMoyen()
+{
+    return Session::getInstance()->tempsMoyen();
+}
 //    public static function estAdministrateur() : bool
 //    {
 //        $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
