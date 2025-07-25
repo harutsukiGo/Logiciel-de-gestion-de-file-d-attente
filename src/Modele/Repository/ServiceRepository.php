@@ -53,10 +53,9 @@ class ServiceRepository extends AbstractRepository
             WHERE c.idService = :idService";
 
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
-        $pdoStatement->bindValue(':idService', $idService);
-        $pdoStatement->execute();
+        $pdoStatement->execute([':idService' => $idService]);
 
-        return $pdoStatement->fetchColumn();
+        return $pdoStatement->fetchColumn() ?: 0;
     }
 
     public function getNomService(int $idService): ?string
