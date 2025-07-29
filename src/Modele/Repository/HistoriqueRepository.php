@@ -18,8 +18,8 @@ class HistoriqueRepository extends AbstractRepository
             $objetFormatTableau['statut'],
             new \DateTime($objetFormatTableau['date_heure']),
             $objetFormatTableau['action'],
-            $ticketRepository->recupererParClePrimaire($objetFormatTableau['idTicket']), // Get Ticket object
-            $agentRepository->recupererParClePrimaire($objetFormatTableau['idAgent'])    // Get Agent object
+            $ticketRepository->recupererParClePrimaire($objetFormatTableau['idTicket']),
+            $agentRepository->recupererParClePrimaire($objetFormatTableau['idAgent'])
         );
     }
 
@@ -36,7 +36,7 @@ class HistoriqueRepository extends AbstractRepository
 
     protected function getNomsColonnes(): array
     {
-        return ["idHistorique", "statut", "date_heure", "action", "idTicket", "idAgent"];
+        return ["statut", "date_heure", "action", "idTicket", "idAgent"];
     }
 
     protected function formatTableauSQL(AbstractDataObject $idHistorique): array
@@ -44,34 +44,23 @@ class HistoriqueRepository extends AbstractRepository
 
         /** @var Historique $idHistorique */
         return [
-            "idHistorique" => $idHistorique->getIdHistorique(),
-            "statut" => $idHistorique->getStatut(),
-            "date_heure" => $idHistorique->getDateHeure()->format('Y-m-d H:i:s'),
-            "action" => $idHistorique->getAction(),
-            "idTicket" => $idHistorique->getIdTicket()->getIdTicket(),
-            "idAgent" => $idHistorique->getIdAgent()->getIdAgent()
+            "statutTag" => $idHistorique->getStatut(),
+            "date_heureTag" => $idHistorique->getDateHeure()->format('Y-m-d H:i:s'),
+            "actionTag" => $idHistorique->getAction(),
+            "idTicketTag" => $idHistorique->getIdTicket()->getIdTicket(),
+            "idAgentTag" => $idHistorique->getIdAgent()->getIdAgent()
         ];
     }
 
     public function ajouterHistorique(AbstractDataObject $objet): ?AbstractDataObject
     {
         try {
-            $colonnes = array_filter($this->getNomsColonnes(), function ($colonne) {
-                return $colonne !== 'idHistorique';
-            });
-            $sql = "INSERT INTO " . $this->getNomTable() . " (" . join(",", $colonnes) . ") VALUES (:" . join(", :", $colonnes) . ")";
+            $sql = "INSERT INTO " . $this->getNomTable() . " (" . join(",", $this->getNomsColonnes()) . ") VALUES (:" . join("Tag, :", $this->getNomsColonnes()) . "Tag)";
+            $creerObject = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+            $creerObject->execute($this->formatTableauSQL($objet));
             $pdo = ConnexionBaseDeDonnees::getPdo();
-            $creerObject = $pdo->prepare($sql);
-
-            $values = $this->formatTableauSQL($objet);
-            unset($values['idHistorique']);
-
-            $creerObject->execute($values);
-
             $dernierID = $pdo->lastInsertId();
-
             return $this->recupererParClePrimaire($dernierID);
-
         } catch (PDOException $e) {
             return null;
         }
@@ -93,5 +82,6 @@ class HistoriqueRepository extends AbstractRepository
         $pdoStatement->execute($values);
         return $pdoStatement->fetchAll();
     }
+
 
 }

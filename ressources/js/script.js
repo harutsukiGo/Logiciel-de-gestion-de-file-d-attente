@@ -179,8 +179,9 @@ function reinitialiserInterface() {
 }
 
 async function redirigerTicket() {
-    const idTicket = document.getElementById("idTicketRedirection");
+    const idTicket = document.getElementById("numTicketRedirection");
     const service = document.getElementById("serviceDeroulant");
+
     try {
         await fetch("/fileAttente/web/controleurFrontal.php?action=mettreAJourServiceClient&controleur=clientAttentes&idTicket=" + idTicket.value + "&idService=" + service.value, {
             method: "GET"
@@ -191,7 +192,127 @@ async function redirigerTicket() {
 
 }
 
+function modalService(nomServicePlaceholder, dateOuverturePlaceholder, dateFermeturePlaceholder, checkboxPlaceholder, callback) {
+    const modal = document.createElement("div");
+    modal.className = "modal";
 
+    const titre = document.createElement("h2");
+    titre.textContent = "Nom du service";
+
+    const nomService = document.createElement("input");
+    nomService.type = "text";
+    nomService.value = nomServicePlaceholder;
+    nomService.className = "inputNomService";
+
+    const dateOuverture = document.createElement("input");
+    dateOuverture.type = "time";
+    dateOuverture.className = "inputTimeOuverture";
+    dateOuverture.value = dateOuverturePlaceholder;
+
+    const dateFermeture = document.createElement("input");
+    dateFermeture.type = "time";
+    dateFermeture.className = "inputTimeFermeture";
+    dateFermeture.value = dateFermeturePlaceholder;
+
+    const divParametres = document.createElement("div");
+    divParametres.className = "divParametres";
+    divParametres.append(nomService, dateOuverture, dateFermeture);
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = "checkboxService";
+    checkbox.checked = checkboxPlaceholder;
+
+
+    const texte = document.createElement("p");
+    texte.textContent = "Service actif";
+
+    const divCheckbox = document.createElement("div");
+    divCheckbox.className = "divCheckbox";
+    divCheckbox.append(checkbox, texte);
+
+    const buttonSave = document.createElement("button");
+    buttonSave.id = "buttonSave";
+    buttonSave.textContent = "Enregistrer";
+
+    const buttonClose = document.createElement("button");
+    buttonClose.id = "buttonClose";
+    buttonClose.className = "close";
+    buttonClose.textContent = "Annuler";
+    buttonClose.onclick = () => {
+        modal.remove();
+        overlay.remove();
+    };
+    buttonSave.onclick = async () => {
+        await callback();
+        modal.remove();
+        overlay.remove();
+    }
+
+
+    const divButton = document.createElement("div");
+    divButton.className = "divButton";
+    divButton.append(buttonSave, buttonClose);
+
+    modal.append(titre, divParametres, divCheckbox, divButton);
+
+    const overlay = document.createElement("div");
+    overlay.className = "overlay";
+    document.body.append(overlay, modal);
+}
+
+async function actualiserListeServices() {
+    await fetch("/fileAttente/web/controleurFrontal.php?action=afficherServiceAdministration&controleur=service", {
+        method: "GET"
+    });
+}
+
+
+async function mettreAJourService(idService) {
+    const formData = new FormData();
+
+    const inputNomService = document.querySelector(".inputNomService");
+    const inputTimeOuverture = document.querySelector(".inputTimeOuverture");
+    const inputTimeFermeture = document.querySelector(".inputTimeFermeture");
+    const checkboxService = document.getElementById("checkboxService");
+
+    formData.append("idService", idService);
+    formData.append("nomService", inputNomService.value);
+    formData.append("horaireDebut", inputTimeOuverture.value);
+    formData.append("horaireFin", inputTimeFermeture.value);
+    formData.append("statutService", checkboxService.checked ? "1" : "0");
+
+    try {
+        await fetch("/fileAttente/web/controleurFrontal.php?action=mettreAJourServiceAdministration&controleur=service", {
+            method: "POST",
+            body: formData,
+        });
+    } catch (e) {
+        console.error("Erreur lors de l'ajout du service");
+    }
+}
+
+async function ajouterService() {
+    const formData = new FormData();
+    const inputNomService = document.querySelector(".inputNomService");
+    const inputTimeOuverture = document.querySelector(".inputTimeOuverture");
+    const inputTimeFermeture = document.querySelector(".inputTimeFermeture");
+    const checkboxService = document.getElementById("checkboxService");
+
+    formData.append("nomService", inputNomService.value);
+    formData.append("horaireDebut", inputTimeOuverture.value);
+    formData.append("horaireFin", inputTimeFermeture.value);
+    formData.append("statutService", checkboxService.checked ? "1" : "0");
+
+    try {
+        await fetch("/fileAttente/web/controleurFrontal.php?action=creerServiceAdministration&controleur=service", {
+            method: "POST",
+            body: formData,
+        });
+    } catch (e) {
+        console.error("Erreur lors de la mise à jour du service");
+    }
+}
 
 let htmlInitial;
 document.addEventListener("DOMContentLoaded", () => {

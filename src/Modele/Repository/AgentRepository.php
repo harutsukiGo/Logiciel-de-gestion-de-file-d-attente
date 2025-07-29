@@ -41,14 +41,14 @@ class AgentRepository extends AbstractRepository
     {
         /** @var Agents $idAgent */
         return [
-            "idAgent" => $idAgent->getIdAgent(),
-            "nomAgent" => $idAgent->getNomAgent(),
-            "mailAgent" => $idAgent->getMailAgent(),
-            "statut" => $idAgent->getStatut() ? 1 : 0,
-            "login" => $idAgent->getLogin(),
-            "motDePasse" => $idAgent->getMotDePasse(),
-            "role" => $idAgent->getRole(),
-            "idGuichet" => $idAgent->getIdGuichet()
+            "idAgentTag" => $idAgent->getIdAgent(),
+            "nomAgentTag" => $idAgent->getNomAgent(),
+            "mailAgentTag" => $idAgent->getMailAgent(),
+            "statutTag" => $idAgent->getStatut() ? 1 : 0,
+            "loginTag" => $idAgent->getLogin(),
+            "motDePasseTag" => $idAgent->getMotDePasse(),
+            "roleTag" => $idAgent->getRole(),
+            "idGuichetTag" => $idAgent->getIdGuichet()
         ];
     }
     public function retournePlusPetitTicketAgent(): array
@@ -129,4 +129,6 @@ class AgentRepository extends AbstractRepository
             return $this->construireDepuisTableauSQL($objectFormatTableau);
         }
     }
+
+
 }

@@ -28,14 +28,13 @@ class TicketRepository extends AbstractRepository
     {
         /** @var Ticket $objet */
         return [
-            "idTicket" => $objet->getIdTicket(),
-            "num_ticket" => $objet->getNumTicket(),
-            "date_heure" => $objet->getDateHeure()->format('Y-m-d H:i:s'),
-            "statutTicket" => $objet->getStatutTicket(),
-            "idHistorique" => $objet->getIdHistorique()?->getIdHistorique(),
-            "idAgent" => $objet->getIdAgent()?->getIdAgent(),
-            "date_arrivee" => $objet->getDateArrivee()?->format('Y-m-d H:i:s'),
-            "date_terminee" => $objet->getDateTerminee()?->format('Y-m-d H:i:s')
+            "num_ticketTag" => $objet->getNumTicket(),
+            "date_heureTag" => $objet->getDateHeure()->format('Y-m-d H:i:s'),
+            "statutTicketTag" => $objet->getStatutTicket(),
+            "idHistoriqueTag" => $objet->getIdHistorique()?->getIdHistorique(),
+            "idAgentTag" => $objet->getIdAgent()?->getIdAgent(),
+            "date_arriveeTag" => $objet->getDateArrivee()?->format('Y-m-d H:i:s'),
+            "date_termineeTag" => $objet->getDateTerminee()?->format('Y-m-d H:i:s')
         ];
     }
 
@@ -52,30 +51,18 @@ class TicketRepository extends AbstractRepository
 
     protected function getNomsColonnes(): array
     {
-        return ["idTicket", "num_ticket", "date_heure", "statutTicket", "idHistorique", "idAgent", "date_arrivee", "date_terminee"];
+        return ["num_ticket", "date_heure", "statutTicket", "idHistorique", "idAgent", "date_arrivee", "date_terminee"];
     }
 
 
     public function ajouterTicket(AbstractDataObject $objet): ?AbstractDataObject
     {
         try {
-            $colonnes = array_filter($this->getNomsColonnes(), function ($colonne) {
-                return $colonne !== 'idTicket';
-            });
-
-            $sql = "INSERT INTO " . $this->getNomTable() . " (" . implode(",", $colonnes) . ")
-                VALUES (:" . implode(", :", $colonnes) . ")";
-
+            $sql = "INSERT INTO " . $this->getNomTable() . " (" . join(",", $this->getNomsColonnes()) . ") VALUES (:" . join("Tag, :", $this->getNomsColonnes()) . "Tag)";
+            $creerObject = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+            $creerObject->execute($this->formatTableauSQL($objet));
             $pdo = ConnexionBaseDeDonnees::getPdo();
-            $creerObject = $pdo->prepare($sql);
-
-            $values = $this->formatTableauSQL($objet);
-            unset($values['idTicket']);
-
-            $creerObject->execute($values);
-
             $dernierID = $pdo->lastInsertId();
-
             return $this->recupererParClePrimaire($dernierID);
         } catch (PDOException $e) {
             return null;
@@ -96,7 +83,7 @@ class TicketRepository extends AbstractRepository
 
     public function compteTicket()
     {
-        $sql = "SELECT COUNT(*)  FROM " . $this->getNomTable();
+        $sql = "SELECT COUNT(*)  FROM " . $this->getNomTable() ." WHERE date(date_heure)=date(now());";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
         return $pdoStatement->fetch()[0];
     }
@@ -205,7 +192,7 @@ class TicketRepository extends AbstractRepository
 
     public function compterNombreClient($idAgent): int
     {
-        $sql = "SELECT COUNT(*) FROM " . $this->getNomTable() . " WHERE idAgent =:idAgentTag";
+        $sql = "SELECT COUNT(*) FROM " . $this->getNomTable() . " WHERE idAgent =:idAgentTag AND date(date_heure)=date(now())";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $pdoStatement->execute(['idAgentTag' => $idAgent]);
         return $pdoStatement->fetch()[0];
@@ -220,4 +207,6 @@ class TicketRepository extends AbstractRepository
         $pdoStatement->execute(['idServiceTag' => $idService]);
         return (int)$pdoStatement->fetchColumn();
     }
+
+
 }

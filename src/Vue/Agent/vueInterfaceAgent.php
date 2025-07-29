@@ -112,10 +112,9 @@ use App\file\Modele\DataObject\Ticket;
                             <select id="numTicketRedirection">
                                 <?php /** @var Ticket[] $tickets * */ ?>
                                 <?php foreach ($tickets as $ticket): ?>
-                                    <option value="<?php echo $ticket["num_ticket"]; ?>">
+                                    <option id="inputIdTicket" value="<?php echo $ticket["idTicket"]; ?>">
                                         <?php echo $ticket["num_ticket"]; ?>
                                     </option>
-                                    <input type="hidden" id="idTicketRedirection" value="<?php echo $ticket["idTicket"]; ?>">
                                 <?php endforeach; ?>
                             </select>
                         </label>
@@ -127,7 +126,7 @@ use App\file\Modele\DataObject\Ticket;
                             <select id="serviceDeroulant">
                                 <?php /** @var Service[] $services * */ ?>
                                 <?php foreach ($services as $service): ?>
-                                    <option value="<?php echo $service->getIdService(); ?>">
+                                    <option id="inputIdService" value="<?php echo $service->getIdService(); ?>">
                                         <?php echo $service->getNomService(); ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -136,7 +135,8 @@ use App\file\Modele\DataObject\Ticket;
                     </div>
                 </div>
                 <button id="btnRediriger" class="btnRediriger"
-                        style="display: flex; align-items: center; gap: 8px; justify-content: center;" onclick="redirigerTicket()">
+                        style="display: flex; align-items: center; gap: 8px; justify-content: center;"
+                        onclick="redirigerTicket()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                          class="lucide lucide-forward h-4 w-4 mr-2">
@@ -195,7 +195,7 @@ use App\file\Modele\DataObject\Ticket;
             /** @var Historique[] $historique */
             ?>
             <div class="historiqueAgent">
-                <h2> Historique des actions</h2>
+                <h2> Historique des tickets</h2>
                 <?php if (count($historique) == 0): ?>
                     <p>Aucun ticket dans l'historique</p>
                 <?php else: ?>

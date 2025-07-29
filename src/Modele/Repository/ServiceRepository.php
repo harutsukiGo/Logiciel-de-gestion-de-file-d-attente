@@ -10,11 +10,11 @@ class ServiceRepository extends AbstractRepository
     protected function construireDepuisTableauSQL(array $objetFormatTableau): Service
     {
         return new Service(
-            $objetFormatTableau['idService'],
+            $objetFormatTableau['idService'] ?? null,
             $objetFormatTableau['nomService'],
             new \DateTime($objetFormatTableau['horaireDebut']),
             new \DateTime($objetFormatTableau['horaireFin']),
-            (bool)$objetFormatTableau['statutService']
+            $objetFormatTableau['statutService']
         );
     }
 
@@ -30,22 +30,22 @@ class ServiceRepository extends AbstractRepository
 
     protected function getNomsColonnes(): array
     {
-        return ["idService", "nomService", "horaireDebut", "horaireFin", "statutService"];
+        return ['idService','nomService', 'horaireDebut', 'horaireFin', 'statutService'];
     }
 
     protected function formatTableauSQL(AbstractDataObject $service): array
     {
         /** @var Service $service */
         return [
-            "idService" => $service->getIdService(),
-            "nomService" => $service->getNomService(),
-            "horaireDebut" => $service->getHoraireDebut()->format('Y-m-d H:i:s'),
-            "horaireFin" => $service->getHoraireFin()->format('Y-m-d H:i:s'),
-            "statutService" => (int)$service->getStatutService()
+            'idServiceTag' => $service->getIdService(),
+            'nomServiceTag' => $service->getNomService(),
+            'horaireDebutTag' => $service->getHoraireDebut()->format('H:i:s'),
+            'horaireFinTag' => $service->getHoraireFin()->format('H:i:s'),
+            'statutServiceTag' => $service->getStatutService() ? 1 : 0
         ];
     }
 
-    public function getNbPersonneAttente(String $idService): int
+    public function getNbPersonneAttente(string $idService): int
     {
         $sql = "SELECT COUNT(*)
             FROM client_attentes c
@@ -75,4 +75,29 @@ class ServiceRepository extends AbstractRepository
         return $pdoStatement->fetch()[0];
     }
 
+    public function ajouterService(AbstractDataObject $objet): ?AbstractDataObject
+    {
+        try {
+            $colonnes = array_filter($this->getNomsColonnes(), function ($colonne) {
+                return $colonne !== 'idService';
+            });
+
+            $sql = "INSERT INTO " . $this->getNomTable() . " (" . implode(",", $colonnes) . ")
+                VALUES (:" . implode(", :", $colonnes) . ")";
+
+            $pdo = ConnexionBaseDeDonnees::getPdo();
+            $creerObject = $pdo->prepare($sql);
+
+            $values = $this->formatTableauSQL($objet);
+            unset($values['idService']);
+
+            $creerObject->execute($values);
+
+            $dernierID = $pdo->lastInsertId();
+
+            return $this->recupererParClePrimaire($dernierID);
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
 }

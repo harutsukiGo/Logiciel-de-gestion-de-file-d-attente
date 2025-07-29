@@ -61,4 +61,5 @@ class PubliciteRepository extends AbstractRepository
         return $publicites;
     }
 
+
 }

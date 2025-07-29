@@ -36,7 +36,8 @@ class ControleurTicket extends ControleurGenerique
             null
         );
 
-        $ticketInsere = (new TicketRepository())->ajouterTicket($ticket);
+        $ticketInsere = (new TicketRepository())->ajouterAutoIncrement($ticket);
+
         if (!$ticketInsere) {
             return;
         }
@@ -49,7 +50,6 @@ class ControleurTicket extends ControleurGenerique
             $date
         );
 
-
         $historique = new Historique(
             null,
             "en attente",
@@ -58,12 +58,12 @@ class ControleurTicket extends ControleurGenerique
             $ticketInsere,
             $agent
         );
-        $historiqueInsere = (new HistoriqueRepository())->ajouterHistorique($historique);
+        $historiqueInsere = (new HistoriqueRepository())->ajouterAutoIncrement($historique);
         if (!$historiqueInsere) {
             return;
         }
         (new TicketRepository())->mettreAJourHistorique($historiqueInsere, $ticketInsere);
-        (new ClientAttentesRepository())->ajouterClientAttentes($clientAttente);
+        (new ClientAttentesRepository())->ajouter($clientAttente);
 
         ControleurGenerique::afficherVue('vueGenerale.php', [
             "titre" => "Ticket créé",

@@ -35,9 +35,9 @@ class GuichetsRepository extends AbstractRepository
     {
         /** @var Guichets $idGuichet */
         return [
-            "idGuichet" => $idGuichet->getIdGuichet(),
-            "nom_guichet" => $idGuichet->getNomGuichet(),
-            "statutGuichet" => $idGuichet->getStatutGuichet() ? 1 : 0,
+            "idGuichetTag" => $idGuichet->getIdGuichet(),
+            "nom_guichetTag" => $idGuichet->getNomGuichet(),
+            "statutGuichetTag" => $idGuichet->getStatutGuichet() ? 1 : 0,
         ];
     }
 

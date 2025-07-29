@@ -32,15 +32,33 @@ abstract class AbstractRepository
 
     public function ajouter(AbstractDataObject $objet): bool
     {
-         try {
+        try {
             $sql = "INSERT INTO " . $this->getNomTable() . " (" . join(",", $this->getNomsColonnes()) . ") VALUES (:" . join("Tag, :", $this->getNomsColonnes()) . "Tag)";
             $creerObject = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
             $creerObject->execute($this->formatTableauSQL($objet));
         } catch (PDOException $e) {
-             return false;
+            echo $e->getMessage();
+            return false;
         }
         return true;
     }
+
+    public function ajouterAutoIncrement(AbstractDataObject $objet): ?AbstractDataObject
+    {
+        try {
+            $sql = "INSERT INTO " . $this->getNomTable() . " (" . join(",", $this->getNomsColonnes()) . ") VALUES (:" . join("Tag, :", $this->getNomsColonnes()) . "Tag)";
+            $creerObject = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+            $creerObject->execute($this->formatTableauSQL($objet));
+            $pdo = ConnexionBaseDeDonnees::getPdo();
+            $dernierID = $pdo->lastInsertId();
+            return $this->recupererParClePrimaire($dernierID);
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+
+
 
     public function supprimer(string $valeurClePrimaire): bool
     {
@@ -84,12 +102,10 @@ abstract class AbstractRepository
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query("SELECT * FROM " . $this->getNomTable());
 
         $objects = [];
-
         foreach ($pdoStatement as $object) {
-            $objects[] = $this->construireDepuisTableauSQL($object);
+             $objects[] = $this->construireDepuisTableauSQL($object);
         }
-
-        return $objects;
+          return $objects;
     }
 
     protected abstract function getNomTable(): string;
@@ -102,6 +118,5 @@ abstract class AbstractRepository
     protected abstract function getNomsColonnes(): array;
 
     protected abstract function formatTableauSQL(AbstractDataObject $objet): array;
-
 
 }

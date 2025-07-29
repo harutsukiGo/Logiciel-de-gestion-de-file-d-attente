@@ -31,39 +31,29 @@ class ClientAttentesRepository extends AbstractRepository
 
     protected function getNomsColonnes(): array
     {
-        return ["idClientAttentes", "idTicket", "idService", "statut", "dateArrive"];
+        return ["idTicket", "idService", "statut", "dateArrive"];
     }
 
     protected function formatTableauSQL(AbstractDataObject $idClientAttentes): array
     {
         /** @var ClientAttentes $idClientAttentes */
         return [
-            "idClientAttentes" => $idClientAttentes->getIdClientAttentes(),
-            "idTicket" => $idClientAttentes->getIdTicket()->getIdTicket(),
-            "idService" => $idClientAttentes->getIdService()->getIdService(),
-            "statut" => $idClientAttentes->getStatut(),
-            "dateArrive" => $idClientAttentes->getDateArrive()->format('Y-m-d H:i:s')
+            "idTicketTag" => $idClientAttentes->getIdTicket()->getIdTicket(),
+            "idServiceTag" => $idClientAttentes->getIdService()->getIdService(),
+            "statutTag" => $idClientAttentes->getStatut(),
+            "dateArriveTag" => $idClientAttentes->getDateArrive()->format('Y-m-d H:i:s')
         ];
     }
 
 
-    public function ajouterClientAttentes(AbstractDataObject $objet): void
+    public function ajouterClientAttentes(AbstractDataObject $objet):void
     {
         try {
-            $colonnes = array_filter($this->getNomsColonnes(), function ($colonne) {
-                return $colonne !== 'idClientAttentes';
-            });
-
-            $pdo = ConnexionBaseDeDonnees::getPdo();
-            $sql = "INSERT INTO " . $this->getNomTable() . " (" . implode(",", $colonnes) . ") VALUES (:" . implode(", :", $colonnes) . ")";
-            $creerObject = $pdo->prepare($sql);
-
-            $values = $this->formatTableauSQL($objet);
-            unset($values['idClientAttentes']);
-            $creerObject->execute($values);
-
-        } catch (\PDOException $e) {
-            throw new \Exception("Error while adding ClientAttentes: " . $e->getMessage());
+            $sql = "INSERT INTO " . $this->getNomTable() . " (" . join(",", $this->getNomsColonnes()) . ") VALUES (:" . join("Tag, :", $this->getNomsColonnes()) . "Tag)";
+            $creerObject = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+            $creerObject->execute($this->formatTableauSQL($objet));
+        } catch (PDOException $e) {
+            return;
         }
     }
 
@@ -79,4 +69,5 @@ class ClientAttentesRepository extends AbstractRepository
             throw new \Exception("Error while updating service: " . $e->getMessage());
         }
     }
+
 }

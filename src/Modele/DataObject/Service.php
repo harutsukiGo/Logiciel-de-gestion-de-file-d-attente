@@ -3,14 +3,14 @@ namespace App\file\Modele\DataObject;
 
 class Service extends AbstractDataObject
 {
-    private int $idService;
+    private ?int $idService;
     private string $nomService;
     private \DateTime $horaireDebut;
     private \DateTime $horaireFin;
     private bool $statutService;
 
     public function __construct(
-        int $idService,
+        ?int $idService,
         string $nomService,
         \DateTime $horaireDebut,
         \DateTime $horaireFin,
@@ -24,7 +24,7 @@ class Service extends AbstractDataObject
     }
 
 
-    public function getIdService(): int
+    public function getIdService(): ?int
     {
         return $this->idService;
     }
