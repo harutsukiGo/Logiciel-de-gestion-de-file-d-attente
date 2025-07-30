@@ -112,12 +112,15 @@ class TicketRepository extends AbstractRepository
             JOIN services s ON s.idService = c.idService
             JOIN avoir a ON a.idService = s.idService
             JOIN guichets g ON g.idGuichet = a.idGuichet
-            WHERE t.statutTicket = 'en attente' 
-            AND t.idTicket = (
-                SELECT MIN(t2.idTicket)
+            WHERE t.statutTicket = 'en attente' AND t.idTicket IN 
+            (SELECT MIN(t2.idTicket)
                 FROM tickets t2
+                JOIN client_attentes c ON c.idTicket = t2.idTicket
+                JOIN services s ON s.idService = c.idService
+                JOIN avoir a ON a.idService = s.idService
+                JOIN guichets g ON g.idGuichet = a.idGuichet
                 WHERE t2.statutTicket = 'en attente'
-            )";
+            );";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
 
         return $pdoStatement->fetchAll();

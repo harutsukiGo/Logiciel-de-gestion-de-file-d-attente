@@ -46,7 +46,6 @@ class ControleurAgent extends ControleurGenerique
     }
 
 
-
     public static function connecter()
     {
         if (!isset($_REQUEST['login']) && !isset($_REQUEST['motDePasse'])) {
@@ -80,6 +79,14 @@ class ControleurAgent extends ControleurGenerique
         ControleurAgent::redirectionVersURL("?action=afficherAccueil&controleur=accueil");
     }
 
+    public static function afficherListeAgentAdministration()
+    {
+         $agents = (new AgentRepository())->recuperer();
+        ControleurGenerique::afficherVue('vueGenerale.php', [
+            "titre" => "Liste des agents - Administration",
+            "cheminCorpsVue" => "Agent/listeAgentAdministration.php","agents" => $agents
+        ]);
+    }
 
 }
 

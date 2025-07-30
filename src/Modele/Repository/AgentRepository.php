@@ -53,19 +53,17 @@ class AgentRepository extends AbstractRepository
     }
     public function retournePlusPetitTicketAgent(): array
     {
-
-        $sql = "SELECT t.idTicket,t.num_ticket, s.nomService,t.statutTicket
-            FROM tickets t
-             JOIN agents a ON t.idAgent = a.idAgent AND a.idAgent = :idAgentTag
-             JOIN client_attentes c ON c.idTicket= t.idTicket
-             JOIN services s ON s.idService= c.idService
-            WHERE t.statutTicket = 'en attente' 
-            AND t.idTicket = (
-                SELECT MIN(t2.idTicket)
-                FROM tickets t2
-                 JOIN agents a ON t2.idAgent = a.idAgent
-                WHERE t2.statutTicket = 'en attente' AND a.idAgent = :idAgentTag
-            );
+        $sql = "SELECT t.idTicket, t.num_ticket, s.nomService, t.statutTicket
+                FROM tickets t
+                JOIN client_attentes c ON c.idTicket = t.idTicket
+                JOIN services s ON s.idService = c.idService
+                WHERE t.statutTicket = 'en attente'
+                  AND t.idAgent = :idAgentTag
+                  AND t.idTicket = (
+                    SELECT MIN(t2.idTicket)
+                    FROM tickets t2
+                    WHERE t2.statutTicket = 'en attente'
+                      AND t2.idAgent = :idAgentTag);
 ";
 
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
@@ -130,5 +128,20 @@ class AgentRepository extends AbstractRepository
         }
     }
 
+    public function recupererServicesParAgent($idAgent): array
+    {
+        $sql = "SELECT s.nomService
+        FROM " . $this->getNomTable() . " a
+        JOIN gerer g ON g.idAgent = a.idAgent
+        JOIN services s ON s.idService = g.idService
+        WHERE a.idAgent = :idAgentTag";
+
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = [
+            "idAgentTag" => $idAgent
+        ];
+        $pdoStatement->execute($values);
+        return $pdoStatement->fetchAll();
+    }
 
 }

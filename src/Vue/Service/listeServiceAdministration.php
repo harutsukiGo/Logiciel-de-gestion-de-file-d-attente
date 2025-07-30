@@ -1,7 +1,4 @@
-<?php /** @var Services[] $services */
-
-use App\file\Modele\DataObject\Service;
-use App\file\Modele\Repository\ServiceRepository; ?>
+<?php /** @var Services[] $services */?>
 <section class="sectionServiceAdministration">
 <section class="sectionAdministrationHeader">
     <button id="btnRetourAgent" onclick="window.location.href='/fileAttente/web/controleurFrontal.php?'">
@@ -43,7 +40,7 @@ use App\file\Modele\Repository\ServiceRepository; ?>
         <span>Services</span>
     </button>
 
-    <button id="btnAgents">
+    <button id="btnAgents" onclick="window.location.href='/fileAttente/web/controleurFrontal.php?action=afficherListeAgentAdministration&controleur=agent'">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
              class="lucide lucide-users w-4 h-4">
@@ -119,7 +116,7 @@ use App\file\Modele\Repository\ServiceRepository; ?>
                                     )">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pen w-4 h-4"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>
                 </button>
-                <button id="btnSupprimerService">
+                <button id="btnSupprimerService" onclick="supprimerService('<?php echo $service->getIdService(); ?>')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2 w-4 h-4"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
                 </button>
             </div>

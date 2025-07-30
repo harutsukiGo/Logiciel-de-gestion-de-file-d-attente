@@ -2,7 +2,11 @@
 
 namespace App\file\Controleur;
 
+use App\file\Modele\DataObject\Avoir;
 use App\file\Modele\DataObject\Service;
+use App\file\Modele\Repository\AgentRepository;
+use App\file\Modele\Repository\AvoirRepository;
+use App\file\Modele\Repository\GuichetsRepository;
 use App\file\Modele\Repository\ServiceRepository;
 
 class ControleurService extends ControleurGenerique
@@ -35,13 +39,34 @@ class ControleurService extends ControleurGenerique
 
          $s = new Service(null, $nomService, $dateOuverture, $dateFermeture, $statut);
 
-        (new ServiceRepository())->ajouter($s);
+        $service=(new ServiceRepository())->ajouterAutoIncrement($s);
+
+        if (!$service) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Erreur lors de la création du service.']);
+            exit;
+        }
+        $guichet=(new GuichetsRepository())->recupererParClePrimaire((new ControleurService())->recupereGuichet());
+        $avoir = new Avoir(null,$service,$guichet);
+
+        (new AvoirRepository())->ajouter($avoir);
 
         header('Content-Type: application/json');
         echo json_encode(['success' => true]);
         exit;
      }
 
+    public static function recupereGuichet()
+    {
+        $guichet = (new GuichetsRepository())->recuperer();
+
+        if (empty($guichet)) {
+            return null;
+        }
+
+        $randomIndex = random_int(0, count($guichet) - 1);
+        return $guichet[$randomIndex]->getIdGuichet();
+    }
 
      public static function mettreAJourServiceAdministration()
      {
@@ -55,6 +80,13 @@ class ControleurService extends ControleurGenerique
 
          (new ServiceRepository())->mettreAJour($s);
 
+         header('Content-Type: application/json');
+         echo json_encode(['success' => true]);
+         exit;
+     }
+
+     public static function supprimerServiceAdministration(){
+         (new ServiceRepository())->supprimer($_REQUEST['idService']);
          header('Content-Type: application/json');
          echo json_encode(['success' => true]);
          exit;

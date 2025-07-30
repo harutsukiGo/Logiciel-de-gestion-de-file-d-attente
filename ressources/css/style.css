@@ -1053,7 +1053,7 @@ h1 {
     background-color: white;
     border-radius: 1rem;
     padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
     max-width: 1000px;
     margin: 0 auto 40px auto;
     justify-content: space-between;
@@ -1142,7 +1142,14 @@ h1 {
     z-index: 999;
 }
 
+/* Agents administrateur */
 
+.divStatutAgent{
+    border-radius: 9999px;
+    background: #c7d6ee;
+    color: rgb(30 64 175);
+    padding: .25rem .5rem;
+}
 
 /* Responsive*/
 @media screen and (max-width: 1400px) {

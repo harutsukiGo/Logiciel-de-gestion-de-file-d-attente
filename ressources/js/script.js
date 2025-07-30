@@ -88,6 +88,7 @@ function afficherPub() {
 
 async function appelerSuivant() {
     const ticket = await recuperePremierTicketAgent();
+
     if (!ticket || ticket.length === 0) {
         return;
     }
@@ -109,7 +110,7 @@ async function appelerSuivant() {
         <input type="hidden" id="idTicket" value="${ticket[0][0]}">
          <button id="btnTerminer" onclick="terminerTicket()"> Terminer </button>
          <button id="btnAbsent" onclick="absentTicket()" > Absent </button>
-         <button id="btnRappeler" onclick="appelerSuivant()"> Rappeler</button>
+<!--         <button id="btnRappeler" onclick="appelerSuivant()"> Rappeler</button>-->
         </div>
 `);
 
@@ -311,6 +312,14 @@ async function ajouterService() {
         });
     } catch (e) {
         console.error("Erreur lors de la mise à jour du service");
+    }
+}
+
+async function supprimerService(idService) {
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce service ?")) {
+        await fetch(`/fileAttente/web/controleurFrontal.php?action=supprimerServiceAdministration&controleur=service&idService=${idService}`, {
+            method: "GET"
+        });
     }
 }
 

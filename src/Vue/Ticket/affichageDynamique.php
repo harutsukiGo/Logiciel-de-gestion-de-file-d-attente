@@ -24,7 +24,7 @@
             <div class="ticketCourant">
                 <h1 class="h1TicketCourant"></h1>
                 <?php if (count($premierTicket) == 0): ?>
-                    <p id='numTicketCourant'>Aucun tickets à traiter actuellement</p>
+                     <p id='numTicketCourant'>Aucun tickets à traiter actuellement</p>
                     <p id="nomServiceCourant">Aucun service  </p>
                     <p id="numeroGuichet">Aucun guichet  </p>
                 <?php else: ?>

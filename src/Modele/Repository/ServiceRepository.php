@@ -74,30 +74,4 @@ class ServiceRepository extends AbstractRepository
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
         return $pdoStatement->fetch()[0];
     }
-
-    public function ajouterService(AbstractDataObject $objet): ?AbstractDataObject
-    {
-        try {
-            $colonnes = array_filter($this->getNomsColonnes(), function ($colonne) {
-                return $colonne !== 'idService';
-            });
-
-            $sql = "INSERT INTO " . $this->getNomTable() . " (" . implode(",", $colonnes) . ")
-                VALUES (:" . implode(", :", $colonnes) . ")";
-
-            $pdo = ConnexionBaseDeDonnees::getPdo();
-            $creerObject = $pdo->prepare($sql);
-
-            $values = $this->formatTableauSQL($objet);
-            unset($values['idService']);
-
-            $creerObject->execute($values);
-
-            $dernierID = $pdo->lastInsertId();
-
-            return $this->recupererParClePrimaire($dernierID);
-        } catch (PDOException $e) {
-            return null;
-        }
-    }
 }
