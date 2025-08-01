@@ -91,13 +91,13 @@ class TicketRepository extends AbstractRepository
 
     public function recupererTickets(): array
     {
-        $sql = "SELECT t.idTicket, t.num_ticket, g.nom_guichet, s.nomService, t.statutTicket
-            FROM tickets t 
-             JOIN client_attentes c ON c.idTicket = t.idTicket
-             JOIN services s ON s.idService = c.idService
-             JOIN avoir a ON a.idService = s.idService
-             JOIN guichets g ON g.idGuichet = a.idGuichet
-            WHERE t.statutTicket = 'en attente'
+        $sql = "SELECT t.idTicket,t.num_ticket, g.nom_guichet, s.nomService,t.statutTicket
+            FROM tickets t
+            JOIN client_attentes c ON c.idTicket = t.idTicket
+            JOIN services s ON s.idService = c.idService
+            JOIN agents a ON a.idService = s.idService
+            JOIN guichets g ON g.idGuichet = a.idGuichet
+            WHERE t.statutTicket = 'en attente' 
           ";
 
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
@@ -110,15 +110,11 @@ class TicketRepository extends AbstractRepository
             FROM tickets t
             JOIN client_attentes c ON c.idTicket = t.idTicket
             JOIN services s ON s.idService = c.idService
-            JOIN avoir a ON a.idService = s.idService
+            JOIN agents a ON a.idService = s.idService
             JOIN guichets g ON g.idGuichet = a.idGuichet
             WHERE t.statutTicket = 'en attente' AND t.idTicket IN 
             (SELECT MIN(t2.idTicket)
                 FROM tickets t2
-                JOIN client_attentes c ON c.idTicket = t2.idTicket
-                JOIN services s ON s.idService = c.idService
-                JOIN avoir a ON a.idService = s.idService
-                JOIN guichets g ON g.idGuichet = a.idGuichet
                 WHERE t2.statutTicket = 'en attente'
             );";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);

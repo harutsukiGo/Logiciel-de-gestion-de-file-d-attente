@@ -41,4 +41,13 @@ class GuichetsRepository extends AbstractRepository
         ];
     }
 
+
+    public function recupererGuichets():array
+    {
+        $sql="SELECT idGuichet FROM ".$this->getNomTable();
+        $pdoStatement=ConnexionBaseDeDonnees::getPdo();
+       $res= $pdoStatement->query($sql);
+       return  $res->fetchAll();
+    }
+
 }

@@ -2,10 +2,8 @@
 
 namespace App\file\Controleur;
 
-use App\file\Modele\DataObject\Avoir;
 use App\file\Modele\DataObject\Service;
 use App\file\Modele\Repository\AgentRepository;
-use App\file\Modele\Repository\AvoirRepository;
 use App\file\Modele\Repository\GuichetsRepository;
 use App\file\Modele\Repository\ServiceRepository;
 
@@ -37,58 +35,54 @@ class ControleurService extends ControleurGenerique
         $dateFermeture = new \DateTime($_POST['horaireFin']);
         $statut = $_POST['statutService'] ? 1 : 0;
 
-         $s = new Service(null, $nomService, $dateOuverture, $dateFermeture, $statut);
+        $s = new Service(null, $nomService, $dateOuverture, $dateFermeture, $statut, 1);
 
-        $service=(new ServiceRepository())->ajouterAutoIncrement($s);
+        $service = (new ServiceRepository())->ajouter($s);
 
         if (!$service) {
             header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => 'Erreur lors de la création du service.']);
+            echo json_encode(['failed' => false, 'message' => 'Erreur lors de la création du service.']);
             exit;
         }
-        $guichet=(new GuichetsRepository())->recupererParClePrimaire((new ControleurService())->recupereGuichet());
-        $avoir = new Avoir(null,$service,$guichet);
 
-        (new AvoirRepository())->ajouter($avoir);
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true,]
+        );
+        exit;
+    }
+
+    public static function recupererServicesTableau()
+    {
+       echo json_encode((new ServiceRepository())->recupererServices());
+    }
+
+    public static function mettreAJourServiceAdministration()
+    {
+        $idService = $_POST['idService'];
+        $nomService = $_POST['nomService'];
+        $dateOuverture = new \DateTime($_POST['horaireDebut']);
+        $dateFermeture = new \DateTime($_POST['horaireFin']);
+        $statut = $_POST['statutService'] ? 1 : 0;
+
+        $s = new Service($idService, $nomService, $dateOuverture, $dateFermeture, $statut, 1);
+
+        (new ServiceRepository())->mettreAJour($s);
 
         header('Content-Type: application/json');
         echo json_encode(['success' => true]);
         exit;
-     }
-
-    public static function recupereGuichet()
-    {
-        $guichet = (new GuichetsRepository())->recuperer();
-
-        if (empty($guichet)) {
-            return null;
-        }
-
-        $randomIndex = random_int(0, count($guichet) - 1);
-        return $guichet[$randomIndex]->getIdGuichet();
     }
 
-     public static function mettreAJourServiceAdministration()
-     {
-         $idService = $_POST['idService'];
-         $nomService = $_POST['nomService'];
-         $dateOuverture = new \DateTime($_POST['horaireDebut']);
-         $dateFermeture = new \DateTime($_POST['horaireFin']);
-         $statut = $_POST['statutService'] ? 1 : 0;
-
-         $s = new Service($idService, $nomService, $dateOuverture, $dateFermeture, $statut);
-
-         (new ServiceRepository())->mettreAJour($s);
-
-         header('Content-Type: application/json');
-         echo json_encode(['success' => true]);
-         exit;
-     }
-
-     public static function supprimerServiceAdministration(){
-         (new ServiceRepository())->supprimer($_REQUEST['idService']);
-         header('Content-Type: application/json');
-         echo json_encode(['success' => true]);
-         exit;
-     }
+    public static function supprimerServiceAdministration()
+    {
+       $res= (new ServiceRepository())->supprimerService();
+       if (!$res) {
+            header('Content-Type: application/json');
+            echo json_encode(['failed' => false, 'message' => 'Erreur lors de la suppression du service.']);
+            exit;
+       }
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true]);
+        exit;
+    }
 }

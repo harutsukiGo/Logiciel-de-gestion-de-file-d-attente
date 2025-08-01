@@ -1,4 +1,5 @@
 <?php
+
 namespace App\file\Modele\Repository;
 
 use App\file\Modele\DataObject\AbstractDataObject;
@@ -20,35 +21,38 @@ class PubliciteRepository extends AbstractRepository
     protected function construireDepuisTableauSQL(array $objetFormatTableau): AbstractDataObject
     {
 
-        $typeEnum = match($objetFormatTableau['type']) {
-            'image' => enumPublicite::image,
-            'video' => enumPublicite::video,
+        $typeEnum = match ($objetFormatTableau['type']) {
+            'image' =>  enumPublicite::from('image'),
+            'video' =>  enumPublicite::from('vidéo'),
         };
         return new Publicite(
             $objetFormatTableau['idPublicites'],
             $objetFormatTableau['fichier'],
             $objetFormatTableau['ordre'],
             $objetFormatTableau['actif'],
-           $typeEnum
+            $typeEnum,
+            $objetFormatTableau['estActif'],
         );
     }
 
     protected function getNomsColonnes(): array
     {
-        return ["idPublicites", "fichier", "ordre", "actif", "type"];
+        return ["idPublicites", "fichier", "ordre", "actif", "type", "estActif"];
     }
 
     protected function formatTableauSQL(AbstractDataObject $objet): array
     {
         /** @var Publicite $objet */
         return [
-            "idPublicites" => $objet->getIdPublicite(),
-            "fichier" => $objet->getFichier(),
-            "ordre" => $objet->getOrdre(),
-            "actif" => $objet->isActif() ? 1 : 0,
-            "type" => $objet->getType()
+            "idPublicitesTag" => $objet->getIdPublicite(),
+            "fichierTag" => $objet->getFichier(),
+            "ordreTag" => $objet->getOrdre(),
+            "actifTag" => $objet->getActif() ? 1 : 0,
+            "typeTag" => $objet->getType()->getValue(),
+            "estActifTag" => $objet->getEstActif() ? 1 : 0,
         ];
     }
+
     public function recupererPublicitesActives(): array
     {
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare("SELECT * FROM " . $this->getNomTable() . " WHERE actif = 1 ORDER BY ordre ASC");
@@ -61,5 +65,41 @@ class PubliciteRepository extends AbstractRepository
         return $publicites;
     }
 
+    public function augmenteOrdre($idPublicites)
+    {
+        $sql = "UPDATE " . $this->getNomTable() . " SET ordre = ordre +1 WHERE idPublicites=:idPublicites";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values=["idPublicites"=>$idPublicites];
+        return $pdoStatement->execute($values);
+    }
 
+    public function diminuerOrdre($idPublicites)
+    {
+        $sql = "UPDATE " . $this->getNomTable() . " SET ordre = ordre -1 WHERE idPublicites=:idPublicites";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values=["idPublicites"=>$idPublicites];
+        return $pdoStatement->execute($values);
+    }
+
+    public function recupererPubOrderBy(): array
+    {
+
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query("SELECT * FROM " . $this->getNomTable() ." ORDER BY ordre ASC");
+
+        $objects = [];
+        foreach ($pdoStatement as $object) {
+            $objects[] = $this->construireDepuisTableauSQL($object);
+        }
+        return $objects;
+    }
+
+    public function supprimerPublicite(): bool
+    {
+        $sql='UPDATE ' . $this->getNomTable() . ' SET estActif = 0 WHERE idPublicites = :idPublicitesTag';
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = [
+            "idPublicitesTag" => $_REQUEST['idPublicites']
+        ];
+        return $pdoStatement->execute($values);
+    }
 }

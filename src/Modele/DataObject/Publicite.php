@@ -8,15 +8,17 @@ private string $fichier;
 private int $ordre;
 private bool $actif;
 private enumPublicite $type;
+private bool $estActif;
 
 
-    public function __construct(?int $idPublicites, string $fichier, int $ordre, bool $actif, enumPublicite $type)
+    public function __construct(?int $idPublicites, string $fichier, int $ordre, bool $actif, enumPublicite $type,bool $estActif)
     {
         $this->idPublicites = $idPublicites;
         $this->fichier = $fichier;
         $this->ordre = $ordre;
         $this->actif = $actif;
         $this->type = $type;
+        $this->estActif = $estActif;
     }
 
     public function getIdPublicite(): ?int
@@ -34,7 +36,7 @@ private enumPublicite $type;
         return $this->ordre;
     }
 
-    public function isActif(): bool
+    public function getActif(): bool
     {
         return $this->actif;
     }
@@ -43,6 +45,12 @@ private enumPublicite $type;
     {
         return $this->type;
     }
+
+    public function getEstActif(): bool
+    {
+        return $this->estActif;
+    }
+
 
 
 

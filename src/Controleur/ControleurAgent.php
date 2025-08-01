@@ -3,7 +3,9 @@
 namespace App\file\Controleur;
 
 use App\file\Lib\ConnexionUtilisateur;
+use App\file\Modele\DataObject\Agents;
 use App\file\Modele\Repository\AgentRepository;
+use App\file\Modele\Repository\GuichetsRepository;
 use App\file\Modele\Repository\HistoriqueRepository;
 use App\file\Modele\Repository\ServiceRepository;
 
@@ -16,7 +18,7 @@ class ControleurAgent extends ControleurGenerique
         $tickets = (new AgentRepository())->afficherFileAttente($_REQUEST["idAgent"]);
         ControleurGenerique::afficherVue('vueGenerale.php', [
             "titre" => "Interface Agent",
-            "cheminCorpsVue" => "Agent/vueInterfaceAgent.php", "agent" => (new AgentRepository())->recupererParClePrimaire(ConnexionUtilisateur::getLoginUtilisateurConnecte()), "tickets" => $tickets, "historique" => $historique,"services" => $services
+            "cheminCorpsVue" => "Agent/vueInterfaceAgent.php", "agent" => (new AgentRepository())->recupererParClePrimaire(ConnexionUtilisateur::getLoginUtilisateurConnecte()), "tickets" => $tickets, "historique" => $historique, "services" => $services
         ]);
     }
 
@@ -70,7 +72,7 @@ class ControleurAgent extends ControleurGenerique
         ControleurGenerique::afficherVue('vueGenerale.php', [
             "titre" => "Détail Agent",
             "cheminCorpsVue" => "Agent/vueDetail.php",
-            "agent" =>  (new AgentRepository())->recupererParClePrimaire($_REQUEST['idAgent'])]);
+            "agent" => (new AgentRepository())->recupererParClePrimaire($_REQUEST['idAgent'])]);
     }
 
     public static function deconnecter()
@@ -81,12 +83,73 @@ class ControleurAgent extends ControleurGenerique
 
     public static function afficherListeAgentAdministration()
     {
-         $agents = (new AgentRepository())->recuperer();
+        $agents = (new AgentRepository())->recuperer();
         ControleurGenerique::afficherVue('vueGenerale.php', [
             "titre" => "Liste des agents - Administration",
-            "cheminCorpsVue" => "Agent/listeAgentAdministration.php","agents" => $agents
+            "cheminCorpsVue" => "Agent/listeAgentAdministration.php", "agents" => $agents
         ]);
     }
 
+    public static function creerAgentAdministration()
+    {
+        $nomAgent = $_POST["nomAgent"];
+        $emailAgent = $_POST["mailAgent"];
+        $loginAgent = $_POST["loginAgent"];
+        $motDePasseAgent = $_POST["motDePasseAgent"];
+        $roleAgent = $_POST["roleAgent"];
+        $guichetAgent = (new GuichetsRepository())->recupererParClePrimaire($_POST["idGuichet"]);
+        $statutAgent = $_POST["statutAgent"];
+        $idServiceAgent = (new ServiceRepository())->recupererParClePrimaire($_POST["idService"]);
+
+        $agent = new Agents(null, $nomAgent, $emailAgent, $statutAgent, $loginAgent, $motDePasseAgent, $roleAgent, $guichetAgent, $idServiceAgent, 1);
+
+        $idAgent = (new AgentRepository())->ajouter($agent);
+
+        if (!$idAgent) {
+            header('Content-Type: application/json');
+            echo json_encode(['failed' => false, 'message' => 'Erreur lors de la création de l\'agent.']);
+            exit;
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true]);
+        exit;
+
+    }
+
+    public static function mettreAJourAgentAdministration()
+    {
+        $idAgent = $_POST["idAgent"];
+        $nomAgent = $_POST["nomAgent"];
+        $emailAgent = $_POST["mailAgent"];
+        $loginAgent = $_POST["loginAgent"];
+        $motDePasseAgent = $_POST["motDePasseAgent"];
+        $roleAgent = $_POST["roleAgent"];
+        $guichetAgent = (new GuichetsRepository())->recupererParClePrimaire($_POST["idGuichet"]);
+        $statutAgent = $_POST["statutAgent"];
+        $idServiceAgent = (new ServiceRepository())->recupererParClePrimaire($_POST["idService"]);
+
+        $agent = new Agents ($idAgent, $nomAgent, $emailAgent, $statutAgent, $loginAgent, $motDePasseAgent, $roleAgent, $guichetAgent, $idServiceAgent, 1);
+
+        (new AgentRepository())->mettreAJour($agent);
+
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true]);
+        exit;
+    }
+
+
+    public static function supprimerAgentAdministration()
+    {
+        $res=(new AgentRepository())->supprimerAgent();
+        if (!$res) {
+            header('Content-Type: application/json');
+            echo json_encode(['failed' => false, 'message' => 'Erreur lors de la suppression du service.']);
+            exit;
+        }
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true]);
+        exit;
+    }
 }
 

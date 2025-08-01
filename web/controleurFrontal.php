@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once __DIR__ . '/../src/Lib/Psr4AutoloaderClass.php';
 use App\file\Lib\PreferenceControleur;
 use App\file\Modele\HTTP\Cookie;
@@ -28,5 +32,5 @@ try {
 
     $controleur->$action();
 } catch (Exception $e) {
-    return;
-}
+    echo '<pre style="color:red;">' . $e->getMessage() . '</pre>';
+    exit;}

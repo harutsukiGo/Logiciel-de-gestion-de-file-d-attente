@@ -4,7 +4,7 @@ namespace App\file\Modele\DataObject;
 
 class Agents extends AbstractDataObject
 {
-    private int $idAgent;
+    private ?int $idAgent;
     private string $nomAgent;
     private string $mailAgent;
     private bool $statut;
@@ -12,9 +12,11 @@ class Agents extends AbstractDataObject
     private string $motDePasse;
     private string $role;
     private Guichets $idGuichet;
+    private Service $idService;
+    private bool $estActif;
 
 
-    public function __construct(int $idAgent, string $nomAgent, string $mailAgent, bool $statut, string $login, string $motDePasse, string $role, Guichets $idGuichet)
+    public function __construct(?int $idAgent, string $nomAgent, string $mailAgent, bool $statut, string $login, string $motDePasse, string $role, Guichets $idGuichet,Service $idService ,bool $estActif)
     {
         $this->idAgent = $idAgent;
         $this->nomAgent = $nomAgent;
@@ -24,9 +26,11 @@ class Agents extends AbstractDataObject
         $this->motDePasse = $motDePasse;
         $this->role = $role;
         $this->idGuichet = $idGuichet;
+        $this->idService = $idService;
+        $this->estActif = $estActif;
     }
 
-    public function getIdAgent(): int
+    public function getIdAgent(): ?int
     {
         return $this->idAgent;
     }
@@ -63,5 +67,15 @@ class Agents extends AbstractDataObject
     public function getIdGuichet(): Guichets
     {
         return $this->idGuichet;
+    }
+
+    public function getEstActif(): bool
+    {
+        return $this->estActif;
+    }
+
+    public function getIdService(): Service
+    {
+        return $this->idService;
     }
 }

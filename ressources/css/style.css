@@ -842,8 +842,7 @@ h1 {
 }
 
 
-
-#numTicketRedirection, #serviceDeroulant,.inputNomService,.inputTimeOuverture,.inputTimeFermeture {
+#numTicketRedirection, #serviceDeroulant, .inputNomService, .inputTimeOuverture, .inputTimeFermeture, #inputNomAgent, #inputMailAgent, #inputLoginAgent, #inputMotDePasseAgent, #selectRoleAgent, #selectGuichetAgent, #selectServicesAgent, #inputNomFichier, #inputOrdre, #inputType {
     width: 100%;
     height: 3vh;
     border-radius: .5rem;
@@ -1068,40 +1067,40 @@ h1 {
 .divNomServiceHoraireStatut {
     display: flex;
     align-items: center;
-    gap: 1rem ;
+    gap: 1rem;
 }
 
-#btnModifierService,#btnSupprimerService{
+#btnModifierService, #btnSupprimerService, #btnHaut, #btnBas {
     border: none;
     background: none;
     cursor: pointer;
 }
 
 /* Modal */
-.modal{
+.modal {
     background: white;
     position: fixed;
     top: 50%;
-    left:50%;
+    left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 1rem;
     padding: 20px;
     width: 600px;
     z-index: 1000;
-
 }
 
 .divParametres {
     display: flex;
     flex-direction: column;
-    gap:20px;
- }
+    gap: 20px;
+}
 
 .divCheckbox {
     display: flex;
     align-items: center;
     gap: 10px;
 }
+
 .divButton {
     display: flex;
     flex-direction: row;
@@ -1109,46 +1108,114 @@ h1 {
     gap: 20px;
     margin-top: 10px;
 }
+
 #buttonSave, #buttonClose {
     width: fit-content;
     padding: 10px 20px;
     border: none;
     cursor: pointer;
     border-radius: .5rem;
-
 }
 
-#buttonSave{
+#buttonSave {
     background-color: #000000;
     color: white;
 }
 
-#buttonSave:hover{
+#buttonSave:hover {
     background-color: #151313;
     color: white;
 }
 
-#buttonClose:hover{
+#buttonClose:hover {
     background-color: lightgrey;
     color: black;
 }
+
 .overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 999;
 }
 
 /* Agents administrateur */
 
-.divStatutAgent{
+.divStatutAgent {
     border-radius: 9999px;
     background: #c7d6ee;
     color: rgb(30 64 175);
     padding: .25rem .5rem;
+}
+
+.divListeServices {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.nbAutresServices {
+    color: rgb(107 114 128);
+
+}
+
+/* Publicités administrations */
+.divPubliciteAdministration {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+    grid-auto-rows: minmax(100px, auto);
+    max-width: 1000px;
+    margin: 0 auto 40px auto;
+}
+
+.divPubliciteChild {
+    background-color: white;
+    border-radius: .75rem;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+
+}
+
+.imgPubliciteAdmin {
+    width: 500px;
+    border-radius: .75rem .75rem 0 0;
+    height: 150px;
+    object-fit: cover;
+}
+
+.divParentsBtnFleche {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.statutActifPub {
+    background-color: rgb(34 197 94);
+    color: white;
+    border-radius: 9999px;
+    padding: .25rem .5rem;
+    text-align: center;
+    width: fit-content;
+}
+
+.divStatutOrdre {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.bottomAction {
+    padding: 1rem;
+}
+
+
+#btnHaut, #btnBas, .ordre {
+    color: rgb(107 114 128);
 }
 
 /* Responsive*/

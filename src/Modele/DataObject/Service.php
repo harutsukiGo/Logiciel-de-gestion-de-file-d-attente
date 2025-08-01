@@ -8,19 +8,22 @@ class Service extends AbstractDataObject
     private \DateTime $horaireDebut;
     private \DateTime $horaireFin;
     private bool $statutService;
+    private bool $estActif ;
 
     public function __construct(
         ?int $idService,
         string $nomService,
         \DateTime $horaireDebut,
         \DateTime $horaireFin,
-        bool $statutService
+        bool $statutService,
+        bool $estActif
     ){
         $this->idService = $idService;
         $this->nomService = $nomService;
         $this->horaireDebut = $horaireDebut;
         $this->horaireFin = $horaireFin;
         $this->statutService = $statutService;
+        $this->estActif = $estActif;
     }
 
 
@@ -51,4 +54,10 @@ class Service extends AbstractDataObject
     {
         return $this->statutService;
     }
+
+    public function getEstActif(): bool
+    {
+        return $this->estActif;
+    }
+
 }

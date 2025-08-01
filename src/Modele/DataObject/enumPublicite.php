@@ -1,13 +1,12 @@
 <?php
+
 namespace App\file\Modele\DataObject;
 
-enum enumPublicite
+enum enumPublicite: string
 {
-    case image;
-    case video;
+    case IMAGE = 'image';
+    case  VIDEO = 'vidéo';
 
-    public function getType(): enumPublicite
-    {
-        return $this;
-    }
+    public function getValue(): string {
+        return $this->value; }
 }

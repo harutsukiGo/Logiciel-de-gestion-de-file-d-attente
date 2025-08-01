@@ -14,7 +14,8 @@ class ServiceRepository extends AbstractRepository
             $objetFormatTableau['nomService'],
             new \DateTime($objetFormatTableau['horaireDebut']),
             new \DateTime($objetFormatTableau['horaireFin']),
-            $objetFormatTableau['statutService']
+            $objetFormatTableau['statutService'],
+            $objetFormatTableau['estActif']
         );
     }
 
@@ -30,7 +31,7 @@ class ServiceRepository extends AbstractRepository
 
     protected function getNomsColonnes(): array
     {
-        return ['idService','nomService', 'horaireDebut', 'horaireFin', 'statutService'];
+        return ['idService','nomService', 'horaireDebut', 'horaireFin', 'statutService', 'estActif'];
     }
 
     protected function formatTableauSQL(AbstractDataObject $service): array
@@ -41,7 +42,8 @@ class ServiceRepository extends AbstractRepository
             'nomServiceTag' => $service->getNomService(),
             'horaireDebutTag' => $service->getHoraireDebut()->format('H:i:s'),
             'horaireFinTag' => $service->getHoraireFin()->format('H:i:s'),
-            'statutServiceTag' => $service->getStatutService() ? 1 : 0
+            'statutServiceTag' => $service->getStatutService() ? 1 : 0,
+            'estActifTag' => $service->getEstActif() ? 1 : 0
         ];
     }
 
@@ -73,5 +75,35 @@ class ServiceRepository extends AbstractRepository
         $sql = "SELECT COUNT(*)  FROM " . $this->getNomTable();
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
         return $pdoStatement->fetch()[0];
+    }
+
+    public function recupereServiceRandom()
+    {
+        $services = (new ServiceRepository())->recuperer();
+
+        if (empty($services)) {
+            return null;
+        }
+
+        $randomIndex = random_int(0, count($services) - 1);
+        return $services[$randomIndex]->getIdService();
+    }
+
+    public function supprimerService(): bool
+    {
+            $sql='UPDATE ' . $this->getNomTable() . ' SET estActif = 0 WHERE idService = :idServiceTag';
+            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+            $values = [
+                "idServiceTag" => $_REQUEST['idService']
+            ];
+            return $pdoStatement->execute($values);
+    }
+
+    public function recupererServices():array
+    {
+        $sql="SELECT idService, nomService FROM ".$this->getNomTable();
+        $pdoStatement=ConnexionBaseDeDonnees::getPdo();
+        $res= $pdoStatement->query($sql);
+        return  $res->fetchAll();
     }
 }
