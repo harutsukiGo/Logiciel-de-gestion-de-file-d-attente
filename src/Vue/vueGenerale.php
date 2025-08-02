@@ -13,6 +13,7 @@ use App\file\Modele\Repository\AgentRepository;
         /** @var string $titre*/
         echo $titre;?></title>
     <script src="/fileAttente/ressources/js/script.js"></script>
+    <script src="/fileAttente/ressources/js/Modal.js"></script>
     <link rel="stylesheet" href="/fileAttente/ressources/css/style.css">
 </head>
 <body>

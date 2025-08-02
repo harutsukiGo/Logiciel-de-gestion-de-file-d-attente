@@ -14,6 +14,9 @@
 </section>
 <?php
 /** @var Ticket[] $premierTicket * */
+
+use App\file\Modele\DataObject\enumPublicite;
+
 ?>
 <div class="divDynamique">
 
@@ -43,10 +46,16 @@
     ?>
         <div class="divPublicite">
                 <?php foreach ($publicites as $key => $publicite): ?>
+            <?php if ($publicite->getEstActif()):?>
+            <?php if ($publicite->getType() === enumPublicite::VIDEO ):?>
+                            <iframe class="imgPub" src="<?php echo $publicite->getFichier() . (str_contains($publicite->getFichier(), '?') ? '&' : '?') . 'autoplay=1&mute=1&loop=1'; ?>" title="YouTube video player" allow="autoplay"></iframe>
+                        <?php else:?>
                     <img class="imgPub <?= $key === 0 ? 'active' : 'hidden' ?>"
                          src="<?= $publicite->getFichier() ?>"
                          alt="Publicité"
                          data-index="<?= $key ?>">
+            <?php endif; ?>
+            <?php endif; ?>
                 <?php endforeach;?>
             <div class="divTemperature">
                 <p id="horloge"> </p>

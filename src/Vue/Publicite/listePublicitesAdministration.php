@@ -87,6 +87,8 @@
     </section>
 
     <?php /** @var Publicite[] $publicites **/
+
+    use App\file\Modele\DataObject\enumPublicite;
     use App\file\Modele\DataObject\Publicite;
     ?>
 
@@ -97,8 +99,11 @@
         <?php foreach ($publicites as $publicite): ?>
         <?php if ($publicite->getEstActif()):?>
         <div class="divPubliciteChild">
-
+         <?php if ($publicite->getType() === enumPublicite::VIDEO):?>
+             <iframe class="imgPubliciteAdmin" src="<?php echo $publicite->getFichier()?>" title="YouTube video player" allow="autoplay"></iframe>
+         <?php else: ?>
          <img class="imgPubliciteAdmin" src="<?php echo $publicite->getFichier()?>" alt="pub">
+            <?php endif; ?>
 
             <div class="bottomAction">
 
@@ -126,8 +131,7 @@
             </div>
 
             <div class="divButtonPublicite">
-<!--                <button id="btnModifierService">-->
-                <button id="btnModifierService"
+                 <button id="btnModifierService"
                         onclick="modalPublicite(
                                 '<?php echo $publicite->getFichier() ?>',
                                 '<?php echo $publicite->getOrdre() ?>',

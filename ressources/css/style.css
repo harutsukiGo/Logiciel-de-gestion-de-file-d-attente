@@ -564,7 +564,7 @@ h1 {
     position: relative;
 }
 
-.imgPub {
+.imgPub,.videoPub  {
     width: 500px;
     height: 250px;
     position: absolute;
@@ -572,6 +572,7 @@ h1 {
     transition: opacity 0.5s ease-in-out;
     opacity: 0;
     object-fit: cover;
+    border:none;
 }
 
 .imgPub.active {
@@ -842,7 +843,7 @@ h1 {
 }
 
 
-#numTicketRedirection, #serviceDeroulant, .inputNomService, .inputTimeOuverture, .inputTimeFermeture, #inputNomAgent, #inputMailAgent, #inputLoginAgent, #inputMotDePasseAgent, #selectRoleAgent, #selectGuichetAgent, #selectServicesAgent, #inputNomFichier, #inputOrdre, #inputType {
+#numTicketRedirection, #serviceDeroulant, #inputNomService, #inputTimeOuverture, #inputTimeFermeture, #inputNomAgent, #inputMailAgent, #inputLoginAgent, #inputMotDePasseAgent, #inputRoleAgent, #inputGuichetAgent, #inputServiceAgent, #inputNomFichier, #inputOrdre, #inputType {
     width: 100%;
     height: 3vh;
     border-radius: .5rem;
@@ -1314,7 +1315,7 @@ h1 {
     }
 
 
-    .imgPub {
+    .imgPub{
         position: absolute;
         left: 50%;
         transform: translateX(-50%);

@@ -86,6 +86,7 @@ function afficherPub() {
     }, 3000);
 }
 
+
 async function appelerSuivant() {
     const ticket = await recuperePremierTicketAgent();
 
@@ -193,267 +194,46 @@ async function redirigerTicket() {
 }
 
 function modalService(nomServicePlaceholder, dateOuverturePlaceholder, dateFermeturePlaceholder, checkboxPlaceholder, callback) {
-    const modal = document.createElement("div");
-    modal.className = "modal";
-
-    const titre = document.createElement("h2");
-    titre.textContent = "Nouveau service";
-
-    const divNomService=document.createElement("div");
-    const nomServiceP= document.createElement("p");
-    nomServiceP.textContent= "Nom du service :";
-
-    const nomService = document.createElement("input");
-    nomService.type = "text";
-    nomService.value = nomServicePlaceholder;
-    nomService.className = "inputNomService";
-
-    divNomService.append(nomServiceP,nomService);
-
-    const divDateOuverture= document.createElement("div");
-    const dateOuvertureP=document.createElement("p");
-    dateOuvertureP.textContent="Horaire d'ouverture :";
-
-
-    const dateOuverture = document.createElement("input");
-    dateOuverture.type = "time";
-    dateOuverture.className = "inputTimeOuverture";
-    dateOuverture.value = dateOuverturePlaceholder;
-
-    divDateOuverture.append(dateOuvertureP,dateOuverture);
-
-
-    const divDateFermeture= document.createElement("div");
-    const dateFermetureP=document.createElement("p");
-    dateFermetureP.textContent="Horaire fermeture :";
-
-
-    const dateFermeture = document.createElement("input");
-    dateFermeture.type = "time";
-    dateFermeture.className = "inputTimeFermeture";
-    dateFermeture.value = dateFermeturePlaceholder;
-
-    divDateFermeture.append(dateFermetureP,dateFermeture);
-
-
-    const divParametres = document.createElement("div");
-    divParametres.className = "divParametres";
-    divParametres.append(divNomService, divDateOuverture, divDateFermeture);
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.id = "checkboxService";
-    checkbox.checked = checkboxPlaceholder;
-
-
-    const texte = document.createElement("p");
-    texte.textContent = "Service actif";
-
-    const divCheckbox = document.createElement("div");
-    divCheckbox.className = "divCheckbox";
-    divCheckbox.append(checkbox, texte);
-
-    const buttonSave = document.createElement("button");
-    buttonSave.id = "buttonSave";
-    buttonSave.textContent = "Enregistrer";
-
-    const buttonClose = document.createElement("button");
-    buttonClose.id = "buttonClose";
-    buttonClose.className = "close";
-    buttonClose.textContent = "Annuler";
-    buttonClose.onclick = () => {
-        modal.remove();
-        overlay.remove();
-    };
-    buttonSave.onclick = async () => {
-        await callback();
-        modal.remove();
-        overlay.remove();
-    }
-    const divButton = document.createElement("div");
-    divButton.className = "divButton";
-    divButton.append(buttonSave, buttonClose);
-
-    modal.append(titre, divParametres, divCheckbox, divButton);
-
-    const overlay = document.createElement("div");
-    overlay.className = "overlay";
-    document.body.append(overlay, modal);
+    const modal = new Modal("Nouveau service");
+    modal.creerTextField("Nom du service", "text", nomServicePlaceholder, "NomService");
+    modal.creerTextField("Horaire d'ouverture", "time", dateOuverturePlaceholder, "TimeOuverture");
+    modal.creerTextField("Horaire de fermeture", "time", dateFermeturePlaceholder, "TimeFermeture");
+    modal.creerInputCheckbox("Service actif",checkboxPlaceholder,"Service");
+    modal.creerButtons(callback);
+    modal.afficher();
 }
 
- async function modalAgent(nomAgent, mailAgent, statutAgent, loginAgent, motDePasseAgent, roleAgent, idGuichet,idService, callback) {
-    const modal = document.createElement("div");
-    modal.className = "modal";
-
-    const titre = document.createElement("h2");
-    titre.textContent = "Nouvel agent";
-
-    const divNomComplet=document.createElement("div");
-
-    const nomComplet = document.createElement("input");
-    nomComplet.type = "text";
-    nomComplet.value = nomAgent;
-    nomComplet.id = "inputNomAgent";
-
-    const nomCompletP=document.createElement("p");
-    nomCompletP.textContent="Nom complet :";
-
-    divNomComplet.append(nomCompletP,nomComplet);
-
-    const divEmail=document.createElement("div");
-
-    const emailP= document.createElement("p");
-    emailP.textContent="Email :"
-
-    const email = document.createElement("input");
-    email.type = "text";
-    email.id = "inputMailAgent";
-    email.value = mailAgent;
-
-    divEmail.append(emailP,email);
-
-
-    const divLogin=document.createElement("div");
-
-    const loginP=document.createElement("p");
-    loginP.textContent="Login :"
-
-    const login = document.createElement("input");
-    login.type = "text";
-    login.id = "inputLoginAgent";
-    login.value = loginAgent;
-
-    divLogin.append(loginP,login);
-
-    const divMotDePasse= document.createElement("div");
-    const motDePasseP=document.createElement("p");
-    motDePasseP.textContent="Mot de passe :";
-
-    const motDePasse = document.createElement("input");
-    motDePasse.type = "password";
-    motDePasse.id = "inputMotDePasseAgent";
-    motDePasse.value = motDePasseAgent;
-
-    divMotDePasse.append(motDePasseP,motDePasse);
-
-    const role = document.createElement("select");
-    role.id = "selectRoleAgent";
-    role.innerHTML = `
-            <option value="agent" ${roleAgent === "agent" ? "selected" : ""}>agent</option>
-            <option value="administrateur" ${roleAgent === "administrateur" ? "selected" : ""}>administrateur</option>
-        `;
-
-    const roleAgentP = document.createElement("p");
-    roleAgentP.textContent = "Rôle agent :";
-
-    const divRole= document.createElement("div");
-    divRole.append(roleAgentP,role);
-
-    const divGuichet= document.createElement("div");
-
-    const guichetP= document.createElement("p");
-    guichetP.textContent="Guichet :";
-
-    const guichet = document.createElement("select");
-    guichet.id = "selectGuichetAgent";
-    let guichets = await recupererGuichets();
-
-    guichets.forEach(guichetItem => {
-        const option = document.createElement("option");
-        option.textContent = guichetItem.idGuichet;
-        if (String(guichetItem.idGuichet) === String(idGuichet)) {
-             option.selected = true;
-        }
-        guichet.appendChild(option);
-    });
-
-    divGuichet.append(guichetP,guichet);
-
-    const divService = document.createElement("div");
-    const serviceP = document.createElement("p");
-    serviceP.textContent = "Services :";
-
-    const service = document.createElement("select");
-    service.id="selectServicesAgent";
-    let services = await recupererServices();
-
-    services.forEach(serviceItem=>{
-     const option= document.createElement("option");
-     option.value=serviceItem.idService;
-     option.textContent=serviceItem.nomService;
-     if (String(serviceItem.idService) === String(idService)){
-         option.selected=true;
-     }
-     service.append(option);
-    });
-
-    divService.append(serviceP,service);
-
-    const divParametres = document.createElement("div");
-    divParametres.className = "divParametres";
-    divParametres.append(divNomComplet, divEmail, divLogin, divMotDePasse, divRole, divGuichet, divService);
-
-    const statut = document.createElement("input");
-    statut.type = "checkbox";
-    statut.id = "checkboxAgent";
-    statut.checked = statutAgent;
-
-
-    const texte = document.createElement("p");
-    texte.textContent = "Agent actif";
-
-
-
-    const divCheckbox = document.createElement("div");
-    divCheckbox.className = "divCheckbox";
-    divCheckbox.append(statut, texte);
-
-    const buttonSave = document.createElement("button");
-    buttonSave.id = "buttonSave";
-    buttonSave.textContent = "Enregistrer";
-
-    const buttonClose = document.createElement("button");
-    buttonClose.id = "buttonClose";
-    buttonClose.className = "close";
-    buttonClose.textContent = "Annuler";
-    buttonClose.onclick = () => {
-        modal.remove();
-        overlay.remove();
-    };
-    buttonSave.onclick = async () => {
-        await callback();
-        modal.remove();
-        overlay.remove();
-    }
-
-
-    const divButton = document.createElement("div");
-    divButton.className = "divButton";
-    divButton.append(buttonSave, buttonClose);
-
-    modal.append(titre, divParametres, divCheckbox, divButton);
-
-    const overlay = document.createElement("div");
-    overlay.className = "overlay";
-    document.body.append(overlay, modal);
+async function modalAgent(nomAgent, mailAgent, statutAgent, loginAgent, motDePasseAgent, roleAgent, idGuichet, idService, callback) {
+    const modal = new Modal("Nouvel agent");
+    modal.creerTextField("Nom complet","text",nomAgent,"NomAgent");
+    modal.creerTextField("Email","text",mailAgent,"MailAgent");
+    modal.creerTextField("Login","text",loginAgent,"LoginAgent");
+    modal.creerTextField("Mot de passe","password",motDePasseAgent,"MotDePasseAgent");
+    modal.creerSelecteur("Rôle agent", "inputRoleAgent", [
+        { valeur: "agent", texte: "agent" },
+        { valeur: "administrateur", texte: "administrateur" }
+    ], roleAgent);
+    await modal.creerInputSelect("Guichet","inputGuichetAgent",idGuichet, recupererGuichets);
+    await modal.creerInputSelect("Services", "inputServiceAgent", idService, recupererServices);
+    modal.creerInputCheckbox("Agent actif", statutAgent, "Agent");
+    modal.creerButtons(callback);
+    modal.afficher();
 }
-
-async function mettreAJourAgent(idAgent){
-    const formData=new FormData();
-    const nomAgent= document.getElementById("inputNomAgent");
-    const mailAgent= document.getElementById("inputMailAgent");
-    const loginAgent= document.getElementById("inputLoginAgent");
-    const motDePasseAgent= document.getElementById("inputMotDePasseAgent");
-    const roleAgent= document.getElementById("selectRoleAgent");
-    const guichetAgent= document.getElementById("selectGuichetAgent");
+async function mettreAJourAgent(idAgent) {
+    const formData = new FormData();
+    const nomAgent = document.getElementById("inputNomAgent");
+    const mailAgent = document.getElementById("inputMailAgent");
+    const loginAgent = document.getElementById("inputLoginAgent");
+    const motDePasseAgent = document.getElementById("inputMotDePasseAgent");
+    const roleAgent = document.getElementById("inputRoleAgent");
+    const guichetAgent = document.getElementById("inputGuichetAgent");
     const statutAgent = document.getElementById("checkboxAgent");
-    const idServiceAgent=document.getElementById("selectServicesAgent");
-
+    const idServiceAgent = document.getElementById("inputServiceAgent");
 
 
     formData.append("idAgent", idAgent);
     formData.append("nomAgent", nomAgent.value);
-    formData.append("idAgent",idAgent);
+    formData.append("idAgent", idAgent);
     formData.append("mailAgent", mailAgent.value);
     formData.append("statutAgent", statutAgent.checked ? "1" : "0");
     formData.append("loginAgent", loginAgent.value);
@@ -467,22 +247,21 @@ async function mettreAJourAgent(idAgent){
             method: "POST",
             body: formData,
         });
-    }
-    catch (e) {
+    } catch (e) {
         console.error("Erreur lors de l'ajout de l'agent");
     }
 }
 
-async function ajouterAgent(){
-    const formData=new FormData();
-    const nomAgent= document.getElementById("inputNomAgent");
-    const mailAgent= document.getElementById("inputMailAgent");
-    const loginAgent= document.getElementById("inputLoginAgent");
-    const motDePasseAgent= document.getElementById("inputMotDePasseAgent");
-    const roleAgent= document.getElementById("selectRoleAgent");
-    const guichetAgent= document.getElementById("selectGuichetAgent");
+async function ajouterAgent() {
+    const formData = new FormData();
+    const nomAgent = document.getElementById("inputNomAgent");
+    const mailAgent = document.getElementById("inputMailAgent");
+    const loginAgent = document.getElementById("inputLoginAgent");
+    const motDePasseAgent = document.getElementById("inputMotDePasseAgent");
+    const roleAgent = document.getElementById("inputRoleAgent");
+    const guichetAgent = document.getElementById("inputGuichetAgent");
     const statutAgent = document.getElementById("checkboxAgent");
-    const idServiceAgent=document.getElementById("selectServicesAgent");
+    const idServiceAgent = document.getElementById("inputServiceAgent");
 
     formData.append("nomAgent", nomAgent.value);
     formData.append("mailAgent", mailAgent.value);
@@ -495,24 +274,23 @@ async function ajouterAgent(){
 
     try {
         await fetch("/fileAttente/web/controleurFrontal.php?action=creerAgentAdministration&controleur=agent", {
-           method: "POST",
-              body: formData,
+            method: "POST",
+            body: formData,
         });
-    }
-    catch (e) {
+    } catch (e) {
         console.error("Erreur lors de l'ajout de l'agent");
     }
 
- }
+}
 
 
- async function supprimerAgent(idAgent) {
-     if (confirm("Êtes-vous sûr de vouloir supprimer cet agent ?")) {
-         await fetch(`/fileAttente/web/controleurFrontal.php?action=supprimerAgentAdministration&controleur=agent&idAgent=${idAgent}`, {
-             method: "GET"
-         });
-     }
- }
+async function supprimerAgent(idAgent) {
+    if (confirm("Êtes-vous sûr de vouloir supprimer cet agent ?")) {
+        await fetch(`/fileAttente/web/controleurFrontal.php?action=supprimerAgentAdministration&controleur=agent&idAgent=${idAgent}`, {
+            method: "GET"
+        });
+    }
+}
 
 // async function actualiserListeServices() {
 //     await fetch("/fileAttente/web/controleurFrontal.php?action=afficherServiceAdministration&controleur=service", {
@@ -536,9 +314,9 @@ async function recupererServices() {
 
 async function mettreAJourService(idService) {
     const formData = new FormData();
-    const inputNomService = document.querySelector(".inputNomService");
-    const inputTimeOuverture = document.querySelector(".inputTimeOuverture");
-    const inputTimeFermeture = document.querySelector(".inputTimeFermeture");
+    const inputNomService = document.getElementById("inputNomService");
+    const inputTimeOuverture = document.getElementById("inputTimeOuverture");
+    const inputTimeFermeture = document.getElementById("inputTimeFermeture");
     const checkboxService = document.getElementById("checkboxService");
 
     formData.append("idService", idService);
@@ -559,9 +337,9 @@ async function mettreAJourService(idService) {
 
 async function ajouterService() {
     const formData = new FormData();
-    const inputNomService = document.querySelector(".inputNomService");
-    const inputTimeOuverture = document.querySelector(".inputTimeOuverture");
-    const inputTimeFermeture = document.querySelector(".inputTimeFermeture");
+    const inputNomService = document.getElementById("inputNomService");
+    const inputTimeOuverture = document.getElementById("inputTimeOuverture");
+    const inputTimeFermeture = document.getElementById("inputTimeFermeture");
     const checkboxService = document.getElementById("checkboxService");
 
     formData.append("nomService", inputNomService.value);
@@ -587,19 +365,19 @@ async function supprimerService(idService) {
     }
 }
 
-async function augmenterOrdrePub(idPub){
+async function augmenterOrdrePub(idPub) {
     await fetch(`/fileAttente/web/controleurFrontal.php?action=augmenterOrdre&controleur=publicite&idPublicites=${idPub}`, {
         method: "GET"
     });
 }
 
-async function diminuerOrdrePub(idPub){
+async function diminuerOrdrePub(idPub) {
     await fetch(`/fileAttente/web/controleurFrontal.php?action=diminuerOrdre&controleur=publicite&idPublicites=${idPub}`, {
         method: "GET"
     });
 }
 
-function modalPublicite(nomFichierPlaceholder,ordrePlaceholder,statutPlaceholder,typePlaceholder, callback){
+function modalPublicite(nomFichierPlaceholder, ordrePlaceholder, statutPlaceholder, typePlaceholder, callback) {
     const modal = document.createElement("div");
     modal.className = "modal";
 
@@ -607,56 +385,56 @@ function modalPublicite(nomFichierPlaceholder,ordrePlaceholder,statutPlaceholder
     titre.textContent = "Nouvelle publicité";
 
 
-    const divNomFichier= document.createElement("div");
-    const nomFichierP=document.createElement("p");
-    nomFichierP.textContent="URL du fichier :";
+    const divNomFichier = document.createElement("div");
+    const nomFichierP = document.createElement("p");
+    nomFichierP.textContent = "URL du fichier :";
 
-    const nomFichier= document.createElement("input");
-    nomFichier.type="text";
-    nomFichier.id="inputNomFichier";
+    const nomFichier = document.createElement("input");
+    nomFichier.type = "text";
+    nomFichier.id = "inputNomFichier";
     nomFichier.value = nomFichierPlaceholder;
 
-    divNomFichier.append(nomFichierP,nomFichier);
+    divNomFichier.append(nomFichierP, nomFichier);
 
-    const divOrdre= document.createElement("div");
-    const ordreP= document.createElement("p");
-    ordreP.textContent="Ordre :";
+    const divOrdre = document.createElement("div");
+    const ordreP = document.createElement("p");
+    ordreP.textContent = "Ordre :";
 
-    const ordre= document.createElement("input");
-    ordre.type="number";
-    ordre.id="inputOrdre";
+    const ordre = document.createElement("input");
+    ordre.type = "number";
+    ordre.id = "inputOrdre";
     ordre.value = ordrePlaceholder;
 
-    divOrdre.append(ordreP,ordre);
+    divOrdre.append(ordreP, ordre);
 
     const divCheckbox = document.createElement("div");
-    const statutP=document.createElement("p");
-    statutP.textContent="Publicité active :";
+    const statutP = document.createElement("p");
+    statutP.textContent = "Publicité active :";
 
-    const statut=document.createElement("input");
-    statut.type="checkbox";
-    statut.id="inputStatut";
-    statut.checked= statutPlaceholder;
+    const statut = document.createElement("input");
+    statut.type = "checkbox";
+    statut.id = "checkBoxPublicite";
+    statut.checked = statutPlaceholder;
 
     divCheckbox.className = "divCheckbox";
-    divCheckbox.append(statutP,statut);
+    divCheckbox.append(statutP, statut);
 
-    const divType=document.createElement("div");
-    const typeP=document.createElement("p");
-    typeP.textContent="Type :";
+    const divType = document.createElement("div");
+    const typeP = document.createElement("p");
+    typeP.textContent = "Type :";
 
-    const type= document.createElement("select");
-    type.id="inputType";
-    type.innerHTML='' +
+    const type = document.createElement("select");
+    type.id = "inputType";
+    type.innerHTML = '' +
         '<option value="image"> image  </option>' +
         '<option value="vidéo"> vidéo </option>';
-    type.value= typePlaceholder;
-    divType.append(typeP,type);
+    type.value = typePlaceholder;
+    divType.append(typeP, type);
 
 
     const divParametres = document.createElement("div");
     divParametres.className = "divParametres";
-    divParametres.append(divNomFichier,divOrdre,divType);
+    divParametres.append(divNomFichier, divOrdre, divType);
 
 
     const buttonSave = document.createElement("button");
@@ -680,48 +458,47 @@ function modalPublicite(nomFichierPlaceholder,ordrePlaceholder,statutPlaceholder
     divButton.className = "divButton";
     divButton.append(buttonSave, buttonClose);
 
-    modal.append(titre, divParametres,divCheckbox,divButton);
+    modal.append(titre, divParametres, divCheckbox, divButton);
 
     const overlay = document.createElement("div");
     overlay.className = "overlay";
     document.body.append(overlay, modal);
 }
 
-async function ajouterPublicite(){
-    const formData= new FormData();
-    const nomFichier=document.getElementById("inputNomFichier");
-    const ordre=document.getElementById("inputOrdre");
-    const statut= document.getElementById("inputStatut");
-    const type=document.getElementById("inputType");
+async function ajouterPublicite() {
+    const formData = new FormData();
+    const nomFichier = document.getElementById("inputNomFichier");
+    const ordre = document.getElementById("inputOrdre");
+    const statut = document.getElementById("checkBoxPublicite");
+    const type = document.getElementById("inputType");
 
-    formData.append("fichier",nomFichier.value);
-    formData.append("ordre",ordre.value);
-    formData.append("statut",statut.value);
-    formData.append("type",type.value);
+    formData.append("fichier", nomFichier.value);
+    formData.append("ordre", ordre.value);
+    formData.append("statut", statut.value);
+    formData.append("type", type.value);
 
-    try{
+    try {
         await fetch("/fileAttente/web/controleurFrontal.php?action=creerPubliciteAdministration&controleur=publicite", {
             method: "POST",
             body: formData,
         })
-    }
-    catch (e) {
+    } catch (e) {
         console.error("Erreur lors de l'ajout de la publicité");
     }
 }
 
 async function mettreAJourPublicite(idPub) {
-    const formData= new FormData();
-    const nomFichier=document.getElementById("inputNomFichier");
-    const ordre=document.getElementById("inputOrdre");
-    const statut= document.getElementById("inputStatut");
-    const type=document.getElementById("inputType");
+    const formData = new FormData();
+    const nomFichier = document.getElementById("inputNomFichier");
+    const ordre = document.getElementById("inputOrdre");
+    const statut = document.getElementById("inputStatut");
+    const type = document.getElementById("inputType");
 
     formData.append("idPublicites", idPub);
-    formData.append("fichier",nomFichier.value);
-    formData.append("ordre",ordre.value);
-    formData.append("statut",statut.value);
-    formData.append("type",type.value);
+    formData.append("fichier", nomFichier.value);
+    formData.append("ordre", ordre.value);
+    formData.append("statut", statut.value);
+    formData.append("type", type.value);
 
     try {
         await fetch("/fileAttente/web/controleurFrontal.php?action=mettreAJourPubliciteAdministration&controleur=publicite", {
