@@ -41,7 +41,7 @@ class ControleurPublicite extends ControleurGenerique
     {
         $nomFichier = $_POST['fichier'];
         $ordre = $_POST['ordre'];
-        $actif = $_POST['statut'] ? 1 : 0;
+        $actif = $_POST['actif'] ? 1 : 0;
         $type = enumPublicite::from($_POST['type']);
 
         $publicite=new Publicite(null, $nomFichier, $ordre, $actif, $type,1);
@@ -62,7 +62,7 @@ class ControleurPublicite extends ControleurGenerique
         $idPublicite = $_POST['idPublicites'];
         $nomFichier = $_POST['fichier'];
         $ordre = $_POST['ordre'];
-        $actif = $_POST['statut'] ? 1 : 0;
+        $actif = $_POST['actif'] ? 1 : 0;
         $type = enumPublicite::from($_POST['type']);
 
         $publicite=new Publicite($idPublicite, $nomFichier, $ordre, $actif, $type,1);

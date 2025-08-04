@@ -198,27 +198,28 @@ function modalService(nomServicePlaceholder, dateOuverturePlaceholder, dateFerme
     modal.creerTextField("Nom du service", "text", nomServicePlaceholder, "NomService");
     modal.creerTextField("Horaire d'ouverture", "time", dateOuverturePlaceholder, "TimeOuverture");
     modal.creerTextField("Horaire de fermeture", "time", dateFermeturePlaceholder, "TimeFermeture");
-    modal.creerInputCheckbox("Service actif",checkboxPlaceholder,"Service");
+    modal.creerInputCheckbox("Service actif", checkboxPlaceholder, "Service");
     modal.creerButtons(callback);
     modal.afficher();
 }
 
 async function modalAgent(nomAgent, mailAgent, statutAgent, loginAgent, motDePasseAgent, roleAgent, idGuichet, idService, callback) {
     const modal = new Modal("Nouvel agent");
-    modal.creerTextField("Nom complet","text",nomAgent,"NomAgent");
-    modal.creerTextField("Email","text",mailAgent,"MailAgent");
-    modal.creerTextField("Login","text",loginAgent,"LoginAgent");
-    modal.creerTextField("Mot de passe","password",motDePasseAgent,"MotDePasseAgent");
+    modal.creerTextField("Nom complet", "text", nomAgent, "NomAgent");
+    modal.creerTextField("Email", "text", mailAgent, "MailAgent");
+    modal.creerTextField("Login", "text", loginAgent, "LoginAgent");
+    modal.creerTextField("Mot de passe", "password", motDePasseAgent, "MotDePasseAgent");
     modal.creerSelecteur("Rôle agent", "inputRoleAgent", [
-        { valeur: "agent", texte: "agent" },
-        { valeur: "administrateur", texte: "administrateur" }
+        {valeur: "agent", texte: "agent"},
+        {valeur: "administrateur", texte: "administrateur"}
     ], roleAgent);
-    await modal.creerInputSelect("Guichet","inputGuichetAgent",idGuichet, recupererGuichets);
+    await modal.creerInputSelect("Guichet", "inputGuichetAgent", idGuichet, recupererGuichets);
     await modal.creerInputSelect("Services", "inputServiceAgent", idService, recupererServices);
     modal.creerInputCheckbox("Agent actif", statutAgent, "Agent");
     modal.creerButtons(callback);
     modal.afficher();
 }
+
 async function mettreAJourAgent(idAgent) {
     const formData = new FormData();
     const nomAgent = document.getElementById("inputNomAgent");
@@ -292,11 +293,6 @@ async function supprimerAgent(idAgent) {
     }
 }
 
-// async function actualiserListeServices() {
-//     await fetch("/fileAttente/web/controleurFrontal.php?action=afficherServiceAdministration&controleur=service", {
-//         method: "GET"
-//     });
-// }
 
 async function recupererGuichets() {
     const response = await fetch("/fileAttente/web/controleurFrontal.php?action=recupererListeGuichet&controleur=guichet", {
@@ -378,103 +374,29 @@ async function diminuerOrdrePub(idPub) {
 }
 
 function modalPublicite(nomFichierPlaceholder, ordrePlaceholder, statutPlaceholder, typePlaceholder, callback) {
-    const modal = document.createElement("div");
-    modal.className = "modal";
+    const modal = new Modal("Nouvelle publicité");
 
-    const titre = document.createElement("h2");
-    titre.textContent = "Nouvelle publicité";
-
-
-    const divNomFichier = document.createElement("div");
-    const nomFichierP = document.createElement("p");
-    nomFichierP.textContent = "URL du fichier :";
-
-    const nomFichier = document.createElement("input");
-    nomFichier.type = "text";
-    nomFichier.id = "inputNomFichier";
-    nomFichier.value = nomFichierPlaceholder;
-
-    divNomFichier.append(nomFichierP, nomFichier);
-
-    const divOrdre = document.createElement("div");
-    const ordreP = document.createElement("p");
-    ordreP.textContent = "Ordre :";
-
-    const ordre = document.createElement("input");
-    ordre.type = "number";
-    ordre.id = "inputOrdre";
-    ordre.value = ordrePlaceholder;
-
-    divOrdre.append(ordreP, ordre);
-
-    const divCheckbox = document.createElement("div");
-    const statutP = document.createElement("p");
-    statutP.textContent = "Publicité active :";
-
-    const statut = document.createElement("input");
-    statut.type = "checkbox";
-    statut.id = "checkBoxPublicite";
-    statut.checked = statutPlaceholder;
-
-    divCheckbox.className = "divCheckbox";
-    divCheckbox.append(statutP, statut);
-
-    const divType = document.createElement("div");
-    const typeP = document.createElement("p");
-    typeP.textContent = "Type :";
-
-    const type = document.createElement("select");
-    type.id = "inputType";
-    type.innerHTML = '' +
-        '<option value="image"> image  </option>' +
-        '<option value="vidéo"> vidéo </option>';
-    type.value = typePlaceholder;
-    divType.append(typeP, type);
-
-
-    const divParametres = document.createElement("div");
-    divParametres.className = "divParametres";
-    divParametres.append(divNomFichier, divOrdre, divType);
-
-
-    const buttonSave = document.createElement("button");
-    buttonSave.id = "buttonSave";
-    buttonSave.textContent = "Enregistrer";
-
-    const buttonClose = document.createElement("button");
-    buttonClose.id = "buttonClose";
-    buttonClose.className = "close";
-    buttonClose.textContent = "Annuler";
-    buttonClose.onclick = () => {
-        modal.remove();
-        overlay.remove();
-    };
-    buttonSave.onclick = async () => {
-        await callback();
-        modal.remove();
-        overlay.remove();
-    }
-    const divButton = document.createElement("div");
-    divButton.className = "divButton";
-    divButton.append(buttonSave, buttonClose);
-
-    modal.append(titre, divParametres, divCheckbox, divButton);
-
-    const overlay = document.createElement("div");
-    overlay.className = "overlay";
-    document.body.append(overlay, modal);
+    modal.creerTextField("URL du fichier", "text", nomFichierPlaceholder, "NomFichier");
+    modal.creerTextField("Ordre", "number", ordrePlaceholder, "Ordre");
+    modal.creerSelecteur("Type", "inputType", [
+        {valeur: "image", texte: "image"},
+        {valeur: "vidéo", texte: "vidéo"}
+    ], typePlaceholder);
+    modal.creerInputCheckbox("Publicité active ", statutPlaceholder, "Publicite");
+    modal.creerButtons(callback);
+    modal.afficher();
 }
 
 async function ajouterPublicite() {
     const formData = new FormData();
     const nomFichier = document.getElementById("inputNomFichier");
     const ordre = document.getElementById("inputOrdre");
-    const statut = document.getElementById("checkBoxPublicite");
+    const statut = document.getElementById("checkboxPublicite");
     const type = document.getElementById("inputType");
 
     formData.append("fichier", nomFichier.value);
     formData.append("ordre", ordre.value);
-    formData.append("statut", statut.value);
+    formData.append("actif", statut.checked ? "1" : "0");
     formData.append("type", type.value);
 
     try {
@@ -491,13 +413,13 @@ async function mettreAJourPublicite(idPub) {
     const formData = new FormData();
     const nomFichier = document.getElementById("inputNomFichier");
     const ordre = document.getElementById("inputOrdre");
-    const statut = document.getElementById("inputStatut");
+    const statut = document.getElementById("checkboxPublicite");
     const type = document.getElementById("inputType");
 
     formData.append("idPublicites", idPub);
     formData.append("fichier", nomFichier.value);
     formData.append("ordre", ordre.value);
-    formData.append("statut", statut.value);
+    formData.append("actif", statut.checked ? "1" : "0");
     formData.append("type", type.value);
 
     try {
@@ -515,6 +437,67 @@ async function supprimerPublicite(idPub) {
         await fetch(`/fileAttente/web/controleurFrontal.php?action=supprimerPubliciteAdministration&controleur=publicite&idPublicites=${idPub}`, {
             method: "GET"
         });
+    }
+}
+
+
+async function modalGuichet(nomGuichetPlaceholder, statutGuichetPlaceholder, idServicePlaceholder, callback) {
+    const modal = new Modal("Nouveau guichet");
+    modal.creerTextField("Nom du guichet", "text", nomGuichetPlaceholder, "NomGuichet");
+    modal.creerInputCheckbox("Guichet actif", statutGuichetPlaceholder, "Guichet");
+    await modal.creerInputSelect("Service lié", "inputGuichetService", idServicePlaceholder, recupererServices);
+    modal.creerButtons(callback);
+    modal.afficher();
+}
+
+async function ajouterGuichet() {
+    const formData = new FormData();
+    const nomGuichet = document.getElementById("inputNomGuichet");
+    const statutGuichet = document.getElementById("checkboxGuichet");
+    const idService = document.getElementById("inputGuichetService");
+
+    formData.append("nom_guichet", nomGuichet.value);
+    formData.append("statutGuichet", statutGuichet.checked ? "1" : "0");
+    formData.append("idService", idService.value);
+
+    try {
+        await fetch("/fileAttente/web/controleurFrontal.php?action=creerGuichetAdministration&controleur=guichet", {
+            method: "POST",
+            body: formData,
+        });
+    } catch (e) {
+        console.error("Erreur lors de l'ajout du guichet");
+    }
+
+}
+
+async function mettreAJourGuichet(idGuichet) {
+    const formData = new FormData();
+    const nomGuichet = document.getElementById("inputNomGuichet");
+    const statutGuichet = document.getElementById("checkboxGuichet");
+    const idService = document.getElementById("inputGuichetService");
+
+    formData.append("idGuichet", idGuichet)
+    formData.append("nom_guichet", nomGuichet.value);
+    formData.append("statutGuichet", statutGuichet.checked ? "1" : "0");
+    formData.append("idService", idService.value);
+
+    try {
+        await fetch("/fileAttente/web/controleurFrontal.php?action=mettreAJourGuichetAdministration&controleur=guichet", {
+            method: "POST",
+            body: formData,
+        });
+    } catch (e) {
+        console.error("Erreur lors de la mise à jour du guichet");
+    }
+}
+
+
+async function supprimerGuichet(idGuichet) {
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce guichet ?")) {
+        await fetch(`/fileAttente/web/controleurFrontal.php?action=supprimerGuichetAdministration&controleur=guichet&idGuichet=${idGuichet}`, {
+            method: "GET"
+        })
     }
 }
 

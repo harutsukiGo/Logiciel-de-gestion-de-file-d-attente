@@ -80,7 +80,9 @@ class Modal {
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.id = `checkbox${objet}`;
-        checkbox.checked = nomObjetPlaceholder;
+        // checkbox.checked = nomObjetPlaceholder;
+
+        checkbox.checked = nomObjetPlaceholder === true || nomObjetPlaceholder === 1 || nomObjetPlaceholder === "1";
 
         divObjetCheckbox.append(checkbox,nomObjetCheckbox);
         this.modal.append(divObjetCheckbox);
