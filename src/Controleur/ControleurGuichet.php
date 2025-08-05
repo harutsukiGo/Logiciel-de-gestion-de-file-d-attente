@@ -11,7 +11,7 @@ class ControleurGuichet extends ControleurGenerique
 
     public static function recupererListeGuichet()
     {
-        echo json_encode((new GuichetsRepository())->recupererGuichets());
+        echo json_encode((new GuichetsRepository())->recupererGuichetsActif());
     }
 
     public static function afficherGuichetsAdministration()

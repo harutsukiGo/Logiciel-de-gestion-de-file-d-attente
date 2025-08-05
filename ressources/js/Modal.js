@@ -1,4 +1,4 @@
-class Modal {
+export class Modal {
 
     constructor(titre) {
         this.modal = document.createElement("div");

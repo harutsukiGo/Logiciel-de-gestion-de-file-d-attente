@@ -122,7 +122,7 @@ class ControleurTicket extends ControleurGenerique
 
     public static function recupereAgentRandom()
     {
-        $agents = (new AgentRepository())->recuperer();
+        $agents = (new AgentRepository())->recupererAgentActif();
 
         if (empty($agents)) {
             return null;

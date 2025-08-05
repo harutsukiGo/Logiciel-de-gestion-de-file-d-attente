@@ -3,8 +3,6 @@
 namespace App\file\Controleur;
 
 use App\file\Modele\DataObject\Service;
-use App\file\Modele\Repository\AgentRepository;
-use App\file\Modele\Repository\GuichetsRepository;
 use App\file\Modele\Repository\ServiceRepository;
 
 class ControleurService extends ControleurGenerique

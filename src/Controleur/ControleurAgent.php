@@ -3,6 +3,7 @@
 namespace App\file\Controleur;
 
 use App\file\Lib\ConnexionUtilisateur;
+use App\file\Lib\MotDePasse;
 use App\file\Modele\DataObject\Agents;
 use App\file\Modele\Repository\AgentRepository;
 use App\file\Modele\Repository\GuichetsRepository;
@@ -59,7 +60,7 @@ class ControleurAgent extends ControleurGenerique
             ControleurAgent::redirectionVersURL("?action=afficherAuthentification&controleur=agent");
             return;
         }
-        if ($_REQUEST['motDePasse'] !== $agent->getMotDePasse()) {
+        if (!MotDePasse::verifier($_REQUEST['motDePasse'], $agent->getMotDePasse())) {
             ControleurAgent::redirectionVersURL("?action=afficherAuthentification&controleur=agent");
         }
         ConnexionUtilisateur::connecter($agent->getIdAgent());
@@ -95,7 +96,7 @@ class ControleurAgent extends ControleurGenerique
         $nomAgent = $_POST["nomAgent"];
         $emailAgent = $_POST["mailAgent"];
         $loginAgent = $_POST["loginAgent"];
-        $motDePasseAgent = $_POST["motDePasseAgent"];
+        $motDePasseAgent = MotDePasse::hacher($_POST["motDePasseAgent"]);
         $roleAgent = $_POST["roleAgent"];
         $guichetAgent = (new GuichetsRepository())->recupererParClePrimaire($_POST["idGuichet"]);
         $statutAgent = $_POST["statutAgent"];
@@ -123,7 +124,7 @@ class ControleurAgent extends ControleurGenerique
         $nomAgent = $_POST["nomAgent"];
         $emailAgent = $_POST["mailAgent"];
         $loginAgent = $_POST["loginAgent"];
-        $motDePasseAgent = $_POST["motDePasseAgent"];
+        $motDePasseAgent = MotDePasse::hacher($_POST["motDePasseAgent"]);
         $roleAgent = $_POST["roleAgent"];
         $guichetAgent = (new GuichetsRepository())->recupererParClePrimaire($_POST["idGuichet"]);
         $statutAgent = $_POST["statutAgent"];
@@ -141,7 +142,7 @@ class ControleurAgent extends ControleurGenerique
 
     public static function supprimerAgentAdministration()
     {
-        $res=(new AgentRepository())->supprimerAgent();
+        $res = (new AgentRepository())->supprimerAgent();
         if (!$res) {
             header('Content-Type: application/json');
             echo json_encode(['failed' => false, 'message' => 'Erreur lors de la suppression du service.']);

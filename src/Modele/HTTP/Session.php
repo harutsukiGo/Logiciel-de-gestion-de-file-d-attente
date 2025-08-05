@@ -1,7 +1,6 @@
 <?php
 namespace App\file\Modele\HTTP;
 use App\file\Configuration\ConfigurationSite;
-use Cassandra\Date;
 use Exception;
 
 class Session

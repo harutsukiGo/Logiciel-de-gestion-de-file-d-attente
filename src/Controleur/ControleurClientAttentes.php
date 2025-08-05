@@ -8,4 +8,10 @@ class ControleurClientAttentes extends ControleurGenerique
     {
       (new ClientAttentesRepository())->mettreAJourService($_REQUEST["idTicket"], $_REQUEST["idService"]);
     }
+
+    public static function mettreAJourStatutClient()
+    {
+        (new ClientAttentesRepository())->mettreAJourStatut($_REQUEST["idTicket"], $_REQUEST["statut"]);
+
+    }
 }

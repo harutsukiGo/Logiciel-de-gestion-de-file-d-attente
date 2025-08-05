@@ -47,12 +47,12 @@ class ServiceRepository extends AbstractRepository
         ];
     }
 
-    public function getNbPersonneAttente(string $idService): int
+    public function getNbPersonneAttente(int $idService): int
     {
         $sql = "SELECT COUNT(*)
             FROM client_attentes c
             JOIN services s ON s.idService = c.idService
-            WHERE c.idService = :idService";
+            WHERE c.idService = :idService AND c.statut = 'en attente'";
 
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $pdoStatement->execute([':idService' => $idService]);
@@ -101,7 +101,7 @@ class ServiceRepository extends AbstractRepository
 
     public function recupererServices():array
     {
-        $sql="SELECT idService, nomService FROM ".$this->getNomTable();
+        $sql="SELECT idService, nomService FROM ".$this->getNomTable() . " WHERE estActif='1';";
         $pdoStatement=ConnexionBaseDeDonnees::getPdo();
         $res= $pdoStatement->query($sql);
         return  $res->fetchAll();

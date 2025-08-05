@@ -47,9 +47,9 @@ class GuichetsRepository extends AbstractRepository
     }
 
 
-    public function recupererGuichets():array
+    public function recupererGuichetsActif():array
     {
-        $sql="SELECT idGuichet FROM ".$this->getNomTable();
+        $sql="SELECT idGuichet FROM ".$this->getNomTable()." WHERE estActif='1';";
         $pdoStatement=ConnexionBaseDeDonnees::getPdo();
        $res= $pdoStatement->query($sql);
        return  $res->fetchAll();

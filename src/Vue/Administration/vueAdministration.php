@@ -5,7 +5,7 @@
                  <p>Tickets aujourd'hui</p>
                  <p class="nombreTicket">
                      <?php
-                     use App\file\Lib\ConnexionUtilisateur;
+
                      use App\file\Modele\Repository\ServiceRepository;
                      use App\file\Modele\Repository\TicketRepository;
                      echo (new TicketRepository())->compteTicket(); ?>

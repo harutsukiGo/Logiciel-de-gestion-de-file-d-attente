@@ -12,9 +12,8 @@ use App\file\Modele\Repository\AgentRepository;
         <?php
         /** @var string $titre*/
         echo $titre;?></title>
-    <script src="/fileAttente/ressources/js/script.js"></script>
-    <script src="/fileAttente/ressources/js/Modal.js"></script>
-    <link rel="stylesheet" href="/fileAttente/ressources/css/style.css">
+    <script type="module" src="/fileAttente/ressources/js/script.js"></script>
+     <link rel="stylesheet" href="/fileAttente/ressources/css/style.css">
 </head>
 <body>
 <header>
@@ -81,7 +80,8 @@ $listeChemins = [
     "Publicite/listePublicitesAdministration.php",
     "Guichet/listeGuichetsAdministration.php",
     "Service/listeServiceAdministration.php",
-    "Agent/listeAgentAdministration.php"
+    "Agent/listeAgentAdministration.php",
+    "Parametre/vueParametre.php"
 ];
 if (in_array($cheminCorpsVue, $listeChemins)):?>
     <section class="sectionServiceAdministration">
@@ -159,7 +159,7 @@ if (in_array($cheminCorpsVue, $listeChemins)):?>
          </span>
             </button>
 
-            <button id="btnParametres">
+            <button id="btnParametres" onclick="window.location.href='/fileAttente/web/controleurFrontal.php?action=afficherParametre&controleur=parametre'">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                      class="lucide lucide-monitor w-4 h-4">

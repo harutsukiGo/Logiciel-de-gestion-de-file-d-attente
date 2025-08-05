@@ -60,7 +60,7 @@ class AgentRepository extends AbstractRepository
 
     public function retournePlusPetitTicketAgent(): array
     {
-        $sql = "SELECT t.idTicket, t.num_ticket, s.nomService, t.statutTicket
+        $sql = "SELECT t.idTicket, t.num_ticket, s.nomService, t.statutTicket,t.idHistorique
                 FROM tickets t
                 JOIN agents a ON a.idAgent = t.idAgent
                 JOIN services s ON s.idService = a.idService
@@ -158,5 +158,16 @@ class AgentRepository extends AbstractRepository
             "idAgentTag" => $_REQUEST['idAgent']
         ];
         return $pdoStatement->execute($values);
+    }
+
+    public function recupererAgentActif()
+    {
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query("SELECT * FROM " . $this->getNomTable()." WHERE estActif = '1'");
+
+        $objects = [];
+        foreach ($pdoStatement as $object) {
+            $objects[] = $this->construireDepuisTableauSQL($object);
+        }
+        return $objects;
     }
 }

@@ -45,19 +45,6 @@ class ClientAttentesRepository extends AbstractRepository
         ];
     }
 
-
-    public function ajouterClientAttentes(AbstractDataObject $objet):void
-    {
-        try {
-            $sql = "INSERT INTO " . $this->getNomTable() . " (" . join(",", $this->getNomsColonnes()) . ") VALUES (:" . join("Tag, :", $this->getNomsColonnes()) . "Tag)";
-            $creerObject = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
-            $creerObject->execute($this->formatTableauSQL($objet));
-        } catch (PDOException $e) {
-            return;
-        }
-    }
-
-
     public function mettreAJourService($idTicket, $idService): void
     {
         try {
@@ -68,6 +55,22 @@ class ClientAttentesRepository extends AbstractRepository
         } catch (\PDOException $e) {
             throw new \Exception("Error while updating service: " . $e->getMessage());
         }
+    }
+
+
+    public function mettreAJourStatut(int $idTicket, string $statut): bool
+    {
+        try {
+            $sql = "UPDATE " . $this->getNomTable() . " SET statut = :statutTag WHERE idTicket = :idTicketTag";
+            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+            $values = [
+                "statutTag" => $statut, "idTicketTag" => $idTicket
+            ];
+            return $pdoStatement->execute($values);
+        } catch (PDOException $e) {
+            return false;
+        }
+
     }
 
 }

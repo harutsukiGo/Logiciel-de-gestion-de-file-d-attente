@@ -1,0 +1,197 @@
+import {mettreAJourStatutClient} from "./clients_attente.js";
+import {mettreAJourStatutHistorique} from "./historique.js";
+
+let htmlInitial;
+
+async function appelerSuivant() {
+    const ticket = await recuperePremierTicketAgent();
+    if (!ticket || ticket.length === 0) {
+        return;
+    }
+    const div = document.getElementById("infoTicketCourant");
+    div.textContent = "";
+    let date = new Date();
+
+    await mettreAJourTicket(ticket[0].idTicket, "en cours");
+    await mettreAJourStatutClient(ticket[0].idTicket, "en cours");
+    await mettreAJourStatutHistorique(ticket[0].idHistorique, "en cours");
+    await mettreAJourTicketDateArrivee(ticket[0][0]);
+    div.style.background = "rgb(239 246 255)";
+    div.insertAdjacentHTML("beforeend", `
+        <p id="numTicketCourantAgent">${ticket[0].num_ticket}</p>
+        <p id="nomServiceCourant">${ticket[0].nomService} </p>
+        <p id="statutCourant">En cours</p>
+        <p id="dateArrive">Pris à ${date.toLocaleTimeString()} </p>
+    `);
+    div.insertAdjacentHTML("afterend", `
+        <div class="divBoutonStatutTicket">
+        <input type="hidden" id="idTicket" value="${ticket[0].idTicket}">
+        <input type="hidden" id="idHistorique" value="${ticket[0].idHistorique}">
+         <button id="btnTerminer" onclick="terminerTicket()"> Terminer </button>
+         <button id="btnAbsent" onclick="absentTicket()" > Absent </button>
+            <button id="btnSimuler" onclick="simuler()"> Rappeler </button>
+        </div>
+    `);
+}
+
+function setHtmlInitial(html) {
+    htmlInitial = html;
+}
+
+async function retourneNbTicketsAttente() {
+    return await fetch(`/fileAttente/web/controleurFrontal.php?action=nbTicketsEnAttente&controleur=ticket`, {
+        method: "GET"
+    })
+        .then(response => response.json())
+        .then(data => {
+            return data;
+        });
+}
+
+async function terminerTicket() {
+    const idTicket = document.getElementById("idTicket");
+    const idHistorique = document.getElementById("idHistorique");
+    if (!idTicket) return;
+    await mettreAJourTicket(idTicket.value, "terminé");
+    await mettreAJourStatutClient(idTicket.value, "terminé");
+    await mettreAJourStatutHistorique(idHistorique.value, "terminé");
+    await mettreAJourTicketDateTerminee(idTicket.value);
+    reinitialiserInterface();
+}
+
+async function absentTicket() {
+    const idTicket = document.getElementById("idTicket");
+    const idHistorique = document.getElementById("idHistorique");
+    if (!idTicket) return;
+    await mettreAJourTicket(idTicket.value, "absent");
+    await mettreAJourStatutClient(idTicket.value, "absent");
+    await mettreAJourStatutHistorique(idHistorique.value, "absent");
+    await mettreAJourTicketDateTerminee(idTicket.value);
+    reinitialiserInterface();
+}
+
+async function mettreAJourTicket(idTicket, statut) {
+    await fetch(`/fileAttente/web/controleurFrontal.php?action=mettreAJourStatutTicket&controleur=ticket&idTicket=${idTicket}&statutTicket=${statut}`, {
+        method: "GET"
+    })
+}
+
+async function recuperePremierTicketAgent() {
+    const idAgent = document.getElementById("idAgent");
+    const response = await fetch(`/fileAttente/web/controleurFrontal.php?action=recupereTicketAgent&controleur=agent&idAgent=${idAgent.value}`, {
+        method: "GET"
+    });
+    return await response.json();
+}
+
+async function mettreAJourTicketDateArrivee(idTicket) {
+    if (!idTicket) return;
+    try {
+        await fetch(`/fileAttente/web/controleurFrontal.php?action=mettreAJourDateArriveeTicket&controleur=ticket&idTicket=${idTicket}`, {
+            method: "GET"
+        });
+    } catch (e) {
+        console.error("Erreur lors de la mise à jour de la date de début du ticket:", e);
+    }
+}
+
+async function mettreAJourTicketDateTerminee(idTicket) {
+    if (!idTicket) return;
+    try {
+        await fetch(`/fileAttente/web/controleurFrontal.php?action=mettreAJourDateTermineeTicket&controleur=ticket&idTicket=${idTicket}`, {
+            method: "GET"
+        });
+    } catch (e) {
+        console.error("Erreur lors de la mise à jour de la date de fin du ticket:", e);
+    }
+}
+
+async function simuler() {
+    const idTicket = document.getElementById("idTicket");
+    const numTicket = document.getElementById("numTicketCourant");
+    const nomService = document.getElementById("nomServiceCourant");
+    const numGuichet = document.getElementById("numeroGuichet");
+
+    if (!idTicket) {
+        if (numTicket) {
+            numTicket.textContent = "Aucun tickets à traiter actuellement";
+        }
+        if (nomService) {
+            nomService.textContent = "Aucun service";
+        }
+        if (numGuichet) {
+            numGuichet.textContent = "Aucun guichet";
+        }
+        return;
+    }
+
+    if (await retourneNbTicketsAttente() >= 1) {
+        // let voices;
+        // const selecteurVoix = document.createElement("select");
+        // selecteurVoix.id = "selecteurVoix";
+        //  speechSynthesis.onvoiceschanged = function () {
+        //     voices.window.speechSynthesis.getVoices();
+        //     voices.forEach(function (item, i) {
+        //         const option = document.createElement("option");
+        //         option.value = i;
+        //         option.textContent = item.name;
+        //         selecteurVoix.append(option);
+        //     });
+        //     document.body.append(selecteurVoix)
+        // const div=document.createElement("div");
+        // div.style.background="red";
+        // // document.body.append(div);
+        // }
+        const text = `Le ticket numéro ${numTicket.textContent} pour le service ${nomService.textContent} est attendu au ${numGuichet.textContent}.
+        `;
+        let speech = new SpeechSynthesisUtterance(text);
+         speechSynthesis.speak(speech);
+
+
+        // const divStatut = document.getElementById(`${idTicket.value}`);
+        // if (divStatut && divStatut.classList.contains("statutEnAttente")) {
+        //     divStatut.textContent = "terminé";
+        //     divStatut.classList.remove("statutEnAttente");
+        //     divStatut.classList.add("statutTermine");
+        // }
+    }
+}
+
+
+function reinitialiserInterface() {
+    const div = document.getElementById("infoTicketCourant");
+    div.innerHTML = htmlInitial;
+    div.style.background = "none";
+    const divBoutonStatutTicket = document.querySelector(".divBoutonStatutTicket");
+    if (divBoutonStatutTicket) {
+        divBoutonStatutTicket.remove();
+    }
+}
+
+async function redirigerTicket() {
+    const idTicket = document.getElementById("numTicketRedirection");
+    const service = document.getElementById("serviceDeroulant");
+
+    try {
+        await fetch("/fileAttente/web/controleurFrontal.php?action=mettreAJourServiceClient&controleur=clientAttentes&idTicket=" + idTicket.value + "&idService=" + service.value, {
+            method: "GET"
+        });
+    } catch (e) {
+        console.error("Erreur lors de la redirection du ticket");
+    }
+}
+
+export {
+    appelerSuivant,
+    terminerTicket,
+    absentTicket,
+    mettreAJourTicket,
+    recuperePremierTicketAgent,
+    mettreAJourTicketDateArrivee,
+    mettreAJourTicketDateTerminee,
+    reinitialiserInterface,
+    redirigerTicket,
+    retourneNbTicketsAttente,
+    setHtmlInitial,
+    simuler
+};

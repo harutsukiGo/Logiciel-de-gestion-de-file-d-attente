@@ -1,7 +1,15 @@
 <?php /** @var Agents[] $agents */
 
 use App\file\Modele\Repository\AgentRepository; ?>
-    <section>
+
+<section class="headerServiceAdministration">
+    <h2> Gestion des agents</h2>
+    <button id="btnNouveauService" onclick="modalAgent(null, null, null, null, null, null, null,null,ajouterAgent)">
+        <span> + Nouvel agent </span>
+    </button>
+</section>
+
+<section>
         <?php foreach ($agents as $agent): ?>
         <?php  if ($agent->getEstActif()):?>
             <div class="divService" data-id-service="<?php echo $agent->getIdAgent(); ?>">

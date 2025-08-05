@@ -83,5 +83,16 @@ class HistoriqueRepository extends AbstractRepository
         return $pdoStatement->fetchAll();
     }
 
+    public function mettreAJourStatutHistorique(int $idHistorique, string $statut): bool
+    {
+        try {
+            $sql = "UPDATE " . $this->getNomTable() . " SET statut = :statutTag WHERE idHistorique = :idHistoriqueTag";
+            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+            $values = ["statutTag" => $statut, "idHistoriqueTag" => $idHistorique];
+            return $pdoStatement->execute($values);
+        } catch (PDOException $e) {
+            return false;
+        }
 
+    }
 }
