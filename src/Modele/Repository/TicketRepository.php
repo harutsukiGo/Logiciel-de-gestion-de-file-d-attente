@@ -95,8 +95,7 @@ class TicketRepository extends AbstractRepository
             FROM tickets t
             JOIN client_attentes c ON c.idTicket = t.idTicket
             JOIN services s ON s.idService = c.idService
-            JOIN agents a ON a.idService = s.idService
-            JOIN guichets g ON g.idGuichet = a.idGuichet
+            JOIN guichets g ON g.idService = s.idService
             WHERE t.statutTicket = 'en attente' 
           ";
 

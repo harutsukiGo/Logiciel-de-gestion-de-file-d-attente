@@ -1,3 +1,5 @@
+import {speech} from "./speech.js";
+
 function actualiserHorloge() {
     const horloge = document.getElementById('horloge');
     const maintenant = new Date();
@@ -20,4 +22,20 @@ function afficherPub() {
     }, 3000);
 }
 
-export { actualiserHorloge, afficherPub };
+
+function ajusterVolume() {
+    const slider = document.getElementById("sliderRange");
+    if (slider) {
+         const valeur = parseFloat(slider.value);
+        speech.setVolume(valeur);
+    }
+}
+
+function initialiserSliderVolume() {
+    const slider = document.getElementById("sliderRange");
+    if (slider) {
+        slider.value = speech.getVolume();
+    }
+}
+
+export {actualiserHorloge, afficherPub, ajusterVolume, initialiserSliderVolume};

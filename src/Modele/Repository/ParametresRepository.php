@@ -1,11 +1,12 @@
 <?php
-namespace App\Modele\Repository;
+
+namespace App\file\Modele\Repository;
 
 use App\file\Modele\DataObject\AbstractDataObject;
-use App\file\Modele\Repository\AbstractRepository;
-use App\Modele\DataObject\Parametres;
+use App\file\Modele\DataObject\Parametres;
 
-class ParametresRepository extends AbstractRepository{
+class ParametresRepository extends AbstractRepository
+{
     protected function getNomTable(): string
     {
         return "parametres";
@@ -13,16 +14,16 @@ class ParametresRepository extends AbstractRepository{
 
     protected function getNomClePrimaire(): string
     {
-         return "idParametre";
+        return "idParametre";
     }
 
     protected function construireDepuisTableauSQL(array $objetFormatTableau): AbstractDataObject
     {
-         return new Parametres(
-             $objetFormatTableau["idParametre"],
-             $objetFormatTableau["cle"],
-             $objetFormatTableau["valeur"],
-         );
+        return new Parametres(
+            $objetFormatTableau["idParametre"],
+            $objetFormatTableau["cle"],
+            $objetFormatTableau["valeur"],
+        );
     }
 
     protected function getNomsColonnes(): array
@@ -39,5 +40,19 @@ class ParametresRepository extends AbstractRepository{
         ];
     }
 
+    public function getValeur(string $cle): ?AbstractDataObject
+    {
+        $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE cle = :cleTag";
+        $res = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(":cleTag" => $cle);
+        $res->execute($values);
+        $objectFormatTableau = $res->fetch();
+
+        if ($objectFormatTableau === false) {
+            return null;
+        }
+
+        return $this->construireDepuisTableauSQL($objectFormatTableau);
+    }
 
 }

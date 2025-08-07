@@ -1,7 +1,5 @@
 <?php
-namespace App\Modele\DataObject;
-
-use App\file\Modele\DataObject\AbstractDataObject;
+namespace App\file\Modele\DataObject;
 
 class Parametres extends AbstractDataObject{
 

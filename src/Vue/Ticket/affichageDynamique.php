@@ -48,7 +48,12 @@ use App\file\Modele\DataObject\enumPublicite;
                 <?php foreach ($publicites as $key => $publicite): ?>
             <?php if ($publicite->getEstActif()):?>
             <?php if ($publicite->getType() === enumPublicite::VIDEO ):?>
-                            <iframe class="imgPub" src="<?php echo $publicite->getFichier() . (str_contains($publicite->getFichier(), '?') ? '&' : '?') . 'autoplay=1&mute=1&loop=1'; ?>" title="YouTube video player" allow="autoplay"></iframe>
+                            <iframe class="imgPub" src="<?php
+                            $videoUrl = $publicite->getFichier();
+                            preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $videoUrl, $matches);
+                            $videoId = isset($matches[1]) ? $matches[1] : '';
+                            echo "https://www.youtube.com/embed/" . $videoId . "?autoplay=1&mute=1&loop=1&playlist=" . $videoId;
+                            ?>" title="YouTube video player" allow="autoplay" frameborder="0" allowfullscreen></iframe>
                         <?php else:?>
                     <img class="imgPub <?= $key === 0 ? 'active' : 'hidden' ?>"
                          src="<?= $publicite->getFichier() ?>"

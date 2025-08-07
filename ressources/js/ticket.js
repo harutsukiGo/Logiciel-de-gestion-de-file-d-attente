@@ -1,5 +1,7 @@
 import {mettreAJourStatutClient} from "./clients_attente.js";
 import {mettreAJourStatutHistorique} from "./historique.js";
+import {speech} from "./speech.js";
+import {getVoixSelectionnee} from "./parametres.js";  // Ajoutez cet import
 
 let htmlInitial;
 
@@ -112,7 +114,7 @@ async function simuler() {
     const nomService = document.getElementById("nomServiceCourant");
     const numGuichet = document.getElementById("numeroGuichet");
 
-    if (!idTicket) {
+     if (!idTicket) {
         if (numTicket) {
             numTicket.textContent = "Aucun tickets à traiter actuellement";
         }
@@ -126,35 +128,34 @@ async function simuler() {
     }
 
     if (await retourneNbTicketsAttente() >= 1) {
-        // let voices;
-        // const selecteurVoix = document.createElement("select");
-        // selecteurVoix.id = "selecteurVoix";
-        //  speechSynthesis.onvoiceschanged = function () {
-        //     voices.window.speechSynthesis.getVoices();
-        //     voices.forEach(function (item, i) {
-        //         const option = document.createElement("option");
-        //         option.value = i;
-        //         option.textContent = item.name;
-        //         selecteurVoix.append(option);
-        //     });
-        //     document.body.append(selecteurVoix)
-        // const div=document.createElement("div");
-        // div.style.background="red";
-        // // document.body.append(div);
-        // }
-        const text = `Le ticket numéro ${numTicket.textContent} pour le service ${nomService.textContent} est attendu au ${numGuichet.textContent}.
-        `;
-        let speech = new SpeechSynthesisUtterance(text);
-         speechSynthesis.speak(speech);
+        const text = `Le ticket numéro ${numTicket.textContent} pour le service ${nomService.textContent} est attendu au ${numGuichet.textContent}.`;
 
+        let voixSelectionnee = getVoixSelectionnee();
+        if (!voixSelectionnee && speechSynthesis.getVoices().length === 0) {
+            await new Promise(resolve => {
+                speechSynthesis.onvoiceschanged = () => {
+                    voixSelectionnee = getVoixSelectionnee();
+                    resolve();
+                };
+                 setTimeout(resolve, 1000);
+            });
+        }
+        console.log("Voix utilisée:", voixSelectionnee?.name || "voix par défaut");
 
-        // const divStatut = document.getElementById(`${idTicket.value}`);
-        // if (divStatut && divStatut.classList.contains("statutEnAttente")) {
-        //     divStatut.textContent = "terminé";
-        //     divStatut.classList.remove("statutEnAttente");
-        //     divStatut.classList.add("statutTermine");
-        // }
+        if (voixSelectionnee) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.voice = voixSelectionnee;
+            utterance.lang = voixSelectionnee.lang;
+
+            speechSynthesis.cancel();
+
+            speechSynthesis.speak(utterance);
+        } else {
+            speech.setText(text);
+            speech.parler();
+        }
     }
+
 }
 
 
