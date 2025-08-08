@@ -2,8 +2,7 @@ class Speech {
     constructor() {
         this.speech = new SpeechSynthesisUtterance("");
         this.speech.volume = parseFloat(localStorage.getItem('speechVolume') || 1);
-        this.speech.voice = null;
-    }
+     }
 
     setText(texte) {
         this.speech.text = texte;
@@ -13,12 +12,8 @@ class Speech {
         this.speech.volume = parseFloat(valeur);
         localStorage.setItem('speechVolume', this.speech.volume);
     }
-    getVolume() {
-        return this.speech.volume;
-    }
-
-    parler() {
-        window.speechSynthesis.speak(this.speech);
+    setVoice(voice) {
+        this.speech.voice = voice;
     }
 }
 

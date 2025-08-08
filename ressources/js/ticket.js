@@ -1,7 +1,7 @@
 import {mettreAJourStatutClient} from "./clients_attente.js";
 import {mettreAJourStatutHistorique} from "./historique.js";
 import {speech} from "./speech.js";
-import {getVoixSelectionnee} from "./parametres.js";  // Ajoutez cet import
+import {getVoixSelectionnee} from "./parametres.js";
 
 let htmlInitial;
 
@@ -140,22 +140,14 @@ async function simuler() {
                  setTimeout(resolve, 1000);
             });
         }
-        console.log("Voix utilisée:", voixSelectionnee?.name || "voix par défaut");
-
         if (voixSelectionnee) {
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.voice = voixSelectionnee;
-            utterance.lang = voixSelectionnee.lang;
-
-            speechSynthesis.cancel();
-
-            speechSynthesis.speak(utterance);
-        } else {
             speech.setText(text);
-            speech.parler();
+            speech.setVoice(voixSelectionnee);
+            speechSynthesis.cancel();
+            speech.speech.volume= parseFloat(localStorage.getItem('speechVolume'));
+            speechSynthesis.speak(speech.speech);
         }
     }
-
 }
 
 

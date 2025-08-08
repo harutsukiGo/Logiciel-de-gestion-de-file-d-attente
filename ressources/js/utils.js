@@ -26,7 +26,7 @@ function afficherPub() {
 function ajusterVolume() {
     const slider = document.getElementById("sliderRange");
     if (slider) {
-         const valeur = parseFloat(slider.value);
+        const valeur = parseFloat(slider.value);
         speech.setVolume(valeur);
     }
 }
@@ -34,7 +34,7 @@ function ajusterVolume() {
 function initialiserSliderVolume() {
     const slider = document.getElementById("sliderRange");
     if (slider) {
-        slider.value = speech.getVolume();
+        slider.value = parseFloat(localStorage.getItem('speechVolume') || 1);
     }
 }
 
