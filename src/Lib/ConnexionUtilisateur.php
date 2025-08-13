@@ -6,12 +6,11 @@ use App\file\Modele\HTTP\Session;
 
 class ConnexionUtilisateur
 {
-// L'utilisateur connecté sera enregistré en session associé à la clé suivante
     private static string $cleConnexion = "_agentConnecte";
 
     public static function connecter(string $loginUtilisateur): void
     {
-         Session::getInstance()->enregistrer(ConnexionUtilisateur::$cleConnexion, $loginUtilisateur);
+        Session::getInstance()->enregistrer(ConnexionUtilisateur::$cleConnexion, $loginUtilisateur);
     }
 
     public static function estConnecte(): bool
@@ -33,36 +32,13 @@ class ConnexionUtilisateur
         }
     }
 
-    public static function estUtilisateur($login): bool
+    public static function retourneHeureConnexionAgent(): string
     {
-        if (ConnexionUtilisateur::getLoginUtilisateurConnecte() == $login) {
-            return true;
-        }
-        return false;
+        return Session::getInstance()->heureDeConnexion();
     }
 
-public static function retourneHeureConnexionAgent()
-{
-    return Session::getInstance()->heureDeConnexion();
-}
-
-public static function tempsMoyen()
-{
-    return Session::getInstance()->tempsMoyen();
-}
-//    public static function estAdministrateur() : bool
-//    {
-//        $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
-//        if (is_null($login)){
-//            return false;
-//        }
-//        $r = ConnexionBaseDeDonnees::getPdo()->prepare("Select estAdmin FROM utilisateur WHERE login = :login");
-//        $r->execute(array("login" => $login));
-//        $admin = $r->fetch();
-//
-//        if($admin['estAdmin'] == 1){
-//            return true;
-//        }
-//        return false;
-//    }
+    public static function tempsMoyen(): string
+    {
+        return Session::getInstance()->tempsMoyen();
+    }
 }

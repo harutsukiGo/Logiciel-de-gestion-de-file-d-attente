@@ -72,21 +72,9 @@ class ServiceRepository extends AbstractRepository
 
     public function retourneNombreServices()
     {
-        $sql = "SELECT COUNT(*)  FROM " . $this->getNomTable();
+        $sql = "SELECT COUNT(*)  FROM " . $this->getNomTable() ." WHERE estActif = '1'";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
         return $pdoStatement->fetch()[0];
-    }
-
-    public function recupereServiceRandom()
-    {
-        $services = (new ServiceRepository())->recuperer();
-
-        if (empty($services)) {
-            return null;
-        }
-
-        $randomIndex = random_int(0, count($services) - 1);
-        return $services[$randomIndex]->getIdService();
     }
 
     public function supprimerService(): bool
@@ -101,7 +89,7 @@ class ServiceRepository extends AbstractRepository
 
     public function recupererServices():array
     {
-        $sql="SELECT idService, nomService FROM ".$this->getNomTable() . " WHERE estActif='1';";
+        $sql="SELECT * FROM ".$this->getNomTable() . " WHERE estActif='1';";
         $pdoStatement=ConnexionBaseDeDonnees::getPdo();
         $res= $pdoStatement->query($sql);
         return  $res->fetchAll();

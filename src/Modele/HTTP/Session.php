@@ -1,5 +1,9 @@
 <?php
 namespace App\file\Modele\HTTP;
+// Ajoutez temporairement ce code dans Session.php
+if (headers_sent($file, $line)) {
+    die("Headers already sent in $file on line $line");
+}
 use App\file\Configuration\ConfigurationSite;
 use Exception;
 

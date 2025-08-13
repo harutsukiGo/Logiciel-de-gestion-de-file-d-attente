@@ -1,5 +1,4 @@
 <?php
-
 namespace App\file\Modele\HTTP;
 class Cookie
 {

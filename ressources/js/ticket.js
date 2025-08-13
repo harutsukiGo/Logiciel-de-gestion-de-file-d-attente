@@ -13,8 +13,7 @@ async function appelerSuivant() {
     const div = document.getElementById("infoTicketCourant");
     div.textContent = "";
     let date = new Date();
-
-    await mettreAJourTicket(ticket[0].idTicket, "en cours");
+     await mettreAJourTicket(ticket[0].idTicket, "en cours");
     await mettreAJourStatutClient(ticket[0].idTicket, "en cours");
     await mettreAJourStatutHistorique(ticket[0].idHistorique, "en cours");
     await mettreAJourTicketDateArrivee(ticket[0][0]);
@@ -24,14 +23,14 @@ async function appelerSuivant() {
         <p id="nomServiceCourant">${ticket[0].nomService} </p>
         <p id="statutCourant">En cours</p>
         <p id="dateArrive">Pris à ${date.toLocaleTimeString()} </p>
-    `);
+     `);
     div.insertAdjacentHTML("afterend", `
         <div class="divBoutonStatutTicket">
         <input type="hidden" id="idTicket" value="${ticket[0].idTicket}">
         <input type="hidden" id="idHistorique" value="${ticket[0].idHistorique}">
          <button id="btnTerminer" onclick="terminerTicket()"> Terminer </button>
          <button id="btnAbsent" onclick="absentTicket()" > Absent </button>
-            <button id="btnSimuler" onclick="simuler()"> Rappeler </button>
+            <button id="btnRappeler" onclick="simuler()"> Rappeler </button>
         </div>
     `);
 }
@@ -110,9 +109,9 @@ async function mettreAJourTicketDateTerminee(idTicket) {
 
 async function simuler() {
     const idTicket = document.getElementById("idTicket");
-    const numTicket = document.getElementById("numTicketCourant");
+    const numTicket = document.getElementById("numTicketCourantAgent");
     const nomService = document.getElementById("nomServiceCourant");
-    const numGuichet = document.getElementById("numeroGuichet");
+    const numGuichet = document.getElementById("idGuichetAgent");
 
      if (!idTicket) {
         if (numTicket) {
@@ -126,9 +125,8 @@ async function simuler() {
         }
         return;
     }
-
-    if (await retourneNbTicketsAttente() >= 1) {
-        const text = `Le ticket numéro ${numTicket.textContent} pour le service ${nomService.textContent} est attendu au ${numGuichet.textContent}.`;
+     if (await retourneNbTicketsAttente() >= 1) {
+        const text = `Le ticket numéro ${numTicket.textContent}, pour le service ${nomService.textContent}, est attendu au guichet numéro ${numGuichet.value}.`;
 
         let voixSelectionnee = getVoixSelectionnee();
         if (!voixSelectionnee && speechSynthesis.getVoices().length === 0) {

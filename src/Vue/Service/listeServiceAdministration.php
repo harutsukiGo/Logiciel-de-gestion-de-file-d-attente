@@ -14,6 +14,7 @@
                 <div class="divNomServiceHoraire">
                     <?php echo "<p class='titreServiceAdmin'>" . $service->getNomService() . "</p>"; ?>
                     <?php echo "<p class='nbPersonneAttenteAdmin'>" . "Horaires : " . $service->getHoraireDebut()->format('H:i') . " - " . $service->getHoraireFin()->format('H:i') . "</p>"; ?>
+
                 </div>
                 <?php
                 $statut = $service->getStatutService();

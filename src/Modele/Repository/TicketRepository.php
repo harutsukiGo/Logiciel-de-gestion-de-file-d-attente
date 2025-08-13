@@ -54,22 +54,6 @@ class TicketRepository extends AbstractRepository
         return ["num_ticket", "date_heure", "statutTicket", "idHistorique", "idAgent", "date_arrivee", "date_terminee"];
     }
 
-
-    public function ajouterTicket(AbstractDataObject $objet): ?AbstractDataObject
-    {
-        try {
-            $sql = "INSERT INTO " . $this->getNomTable() . " (" . join(",", $this->getNomsColonnes()) . ") VALUES (:" . join("Tag, :", $this->getNomsColonnes()) . "Tag)";
-            $creerObject = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
-            $creerObject->execute($this->formatTableauSQL($objet));
-            $pdo = ConnexionBaseDeDonnees::getPdo();
-            $dernierID = $pdo->lastInsertId();
-            return $this->recupererParClePrimaire($dernierID);
-        } catch (PDOException $e) {
-            return null;
-        }
-    }
-
-
     public function mettreAJourHistorique(AbstractDataObject $historique, AbstractDataObject $ticket): void
     {
         $sql = "UPDATE " . $this->getNomTable() . " SET idHistorique = :idHistoriqueTag WHERE idTicket = :idTicketTag";
@@ -83,9 +67,10 @@ class TicketRepository extends AbstractRepository
 
     public function compteTicket()
     {
-        $sql = "SELECT COUNT(*)  FROM " . $this->getNomTable() ." WHERE date(date_heure)=date(now());";
+
+        $sql = "SELECT COUNT(*) AS total FROM " . $this->getNomTable() ." WHERE date(date_heure)=date(now());";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
-        return $pdoStatement->fetch()[0];
+        return (int)$pdoStatement->fetchColumn();
     }
 
 
@@ -137,7 +122,7 @@ class TicketRepository extends AbstractRepository
 
     public function recupererNbTicketsEnAttente(): int
     {
-        $sql = "SELECT COUNT(*) FROM " . $this->getNomTable() . " WHERE statutTicket = 'en attente'";
+        $sql = "SELECT COUNT(*) FROM " . $this->getNomTable() . " WHERE statutTicket = 'en cours'";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
         return (int)$pdoStatement->fetchColumn();
     }

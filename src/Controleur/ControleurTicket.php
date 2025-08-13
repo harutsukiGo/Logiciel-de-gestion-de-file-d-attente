@@ -77,10 +77,10 @@ class ControleurTicket extends ControleurGenerique
     public static function affichageSalleAttente()
     {
         $publicites = (new PubliciteRepository())->recupererPublicitesActives();
-        $service = (new ServiceRepository())->recuperer();
+        $service = (new ServiceRepository())->recupererServices();
         $tickets = (new TicketRepository())->recupererTickets();
         $premierTicket = (new TicketRepository())->retournePlusPetitTicket();
-        ControleurGenerique::afficherVue('vueGenerale.php', [
+        ControleurGenerique::afficherVue('vueIntermediaire.php', [
             "titre" => "Affichage salle d'attente",
             "cheminCorpsVue" => "Ticket/affichageDynamique.php", "service" => $service, "tickets" => $tickets, "premierTicket" => $premierTicket,
             "publicites" => $publicites

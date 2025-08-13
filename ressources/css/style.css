@@ -461,7 +461,22 @@ h1 {
     background-color: rgb(31 41 55);
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    font-size: 1.5vh;
+}
+
+.headerDynamique div:last-child{
+    margin-right: 10px;
+}
+
+.headerDynamique h2:first-child{
+    margin-left: 10px;
+}
+
+.nomEntreprise {
+    color: white;
+    font-size:2vh;
+    font-weight: bolder;
+    margin:0;
 }
 
 #btnRetour {
@@ -494,36 +509,40 @@ h1 {
     padding: 20px;
     min-height: 100vh;
     margin: 0;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
     gap: 20px;
 }
 
-.colonneGauche, .colonneMilieu, .colonneDroite {
-    display: flex;
-    flex-direction: column;
+.colonneGauche, .colonneMilieu {
+    position: relative;
+    overflow: hidden;
 }
 
 .divAppelEnCours {
     background-color: rgb(31 41 55);
     color: rgb(37 99 235);
-    padding: 20px;
     border-radius: 1rem;
-    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 #horloge {
     color: white;
     margin: 0;
-}
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+ }
 
 .divAppelEnCours h2 {
-    font-size: 2vh;
+    font-size: 1.6vh;
     text-align: center;
-    margin-top: 0;
+    margin: 0;
 }
 
 #numTicketCourant {
-    font-size: 3.5vh;
+    font-size: 1.5vh;
     font-weight: 600;
     text-align: center;
 }
@@ -531,21 +550,21 @@ h1 {
 .ticketCourant, .publiciteCourant {
     background-color: rgb(37 99 235);
     display: flex;
-    flex-direction: column;
     align-items: center;
     color: white;
     border-radius: 1rem;
+    padding: 0.15rem;
 }
 
 .ticketCourant h1 {
     color: white;
-    font-size: 3.5vh;
+    font-size: 1.5vh;
     margin-bottom: 0;
 }
 
 #nomServiceCourant {
-    font-size: 2.2vh;
-    font-weight: bold;
+    font-size: 1.2vh;
+    margin: 0;
 }
 
 .ticketCourant p {
@@ -554,19 +573,22 @@ h1 {
 }
 
 #numeroGuichet {
-    font-size: 1.45vh;
+    font-size: 1.2vh;
     color: rgb(191 219 254)
-
 }
 
 
 .divPublicite {
     position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    overflow: hidden;
 }
 
 .imgPub, .videoPub {
-    width: 500px;
-    height: 250px;
+    width: 100%;
+    height: 100%;
     position: absolute;
     border-radius: 1rem;
     transition: opacity 0.5s ease-in-out;
@@ -690,6 +712,7 @@ h1 {
     border-radius: .25rem;
     padding: .25rem .5rem;
     text-align: center;
+    width: fit-content;
 }
 
 
@@ -699,6 +722,9 @@ h1 {
     justify-content: space-between;
 }
 
+#dateArrive{
+    margin:O;
+}
 .titreInterfaceAgent h1 {
     color: black;
 }
@@ -794,6 +820,9 @@ h1 {
     padding: .75rem 30px;
 }
 
+#appelerSuivant:hover, #btnRediriger:hover, #btnConnexion:hover, #btnDeconnexion:hover, #btnNouveauService:hover {
+    background-color: #100f0f;
+}
 
 .controlePosteAgent h2 {
     margin-top: 0;
@@ -879,6 +908,7 @@ h1 {
     font-size: 3.5vh;
     font-weight: 600;
     text-align: center;
+    margin: 0;
 }
 
 .divBoutonStatutTicket {
@@ -943,6 +973,13 @@ h1 {
 }
 
 /*detail agent*/
+.sectionDetailAgent h2 {
+    margin: 0;
+}
+
+.descriptionAgent {
+    margin-top: 0;
+}
 
 .sectionDetailAgent {
     margin: 40px;
@@ -951,6 +988,53 @@ h1 {
 #btnDeconnexion a {
     color: white;
     text-decoration: none;
+}
+
+.divStautAgentDetail {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.divParametresAgentDetail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.divEnfantAgentDetail {
+    background-color: ghostwhite;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    border-radius: .5rem;
+    width: auto;
+    border: 1px solid lightgray;
+    text-align: center;
+    color: rgb(55, 65, 81);
+}
+
+
+.divButtonDeconnexion {
+    display: flex;
+    justify-content: end;
+}
+
+.nomAgent {
+    margin: 0;
+}
+
+@keyframes blink {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0.5;
+    }
 }
 
 /* Administration*/
@@ -1027,6 +1111,7 @@ h1 {
     padding: .25rem .5rem;
     margin: 0;
     text-align: center;
+    width: fit-content;
 }
 
 .titreServiceAdmin, .nbTicketService {
@@ -1052,15 +1137,20 @@ h1 {
 }
 
 .divService {
-    display: flex;
+    display: grid;
     background-color: white;
     border-radius: 1rem;
     padding: 20px;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    box-shadow: rgba(50, 50, 93, 0.25) 0 50px 100px -20px, rgba(0, 0, 0, 0.3) 0 30px 60px -30px, rgba(10, 37, 64, 0.35) 0 -2px 6px 0 inset;
     max-width: 1000px;
     margin: 0 auto 40px auto;
-    justify-content: space-between;
+    grid-template-columns: 2fr 0.2fr;
     align-items: center;
+    gap: 15px;
+}
+
+.divService div div p {
+    word-break: break-word;
 }
 
 .divNomServiceHoraire {
@@ -1069,7 +1159,8 @@ h1 {
 }
 
 .divNomServiceHoraireStatut {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
     align-items: center;
     gap: 1rem;
 }
@@ -1147,6 +1238,23 @@ h1 {
 }
 
 /* Agents administrateur */
+.divAgent {
+    display: grid;
+    background-color: white;
+    border-radius: 1rem;
+    padding: 20px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    max-width: 1000px;
+    margin: 0 auto 40px auto;
+    /*justify-content: space-between;*/
+    grid-template-columns: 2fr 1fr 1fr 2fr 1fr;
+    align-items: center;
+    gap: 15px;
+}
+
+.divAgent div p {
+    word-break: break-word;
+}
 
 .divStatutAgent {
     border-radius: 9999px;
@@ -1159,7 +1267,9 @@ h1 {
     display: flex;
     flex-direction: row;
     gap: 5px;
+    justify-content: center;
 }
+
 
 .nbAutresServices {
     color: rgb(107 114 128);
@@ -1227,9 +1337,9 @@ h1 {
 /* Guichet administration*/
 .divGuichet {
     background-color: white;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-    display: flex;
-    justify-content: space-between;
+    box-shadow: rgba(50, 50, 93, 0.25) 0 50px 100px -20px, rgba(0, 0, 0, 0.3) 0 30px 60px -30px, rgba(10, 37, 64, 0.35) 0 -2px 6px 0 inset;
+    display: grid;
+    grid-template-columns: 2fr 0.2fr;
     align-items: center;
     border-radius: 1rem;
     padding: 20px;
@@ -1237,20 +1347,23 @@ h1 {
     margin: 0 auto 40px auto;
 }
 
+.divGuichet div div p {
+    word-break: break-word;
+}
+
 .divParametresGuichet {
     display: flex;
     flex-direction: column;
-
 }
 
 .divParametresGuichet p {
     margin: 0;
-    /*color: rgb(107 114 128);*/
 }
 
 
 .divParentStatistiqueStatut {
-    display: flex;
+    display: grid;
+    grid-template-columns: 0.3fr 1fr;
     align-items: center;
     /*gap: 30px;*/
 }
@@ -1295,7 +1408,7 @@ h1 {
     width: 100%;
 }
 
-.divButtonParametres{
+.divButtonParametres {
     display: flex;
     justify-content: end;
 }
@@ -1309,7 +1422,16 @@ h1 {
     padding: .75rem 1.5rem;
     border-radius: .5rem;
     cursor: pointer;
-    gap:1rem;
+    gap: 1rem;
+}
+
+#btnEnregistrerParametres:hover {
+    animation: fadeIn 0.3s ease-out;
+    background-color: rgb(0, 75, 246);
+}
+
+.messageFermeture {
+    padding: 20px;
 }
 
 /* Responsive*/
@@ -1396,39 +1518,39 @@ h1 {
 
 }
 
-@media screen and (max-width: 1900px) {
-    .divDynamique {
-        grid-template-columns: 1fr;
-        gap: 10px;
-        padding: 10px;
-    }
+/*@media screen and (max-width: 1900px) {*/
+/*    .divDynamique {*/
+/*        grid-template-columns: 1fr;*/
+/*        gap: 10px;*/
+/*        padding: 10px;*/
+/*    }*/
 
-    .colonneGauche, .colonneMilieu, .colonneDroite {
-        flex-direction: column;
-    }
+/*    .colonneGauche, .colonneMilieu, .colonneDroite {*/
+/*        flex-direction: column;*/
+/*    }*/
 
 
-    .imgPub {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-    }
+/*    .imgPub {*/
+/*        position: absolute;*/
+/*        left: 50%;*/
+/*        transform: translateX(-50%);*/
+/*    }*/
 
-    .divTemperature {
-        position: absolute;
-        width: 100%;
-        max-width: 350px;
-        margin: 20px auto 0 auto;
-        left: 50%;
-        transform: translateX(-50%);
-        height: fit-content;
-        padding: 20px;
-        top: 250px
-    }
+/*    .divTemperature {*/
+/*        position: absolute;*/
+/*        width: 100%;*/
+/*        max-width: 350px;*/
+/*        margin: 20px auto 0 auto;*/
+/*        left: 50%;*/
+/*        transform: translateX(-50%);*/
+/*        height: fit-content;*/
+/*        padding: 20px;*/
+/*        top: 250px*/
+/*    }*/
 
-    .fileAttente {
-        margin-top: 450px;
-    }
+/*    .fileAttente {*/
+/*        margin-top: 450px;*/
+/*    }*/
 
-}
+/*}*/
 

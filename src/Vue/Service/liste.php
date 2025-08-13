@@ -1,22 +1,22 @@
+<?php
+/** @var Service[] $services */
+use App\file\Modele\Repository\ParametresRepository;
+use App\file\Modele\Repository\ServiceRepository;
+?>
+<?php
+$ouveture=(new ParametresRepository())->getValeur("heure_ouverture")->getValeur();
+$fermeture=(new ParametresRepository())->getValeur("heure_fermeture")->getValeur();
+date_default_timezone_set('Europe/Paris');
+$dateActuelle = (new DateTime())->format("H:i");
+?>
 <section>
+    <?php if ($dateActuelle > $fermeture || $dateActuelle < $ouveture): ?>
+        <?php echo "<div class='messageFermeture'>
+<h2> Fermeture des services </h2>
+<p> La prise de ticket est actuellement impossible. Veuillez revenir plus tard.</p> 
+</div>";?>
+    <?php else: ?>
     <div class="grilleService">
-        <?php
-        /** @var Service[] $services */
-
-        use App\file\Modele\Repository\ParametresRepository;
-        use App\file\Modele\Repository\ServiceRepository;
-
-        ?>
-        <?php
-        $ouveture=(new ParametresRepository())->getValeur("heure_ouverture")->getValeur();
-        $fermeture=(new ParametresRepository())->getValeur("heure_fermeture")->getValeur();
-        date_default_timezone_set('Europe/Paris');
-        $dateActuelle = (new DateTime())->format("H:i");
-        ?>
-
-        <?php if ($dateActuelle > $fermeture || $dateActuelle < $ouveture): ?>
-            <?php echo "<div class='messageFermeture'> Le service est actuellement fermé. Veuillez revenir plus tard. </div>";?>
-       <?php else: ?>
             <?php foreach ($services as $s): ?>
                 <?php if ($s->getEstActif() && $s->getStatutService() && ($dateActuelle < $s->getHoraireFin()->format("H:i") || $s->getHoraireDebut()->format("H:i") > $dateActuelle)): ?>
                     <div class="liste-service-item">

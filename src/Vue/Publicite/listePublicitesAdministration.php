@@ -19,7 +19,7 @@
         <?php if ($publicite->getEstActif()):?>
         <div class="divPubliciteChild">
          <?php if ($publicite->getType() === enumPublicite::VIDEO):?>
-             <iframe class="imgPubliciteAdmin" src="<?php echo $publicite->getFichier()?>" title="YouTube video player" allow="autoplay"></iframe>
+             <iframe class="imgPubliciteAdmin" src="https://www.youtube.com/embed/<?php echo $publicite->getFichier()?>" title="YouTube video player" allow="autoplay"></iframe>
          <?php else: ?>
          <img class="imgPubliciteAdmin" src="<?php echo $publicite->getFichier()?>" alt="pub">
             <?php endif; ?>

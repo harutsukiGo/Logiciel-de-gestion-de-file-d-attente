@@ -62,8 +62,8 @@ class AgentRepository extends AbstractRepository
     {
         $sql = "SELECT t.idTicket, t.num_ticket, s.nomService, t.statutTicket,t.idHistorique
                 FROM tickets t
-                JOIN agents a ON a.idAgent = t.idAgent
-                JOIN services s ON s.idService = a.idService
+                JOIN client_attentes c ON c.idTicket = t.idTicket
+                JOIN services s ON s.idService = c.idService
                 WHERE t.statutTicket = 'en attente'
                   AND t.idAgent = :idAgentTag
                   AND t.idTicket = (

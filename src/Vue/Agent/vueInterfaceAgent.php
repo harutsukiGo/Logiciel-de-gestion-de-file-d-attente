@@ -24,6 +24,7 @@ use App\file\Modele\DataObject\Ticket;
     <div class="header-interfaceAgent">
         <div class="titreInterfaceAgent">
             <h1 class=>Interface Agent</h1>
+            <input type="hidden" id="idGuichetAgent" value="<?php echo $agent->getIdGuichet()->getIdGuichet();?>">
             <?php echo "<p class=''>" . "Poste de travail : " . "Guichet " . $agent->getIdGuichet()->getIdGuichet() . "</p>"; ?>
         </div>
 

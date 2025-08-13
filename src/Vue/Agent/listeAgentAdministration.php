@@ -12,7 +12,7 @@ use App\file\Modele\Repository\AgentRepository; ?>
 <section>
         <?php foreach ($agents as $agent): ?>
         <?php  if ($agent->getEstActif()):?>
-            <div class="divService" data-id-service="<?php echo $agent->getIdAgent(); ?>">
+            <div class="divAgent" data-id-service="<?php echo $agent->getIdAgent(); ?>">
                 <div>
                     <p class="titreServiceAdmin"> <?php echo $agent->getNomAgent(); ?></p>
                     <p class="nbPersonneAttenteAdmin"> <?php echo $agent->getMailAgent(); ?></p>
@@ -73,5 +73,4 @@ use App\file\Modele\Repository\AgentRepository; ?>
             </div>
         <?php endif; ?>
         <?php endforeach; ?>
-    </section>
 </section>
