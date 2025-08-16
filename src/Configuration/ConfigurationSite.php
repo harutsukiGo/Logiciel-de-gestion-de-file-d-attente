@@ -12,14 +12,4 @@ class ConfigurationSite
     {
         return ConfigurationSite::$dureeExpiration;
     }
-
-    public static function getURLAbsolue(): string
-    {
-        return "http://localhost/fileAttente/web/controleurFrontal.php";
-    }
-
-    public static function getDebug(): bool{
-        return false;
-    }
-
 }

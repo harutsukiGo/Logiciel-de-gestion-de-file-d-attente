@@ -27,7 +27,7 @@ class ControleurTicket extends ControleurGenerique
 
         $ticket = new Ticket(
             null,
-            (new ControleurTicket())->premiereLettre((new ServiceRepository())->getNomService($_REQUEST['idService'])),
+            (new ControleurTicket())->premiereLettre((new ServiceRepository())->recupererParClePrimaire($_REQUEST['idService'])->getNomService()),
             $date,
             "en attente",
             null,
@@ -134,7 +134,7 @@ class ControleurTicket extends ControleurGenerique
 
     public static function compterClientServi(): int
     {
-        return (new TicketRepository())->compterNombreClient(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+        return (new TicketRepository())->compterNombreClient(ConnexionUtilisateur::getIdAgentConnecte());
     }
 
 }

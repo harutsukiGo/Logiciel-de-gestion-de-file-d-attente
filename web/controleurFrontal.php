@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../src/Lib/Psr4AutoloaderClass.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $chargeurDeClasse = new App\file\Lib\Psr4AutoloaderClass(false);
 $chargeurDeClasse->register();

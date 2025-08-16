@@ -17,10 +17,14 @@ use App\file\Modele\Repository\ServiceRepository;
     <div class="descriptionService">
         <h1 class="titreService">Ticket généré </h1>
         <p class="descriptionServiceBorne">Votre ticket a été créé avec succès</p>
-        <p class="titreService"> <?php echo htmlspecialchars((new ServiceRepository())->getNomService($idService)); ?></p>
+        <p class="titreService"> <?php echo htmlspecialchars((new ServiceRepository())->recupererParClePrimaire($idService)->getNomService()); ?></p>
         <p class="titreServiceTicket"> <?php echo $ticket->getNumTicket(); ?></p>
-        <p><?php echo date('H:i'); ?></p>
-        <div class="service-informations">
+        <p><?php
+            $date = new DateTime();
+            $date->setTimezone(new DateTimeZone('Europe/Paris'));
+            echo $date->format('H:i');
+            ?>
+        </p>        <div class="service-informations">
                 <p> Gardez ce ticket avec vous. Vous serez appelé prochainement. </p>
             </div>
         </div>

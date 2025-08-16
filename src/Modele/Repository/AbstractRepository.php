@@ -1,34 +1,39 @@
 <?php
 
 namespace App\file\Modele\Repository;
+
 use App\file\Modele\DataObject\AbstractDataObject;
 use PDOException;
 
 
 abstract class AbstractRepository
 {
-    public function mettreAJour(AbstractDataObject $objet): void
+    public function mettreAJour(AbstractDataObject $objet): bool
     {
+        try {
+            $sql = "UPDATE " . $this->getNomTable() . " SET ";
+            $colonnes = $this->getNomsColonnes();
 
-        $sql = "UPDATE " . $this->getNomTable() . " SET ";
-        $colonnes = $this->getNomsColonnes();
-
-        for ($i = 0; $i < sizeof($colonnes); $i++) {
-            if ($i == sizeof($colonnes) - 1) {
-                $sql .= $colonnes[$i] . "= :" . $colonnes[$i] . "Tag ";
-            } else {
-                $sql .= $colonnes[$i] . "= :" . $colonnes[$i] . "Tag, ";
+            for ($i = 0; $i < sizeof($colonnes); $i++) {
+                if ($i == sizeof($colonnes) - 1) {
+                    $sql .= $colonnes[$i] . "= :" . $colonnes[$i] . "Tag ";
+                } else {
+                    $sql .= $colonnes[$i] . "= :" . $colonnes[$i] . "Tag, ";
+                }
             }
+
+            $sql .= " WHERE " . $this->getNomClePrimaire() . " = :" . $this->getNomClePrimaire() . "Tag;";
+
+            $creerObjet = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+
+            $creerObjet->execute($this->formatTableauSQL($objet));
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return false;
         }
-
-        $sql .= " WHERE " . $this->getNomClePrimaire() . " = :" . $this->getNomClePrimaire() . "Tag;";
-
-        $creerObjet = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
-
-        $creerObjet->execute($this->formatTableauSQL($objet));
-
-
+        return true;
     }
+
 
     public function ajouter(AbstractDataObject $objet): bool
     {
@@ -58,16 +63,14 @@ abstract class AbstractRepository
     }
 
 
-
-
     public function supprimer(string $valeurClePrimaire): bool
     {
         try {
-            $creerutilisateur = ConnexionBaseDeDonnees::getPdo()->prepare("DELETE FROM " . $this->getNomTable() . " WHERE " . $this->getNomClePrimaire() . " = :cleTag");
+            $sql = ConnexionBaseDeDonnees::getPdo()->prepare("UPDATE " . $this->getNomTable() . " SET estActif=0  WHERE " . $this->getNomClePrimaire() . " = :cleTag");
             $values = array(
                 "cleTag" => $valeurClePrimaire
             );
-            $creerutilisateur->execute($values);
+            $sql->execute($values);
         } catch (PDOException) {
             return false;
         }
@@ -103,9 +106,9 @@ abstract class AbstractRepository
 
         $objects = [];
         foreach ($pdoStatement as $object) {
-             $objects[] = $this->construireDepuisTableauSQL($object);
+            $objects[] = $this->construireDepuisTableauSQL($object);
         }
-          return $objects;
+        return $objects;
     }
 
     protected abstract function getNomTable(): string;

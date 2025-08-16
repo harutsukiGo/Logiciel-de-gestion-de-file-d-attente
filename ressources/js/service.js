@@ -8,6 +8,7 @@ function modalService(nomServicePlaceholder, dateOuverturePlaceholder, dateFerme
     modal.creerInputCheckbox("Service actif", checkboxPlaceholder, "Service");
     modal.creerButtons(callback);
     modal.afficher();
+
 }
 
 async function recupererServices() {
@@ -16,6 +17,59 @@ async function recupererServices() {
     })
     return await response.json();
 }
+
+function creerContenuService(service) {
+    return `
+        <div class="divNomServiceHoraireStatut">
+            <div class="divNomServiceHoraire">
+                <p class='titreServiceAdmin'>${service.nomService}</p>
+                <p class='nbPersonneAttenteAdmin'>Horaires : ${service.horaireDebut} - ${service.horaireFin}</p>
+            </div>
+            <div class='${service.statutService ? "statutTermine" : "statutInactifAdmin"}'>
+                ${service.statutService ? "Actif" : "Inactif"}
+            </div>
+        </div>
+        <div class="actionsServices">
+            <button id="btnModifierService"
+                    onclick="modalService(
+                            '${service.nomService.replace(/'/g, "\\'")}',
+                            '${service.horaireDebut}',
+                            '${service.horaireFin}',
+                            '${service.statutService ? 1 : 0}',
+                            () => mettreAJourService('${service.idService}'))">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pen w-4 h-4"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>
+            </button>
+            <button id="btnSupprimerService" onclick="supprimerService('${service.idService}')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2 w-4 h-4"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+            </button>
+        </div>
+    `;
+}
+
+async function ajouterServiceAuDOM(service) {
+    const sectionServices = document.querySelector(".sectionServiceAdministration");
+    const divService = document.createElement('div');
+    divService.className = 'divService';
+    divService.dataset.idService =service.idService;
+    divService.innerHTML=creerContenuService(service);
+    sectionServices.appendChild(divService);
+}
+
+function supprimerServiceDuDOM(service){
+    const divService = document.querySelector(`[data-id-service='${service.idService}']`);
+    if (divService) {
+        divService.remove();
+    }
+}
+
+function mettreAJourServiceDansDOM(service) {
+    const ligneService = document.querySelector(`[data-id-service='${service.idService}']`);
+    if (ligneService) {
+        ligneService.innerHTML = '';
+        ligneService.innerHTML = creerContenuService(service);
+    }
+}
+
 
 async function mettreAJourService(idService) {
     const formData = new FormData();
@@ -67,7 +121,7 @@ async function supprimerService(idService) {
         await fetch(`/fileAttente/web/controleurFrontal.php?action=supprimerServiceAdministration&controleur=service&idService=${idService}`, {
             method: "GET"
         });
-    }
+     }
 }
 
 export {
@@ -75,5 +129,8 @@ export {
     ajouterService,
     mettreAJourService,
     supprimerService,
-    recupererServices
+    recupererServices,
+    ajouterServiceAuDOM,
+    mettreAJourServiceDansDOM,
+    supprimerServiceDuDOM
 }

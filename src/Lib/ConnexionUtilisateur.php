@@ -3,6 +3,7 @@
 namespace App\file\Lib;
 
 use App\file\Modele\HTTP\Session;
+use App\file\Modele\Repository\AgentRepository;
 
 class ConnexionUtilisateur
 {
@@ -23,7 +24,7 @@ class ConnexionUtilisateur
         Session::getInstance()->supprimer(ConnexionUtilisateur::$cleConnexion);
     }
 
-    public static function getLoginUtilisateurConnecte(): ?string
+    public static function getIdAgentConnecte(): ?string
     {
         if (ConnexionUtilisateur::estConnecte()) {
             return Session::getInstance()->lire(ConnexionUtilisateur::$cleConnexion);
@@ -40,5 +41,11 @@ class ConnexionUtilisateur
     public static function tempsMoyen(): string
     {
         return Session::getInstance()->tempsMoyen();
+    }
+
+    public static function estAdministrateur(): bool
+    {
+        $agent = (new AgentRepository())->recupererParClePrimaire(ConnexionUtilisateur::getIdAgentConnecte());
+        return $agent->getRole() == 'administrateur';
     }
 }

@@ -127,8 +127,8 @@ use App\file\Modele\DataObject\Ticket;
                             <select id="serviceDeroulant">
                                 <?php /** @var Service[] $services * */ ?>
                                 <?php foreach ($services as $service): ?>
-                                    <option id="inputIdService" value="<?php echo $service->getIdService(); ?>">
-                                        <?php echo $service->getNomService(); ?>
+                                    <option id="inputIdService" value="<?php echo $service["idService"]; ?>">
+                                        <?php echo $service["nomService"]; ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>

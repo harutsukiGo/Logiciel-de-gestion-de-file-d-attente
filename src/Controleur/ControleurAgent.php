@@ -2,6 +2,7 @@
 
 namespace App\file\Controleur;
 
+use App\file\Configuration\Agent\PusherAgent;
 use App\file\Lib\ConnexionUtilisateur;
 use App\file\Lib\MotDePasse;
 use App\file\Modele\DataObject\Agents;
@@ -14,18 +15,18 @@ class ControleurAgent extends ControleurGenerique
 {
     public static function afficherAgent()
     {
-        $services = (new ServiceRepository())->recuperer();
+        $services = (new ServiceRepository())->recupererServices();
         $historique = (new HistoriqueRepository())->recupererHistoriqueParAgent($_REQUEST["idAgent"]);
         $tickets = (new AgentRepository())->afficherFileAttente($_REQUEST["idAgent"]);
         ControleurGenerique::afficherVue('vueGenerale.php', [
             "titre" => "Interface Agent",
-            "cheminCorpsVue" => "Agent/vueInterfaceAgent.php", "agent" => (new AgentRepository())->recupererParClePrimaire(ConnexionUtilisateur::getLoginUtilisateurConnecte()), "tickets" => $tickets, "historique" => $historique, "services" => $services
+            "cheminCorpsVue" => "Agent/vueInterfaceAgent.php", "agent" => (new AgentRepository())->recupererParClePrimaire(ConnexionUtilisateur::getIdAgentConnecte()), "tickets" => $tickets, "historique" => $historique, "services" => $services
         ]);
     }
 
     public static function mettreAJourStatutAgent()
     {
-        (new AgentRepository())->mettreAJourStatut(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $_REQUEST["statut"]);
+        (new AgentRepository())->mettreAJourStatut(ConnexionUtilisateur::getIdAgentConnecte(), $_REQUEST["statut"]);
     }
 
     public static function recupereTicketAgent()
@@ -37,7 +38,7 @@ class ControleurAgent extends ControleurGenerique
 
     public static function recupererFileAttente()
     {
-        (new AgentRepository())->afficherFileAttente(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+        (new AgentRepository())->afficherFileAttente(ConnexionUtilisateur::getIdAgentConnecte());
     }
 
     public static function afficherAuthentification()
@@ -51,19 +52,23 @@ class ControleurAgent extends ControleurGenerique
 
     public static function connecter()
     {
-        if (!isset($_REQUEST['login']) && !isset($_REQUEST['motDePasse'])) {
+        if (!isset($_REQUEST['login']) || !isset($_REQUEST['motDePasse'])) {
             ControleurAgent::redirectionVersURL("?action=afficherAuthentification&controleur=agent");
             return;
         }
         $agent = (new AgentRepository())->recupererParLogin($_REQUEST['login']);
+
         if (is_null($agent)) {
             ControleurAgent::redirectionVersURL("?action=afficherAuthentification&controleur=agent");
             return;
         }
+
         if (!MotDePasse::verifier($_REQUEST['motDePasse'], $agent->getMotDePasse())) {
             ControleurAgent::redirectionVersURL("?action=afficherAuthentification&controleur=agent");
+            return;
         }
         ConnexionUtilisateur::connecter($agent->getIdAgent());
+
         ControleurAgent::redirectionVersURL("?action=afficherDetail&controleur=agent&idAgent=" . $agent->getIdAgent());
     }
 
@@ -104,13 +109,27 @@ class ControleurAgent extends ControleurGenerique
 
         $agent = new Agents(null, $nomAgent, $emailAgent, $statutAgent, $loginAgent, $motDePasseAgent, $roleAgent, $guichetAgent, $idServiceAgent, 1);
 
-        $idAgent = (new AgentRepository())->ajouter($agent);
+        $agentCree = (new AgentRepository())->ajouterAutoIncrement($agent);
 
-        if (!$idAgent) {
+        if (!$agentCree) {
             header('Content-Type: application/json');
             echo json_encode(['failed' => false, 'message' => 'Erreur lors de la création de l\'agent.']);
             exit;
         }
+
+        $pusher = new PusherAgent();
+        $pusher->trigger('agent-channel', 'agent-cree', [
+            'idAgent' => $agentCree->getIdAgent(),
+            'nomAgent' => $agentCree->getNomAgent(),
+            'mailAgent' => $agentCree->getMailAgent(),
+            'statutAgent' => $agentCree->getStatut(),
+            'loginAgent' => $agentCree->getLogin(),
+            'motDePasse' => $agentCree->getMotDePasse(),
+            'roleAgent' => $agentCree->getRole(),
+            'idService' => $idServiceAgent->getNomService(),
+            'idGuichet' => $guichetAgent->getNomGuichet(),
+            'estActif' => $agentCree->getEstActif()
+        ]);
 
         header('Content-Type: application/json');
         echo json_encode(['success' => true]);
@@ -134,6 +153,23 @@ class ControleurAgent extends ControleurGenerique
 
         (new AgentRepository())->mettreAJour($agent);
 
+
+        $pusher = new PusherAgent();
+        $pusher->trigger('agent-channel', 'agent-modifiee', [
+            'idAgent' => $agent->getIdAgent(),
+            'nomAgent' => $agent->getNomAgent(),
+            'mailAgent' => $agent->getMailAgent(),
+            'statutAgent' => $agent->getStatut(),
+            'loginAgent' => $agent->getLogin(),
+            'motDePasse' => $agent->getMotDePasse(),
+            'roleAgent' => $agent->getRole(),
+            'idService' => $idServiceAgent->getNomService(),
+            'idGuichet' => $guichetAgent->getNomGuichet(),
+            'estActif' => $agent->getEstActif(),
+            'idServiceAgent' => $idServiceAgent->getIdService(),
+            'idGuichetAgent' => $guichetAgent->getIdGuichet()
+        ]);
+
         header('Content-Type: application/json');
         echo json_encode(['success' => true]);
         exit;
@@ -142,12 +178,15 @@ class ControleurAgent extends ControleurGenerique
 
     public static function supprimerAgentAdministration()
     {
-        $res = (new AgentRepository())->supprimerAgent();
+        $res = (new AgentRepository())->supprimer($_REQUEST["idAgent"]);
         if (!$res) {
             header('Content-Type: application/json');
             echo json_encode(['failed' => false, 'message' => 'Erreur lors de la suppression du service.']);
             exit;
         }
+
+        $pusher = new PusherAgent();
+        $pusher->trigger('agent-channel', 'agent-supprime', ['idAgent' => $_REQUEST['idAgent']]);
         header('Content-Type: application/json');
         echo json_encode(['success' => true]);
         exit;

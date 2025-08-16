@@ -297,6 +297,27 @@ h1 {
     font-size: 1.5rem;
     color: black;
     margin-bottom: 0;
+    margin-top: 0;
+}
+
+.titreServiceListe {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: black;
+    margin-bottom: 0;
+    margin-top: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.divNbPersonneStatut {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: whitesmoke;
+    border-radius: 0.75rem;
+    padding: 5px;
+    margin-top: 10px;
 }
 
 .liste-service-item {
@@ -307,7 +328,6 @@ h1 {
     padding: 20px;
     display: flex;
     flex-direction: column;
-    min-height: 200px;
     width: 100%;
     box-sizing: border-box;
     cursor: pointer;
@@ -319,6 +339,7 @@ h1 {
     border-radius: 10px;
     padding: 5px;
     width: fit-content;
+    height: 100%;
 }
 
 .statutInactif {
@@ -345,6 +366,8 @@ h1 {
 .aService {
     text-decoration: none;
     color: rgb(55, 65, 81);
+    padding: 10px;
+    border-radius: 0.75rem;
 }
 
 
@@ -464,19 +487,19 @@ h1 {
     font-size: 1.5vh;
 }
 
-.headerDynamique div:last-child{
+.headerDynamique div:last-child {
     margin-right: 10px;
 }
 
-.headerDynamique h2:first-child{
+.headerDynamique h2:first-child {
     margin-left: 10px;
 }
 
 .nomEntreprise {
     color: white;
-    font-size:2vh;
+    font-size: 2vh;
     font-weight: bolder;
-    margin:0;
+    margin: 0;
 }
 
 #btnRetour {
@@ -533,7 +556,7 @@ h1 {
     display: flex;
     gap: 10px;
     flex-direction: row;
- }
+}
 
 .divAppelEnCours h2 {
     font-size: 1.6vh;
@@ -722,9 +745,10 @@ h1 {
     justify-content: space-between;
 }
 
-#dateArrive{
-    margin:O;
+#dateArrive {
+    margin: 0;
 }
+
 .titreInterfaceAgent h1 {
     color: black;
 }
@@ -1103,7 +1127,9 @@ h1 {
     display: flex;
     flex-direction: column;
 }
-
+.statutNbTickets{
+    text-align: center;
+}
 .statutInactifAdmin {
     background-color: red;
     color: white;

@@ -134,7 +134,7 @@
                         <li>Historique</li>
                     </ul>
                 </div>
-                <button id="interfaceAgent-btn" onclick="window.location.href='/fileAttente/web/controleurFrontal.php?action=afficherAgent&controleur=agent&idAgent=<?php echo ConnexionUtilisateur::getLoginUtilisateurConnecte(); ?>'"> Accéder au module</button>            </div>
+                <button id="interfaceAgent-btn" onclick="window.location.href='/fileAttente/web/controleurFrontal.php?action=afficherAgent&controleur=agent&idAgent=<?php echo ConnexionUtilisateur::getIdAgentConnecte(); ?>'"> Accéder au module</button>            </div>
 
             <div class="administration">
                 <div class="administration-descriptionParent">

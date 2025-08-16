@@ -1,11 +1,14 @@
-import { actualiserHorloge, afficherPub,ajusterVolume,initialiserSliderVolume } from './utils.js';
+import {actualiserHorloge, afficherPub, ajusterVolume, initialiserSliderVolume} from './utils.js';
 import {
     modalAgent,
     mettreAJourAgent,
     ajouterAgent,
     supprimerAgent,
     mettreAJourStatutAgentFermer,
-    mettreAJourStatutAgentOuvert
+    mettreAJourStatutAgentOuvert,
+    creerAgentDOM,
+    mettreAJourAgentDOM,
+    supprimerAgentDOM
 } from './agent.js';
 
 import {
@@ -13,6 +16,9 @@ import {
     ajouterService,
     mettreAJourService,
     supprimerService,
+    ajouterServiceAuDOM,
+    mettreAJourServiceDansDOM,
+    supprimerServiceDuDOM
 } from './service.js';
 
 import {
@@ -46,7 +52,7 @@ import {
 } from './publicite.js';
 
 import {
-    afficherVoix,mettreAJourParametres
+    afficherVoix, mettreAJourParametres
 } from './parametres.js'
 
 
@@ -54,8 +60,8 @@ window.modalPublicite = modalPublicite;
 window.ajouterPublicite = ajouterPublicite;
 window.mettreAJourPublicite = mettreAJourPublicite;
 window.supprimerPublicite = supprimerPublicite;
-window.diminuerOrdrePub=diminuerOrdrePub;
-window.augmenterOrdrePub=augmenterOrdrePub;
+window.diminuerOrdrePub = diminuerOrdrePub;
+window.augmenterOrdrePub = augmenterOrdrePub;
 
 window.modalGuichet = modalGuichet;
 window.ajouterGuichet = ajouterGuichet;
@@ -68,6 +74,9 @@ window.ajouterAgent = ajouterAgent;
 window.supprimerAgent = supprimerAgent;
 window.mettreAJourStatutAgentFermer = mettreAJourStatutAgentFermer;
 window.mettreAJourStatutAgentOuvert = mettreAJourStatutAgentOuvert;
+window.creerAgentDOM = creerAgentDOM;
+window.mettreAJourAgentDOM=mettreAJourAgentDOM;
+window.supprimerAgentDOM=supprimerAgentDOM;
 
 
 window.appelerSuivant = appelerSuivant;
@@ -88,12 +97,15 @@ window.modalService = modalService;
 window.ajouterService = ajouterService;
 window.mettreAJourService = mettreAJourService;
 window.supprimerService = supprimerService;
+window.ajouterServiceAuDOM = ajouterServiceAuDOM;
+window.mettreAJourServiceDansDOM = mettreAJourServiceDansDOM;
+window.supprimerServiceDuDOM = supprimerServiceDuDOM;
 
-window.ajusterVolume=ajusterVolume;
+window.ajusterVolume = ajusterVolume;
 window.initialiserSliderVolume = initialiserSliderVolume;
 
-window.afficherVoix=afficherVoix;
-window.mettreAJourParametres=mettreAJourParametres;
+window.afficherVoix = afficherVoix;
+window.mettreAJourParametres = mettreAJourParametres;
 
 document.addEventListener("DOMContentLoaded", () => {
     const horloge = document.getElementById("horloge");
@@ -111,4 +123,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
     afficherVoix();
     initialiserSliderVolume();
+    const pusherService = new Pusher('da5a8b9ef5f31e2a1ad8', {
+        cluster: 'eu',
+        encrypted: true
+    });
+
+    const pusherAgent = new Pusher('d7bb9117b19bb62a9a43', {
+        cluster:'eu',
+        encrypted: true
+    });
+
+    const servicesChannel = pusherService.subscribe('service-channel');
+    const agentsChennel = pusherAgent.subscribe('agent-channel');
+
+    servicesChannel.bind('service-cree', function (data) {
+        console.log('Événement service-cree reçu:', data);
+        ajouterServiceAuDOM(data);
+    });
+
+    servicesChannel.bind('service-modifiee', function (data) {
+        console.log('service-modifee:', data);
+        mettreAJourServiceDansDOM(data);
+    });
+
+    servicesChannel.bind('service-supprime', function (data) {
+        console.log('service-supprime:', data);
+        supprimerServiceDuDOM(data);
+    });
+
+    agentsChennel.bind('agent-cree',function (data){
+        console.log('agent cree',data);
+        creerAgentDOM(data);
+    });
+
+    agentsChennel.bind('agent-modifiee',function (data){
+        console.log('agent modifie',data);
+        mettreAJourAgentDOM(data);
+    });
+
+    agentsChennel.bind('agent-supprime',function (data){
+        console.log('agent suprime',data);
+        supprimerAgentDOM(data);
+    });
 });

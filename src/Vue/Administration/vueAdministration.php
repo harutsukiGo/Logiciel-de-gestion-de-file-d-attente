@@ -62,13 +62,13 @@
              <div class="divChildActiviteServices">
 
               <div class="nomServiceNbPersonne">
-                <?php echo "<p class='titreServiceAdmin'>".$service->getNomService()."</p>";?>
-                <?php  echo "<p class='nbPersonneAttenteAdmin'>" .(new ServiceRepository())->getNbPersonneAttente($service->getIdService()) ." en attente</p>";?>
+                <?php echo "<p class='titreServiceAdmin'>".$service["nomService"]."</p>";?>
+                <?php  echo "<p class='nbPersonneAttenteAdmin'>" .(new ServiceRepository())->getNbPersonneAttente($service["idService"]) ." en attente</p>";?>
               </div>
 
                  <div class="statutNbTickets">
-                     <?php echo "<p class='nbTicketService'>" .(new TicketRepository())->nbTicketParService($service->getIdService()) . " tickets"."</p>";?>
-                     <?php $statut= $service->getStatutService();
+                     <?php echo "<p class='nbTicketService'>" .(new TicketRepository())->nbTicketParService($service["idService"]) . " tickets"."</p>";?>
+                     <?php $statut= $service["statutService"];
                      if ($statut) {
                          $statut = "<div class='statutTermine'> Ouvert ". "</div>";
                      }
@@ -98,10 +98,10 @@
                          <?php echo "<p class='nbTicketService'>" .(new TicketRepository())->compterNombreClient($agent->getIdAgent()) . " tickets"."</p>";?>
                          <?php $statut= $agent->getStatut();
                          if ($statut) {
-                             $statut = "<div class='statutTermine'> Disponible ". "</div>";
+                             $statut = "<div class='statutTermine'>Disponible ". "</div>";
                          }
                          else {
-                             $statut = "<div class='statutInactifAdmin'> Occupé "."</div>";
+                             $statut = "<div class='statutInactifAdmin'>Indisponible "."</div>";
                          }
                          echo $statut;
                          ?>

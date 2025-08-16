@@ -8,7 +8,7 @@ $nbPersonneAttente = (new ServiceRepository())->getNbPersonneAttente($service);
 ?>
 
 <section class="intro">
-<h1> <?php echo htmlspecialchars((new ServiceRepository())->getNomService($service)); ?></h1>
+<h1> <?php echo htmlspecialchars((new ServiceRepository())->recupererParClePrimaire($service)->getNomService()); ?></h1>
 <p>Sélectionnez le service souhaité pour obtenir votre ticket</p>
 
 </section>
@@ -16,7 +16,7 @@ $nbPersonneAttente = (new ServiceRepository())->getNbPersonneAttente($service);
     <div class="descriptionService">
         <h1 class="titreService">Confirmation</h1>
         <p class="descriptionServiceBorne">Vous êtes sur le point de prendre un ticket pour le service suivant </p>
-        <p class="titreService"> <?php echo htmlspecialchars((new ServiceRepository())->getNomService($service)); ?></p>
+        <p class="titreService"> <?php echo htmlspecialchars((new ServiceRepository())->recupererParClePrimaire($service)->getNomService()); ?></p>
         <div class="service-informations">
             <div class="div-tempsAttente">
                 <?php echo "<p class='nbPersonneAttente'>   $nbPersonneAttente" ?>
