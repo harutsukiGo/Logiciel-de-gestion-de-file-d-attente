@@ -40,7 +40,10 @@ import {
     modalGuichet,
     ajouterGuichet,
     mettreAJourGuichet,
-    supprimerGuichet
+    supprimerGuichet,
+    ajouterGuichetAuDOM,
+    mettreAJourGuichetAuDOM,
+    supprimerGuichetDuDOM,
 } from './guichet.js';
 
 import {
@@ -48,7 +51,12 @@ import {
     ajouterPublicite,
     mettreAJourPublicite,
     supprimerPublicite,
-    diminuerOrdrePub, augmenterOrdrePub
+    diminuerOrdrePub,
+    augmenterOrdrePub,
+    ajouterPubAuDOM,
+    mettreAJourPubDOM,
+    supprimerPubDuDOM,
+    changerOrdrePubDuDOM
 } from './publicite.js';
 
 import {
@@ -62,11 +70,18 @@ window.mettreAJourPublicite = mettreAJourPublicite;
 window.supprimerPublicite = supprimerPublicite;
 window.diminuerOrdrePub = diminuerOrdrePub;
 window.augmenterOrdrePub = augmenterOrdrePub;
+window.ajouterPubAuDOM = ajouterPubAuDOM;
+window.mettreAJourPubDOM=mettreAJourPubDOM;
+window.supprimerPubDuDOM=supprimerPubDuDOM;
+window.augmenterOrdrePubDuDOM=changerOrdrePubDuDOM;
 
 window.modalGuichet = modalGuichet;
 window.ajouterGuichet = ajouterGuichet;
 window.mettreAJourGuichet = mettreAJourGuichet;
 window.supprimerGuichet = supprimerGuichet;
+window.ajouterGuichetAuDOM=ajouterGuichetAuDOM;
+window.mettreAJourGuichetAuDOM=mettreAJourGuichetAuDOM;
+window.supprimerGuichetDuDOM=supprimerGuichetDuDOM;
 
 window.modalAgent = modalAgent;
 window.mettreAJourAgent = mettreAJourAgent;
@@ -75,8 +90,8 @@ window.supprimerAgent = supprimerAgent;
 window.mettreAJourStatutAgentFermer = mettreAJourStatutAgentFermer;
 window.mettreAJourStatutAgentOuvert = mettreAJourStatutAgentOuvert;
 window.creerAgentDOM = creerAgentDOM;
-window.mettreAJourAgentDOM=mettreAJourAgentDOM;
-window.supprimerAgentDOM=supprimerAgentDOM;
+window.mettreAJourAgentDOM = mettreAJourAgentDOM;
+window.supprimerAgentDOM = supprimerAgentDOM;
 
 
 window.appelerSuivant = appelerSuivant;
@@ -129,17 +144,29 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const pusherAgent = new Pusher('d7bb9117b19bb62a9a43', {
-        cluster:'eu',
+        cluster: 'eu',
+        encrypted: true
+    });
+
+    const pusherPublicite = new Pusher('cbb5eb4a126a9d026d02', {
+        cluster: 'eu',
+        encrypted: true
+    });
+
+    const pusherGuichet=new Pusher('af1fa86b0285d98a104e',{
+        cluster: 'eu',
         encrypted: true
     });
 
     const servicesChannel = pusherService.subscribe('service-channel');
     const agentsChennel = pusherAgent.subscribe('agent-channel');
+    const publiciteChannel = pusherPublicite.subscribe('publicite-channel');
+    const guichetChannel=pusherGuichet.subscribe('guichet-channel');
 
     servicesChannel.bind('service-cree', function (data) {
-        console.log('Événement service-cree reçu:', data);
-        ajouterServiceAuDOM(data);
-    });
+            console.log('Événement service-cree reçu:', data);
+            ajouterServiceAuDOM(data);
+        });
 
     servicesChannel.bind('service-modifiee', function (data) {
         console.log('service-modifee:', data);
@@ -151,18 +178,58 @@ document.addEventListener("DOMContentLoaded", () => {
         supprimerServiceDuDOM(data);
     });
 
-    agentsChennel.bind('agent-cree',function (data){
-        console.log('agent cree',data);
+    agentsChennel.bind('agent-cree', function (data) {
+        console.log('agent cree', data);
         creerAgentDOM(data);
     });
 
-    agentsChennel.bind('agent-modifiee',function (data){
-        console.log('agent modifie',data);
+    agentsChennel.bind('agent-modifiee', function (data) {
+        console.log('agent modifie', data);
         mettreAJourAgentDOM(data);
     });
 
-    agentsChennel.bind('agent-supprime',function (data){
-        console.log('agent suprime',data);
+    agentsChennel.bind('agent-supprime', function (data) {
+        console.log('agent suprime', data);
         supprimerAgentDOM(data);
     });
+
+    publiciteChannel.bind('publicite-cree', function (data) {
+        console.log('publicite-cree:', data);
+        ajouterPubAuDOM(data);
+    })
+
+    publiciteChannel.bind('publicite-modifiee', function (data) {
+        console.log('publicite-modife:', data);
+        mettreAJourPubDOM(data);
+    })
+
+    publiciteChannel.bind('publicite-supprime', function (data) {
+        console.log('publicite-supprime:', data);
+        supprimerPubDuDOM(data)
+    });
+
+    publiciteChannel.bind('publicite-augmente', function (data) {
+        console.log('publicite-augmente:', data);
+        changerOrdrePubDuDOM(data);
+    })
+
+    publiciteChannel.bind('publicite-diminue', function (data) {
+        console.log('publicite-diminue:', data);
+        changerOrdrePubDuDOM(data);
+    })
+
+    guichetChannel.bind('guichet-cree', function (data) {
+        console.log('guichet-cree:', data);
+        ajouterGuichetAuDOM(data);
+    })
+
+    guichetChannel.bind('guichet-modifiee', function (data) {
+        console.log('guichet-modifiee:', data);
+        mettreAJourGuichetAuDOM(data);
+    })
+
+    guichetChannel.bind('guichet-supprime', function (data) {
+        console.log('guichet-supprime:', data);
+        supprimerGuichetDuDOM(data);
+    })
 });

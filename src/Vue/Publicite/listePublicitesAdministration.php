@@ -13,11 +13,11 @@
 
 
 
-    <section>
+    <section class="sectionPubliciteAdministration">
         <div class="divPubliciteAdministration">
         <?php foreach ($publicites as $publicite): ?>
         <?php if ($publicite->getEstActif()):?>
-        <div class="divPubliciteChild">
+        <div class="divPubliciteChild" data-id-publicite="<?php echo $publicite->getIdPublicite(); ?>">
          <?php if ($publicite->getType() === enumPublicite::VIDEO):?>
              <iframe class="imgPubliciteAdmin" src="https://www.youtube.com/embed/<?php echo $publicite->getFichier()?>" title="YouTube video player" allow="autoplay"></iframe>
          <?php else: ?>
@@ -34,7 +34,7 @@
                   echo "<div class='statutInactifAdmin'>Inactif</div>";
               }
               ?>
-                   <span class="ordre"> Ordre : <?php echo $publicite->getOrdre();?></span>
+                   <span class="ordre" id="ordrePub<?php echo $publicite->getIdPublicite();?>"> Ordre : <?php echo $publicite->getOrdre();?></span>
             </div>
 
             <div class="divParentsBtnFleche">

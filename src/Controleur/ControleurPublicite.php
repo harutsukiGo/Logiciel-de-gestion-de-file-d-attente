@@ -1,9 +1,11 @@
 <?php
 namespace App\file\Controleur;
 
+use App\file\Configuration\Publicite\PusherPublicite;
 use App\file\Modele\DataObject\enumPublicite;
 use App\file\Modele\DataObject\Publicite;
 use App\file\Modele\Repository\PubliciteRepository;
+use Pusher\Pusher;
 
 class ControleurPublicite extends ControleurGenerique
 {
@@ -27,13 +29,21 @@ class ControleurPublicite extends ControleurGenerique
 
     public static function augmenterOrdre()
     {
-        (new PubliciteRepository())->augmenteOrdre($_REQUEST["idPublicites"]);
+       $publicite= (new PubliciteRepository())->augmenteOrdre($_REQUEST["idPublicites"]);
+        $pusher = new PusherPublicite();
+         $pusher->trigger('publicite-channel','publicite-augmente',[
+            'idPublicite' => $_REQUEST['idPublicites'],
+             'ordre'=>$publicite->getOrdre()]);
     }
 
 
     public static function diminuerOrdre()
     {
-        (new PubliciteRepository())->diminuerOrdre($_REQUEST["idPublicites"]);
+        $publicite=(new PubliciteRepository())->diminuerOrdre($_REQUEST["idPublicites"]);
+        $pusher = new PusherPublicite();
+        $pusher->trigger('publicite-channel','publicite-diminue',[
+            'idPublicite' => $_REQUEST['idPublicites'],
+            'ordre'=>$publicite->getOrdre()]);
     }
 
 
@@ -46,13 +56,23 @@ class ControleurPublicite extends ControleurGenerique
 
         $publicite=new Publicite(null, $nomFichier, $ordre, $actif, $type,1);
 
-        $publicite = (new PubliciteRepository())->ajouter($publicite);
+        $publicite = (new PubliciteRepository())->ajouterAutoIncrement($publicite);
 
         if (!$publicite) {
             header('Content-Type: application/json');
             echo json_encode(['failed' => false, 'message' => 'Erreur lors de la création de la publicité.']);
             exit;
         }
+
+        $pusher = new PusherPublicite();
+        $pusher->trigger('publicite-channel','publicite-cree',[
+            'idPublicite' => $publicite->getIdPublicite(),
+            'nomFichier'=>$publicite->getFichier(),
+            'ordre' => $publicite->getOrdre(),
+            'actif' => $publicite->getActif(),
+            'type' => $type->getValue()
+        ]);
+
         header('Content-Type: application/json');
         echo json_encode(['success' => true, 'message' => 'Publicité créée avec succès.']);
         exit;
@@ -69,6 +89,15 @@ class ControleurPublicite extends ControleurGenerique
 
          (new PubliciteRepository())->mettreAJour($publicite);
 
+        $pusher = new PusherPublicite();
+        $pusher->trigger('publicite-channel','publicite-modifiee',[
+            'idPublicite' => $publicite->getIdPublicite(),
+            'nomFichier'=>$publicite->getFichier(),
+            'ordre' => $publicite->getOrdre(),
+            'actif' => $publicite->getActif(),
+            'type' => $type->getValue()
+        ]);
+
         header('Content-Type: application/json');
         echo json_encode(['success' => true, 'message' => 'Publicité créée avec succès.']);
         exit;
@@ -77,8 +106,12 @@ class ControleurPublicite extends ControleurGenerique
 
     public static function supprimerPubliciteAdministration()
     {
-        (new PubliciteRepository())->supprimerPublicite();
+        (new PubliciteRepository())->supprimer($_REQUEST['idPublicites']);
+
+        $pusher = new PusherPublicite();
         header('Content-Type: application/json');
+        $pusher->trigger('publicite-channel','publicite-supprime',[
+            'idPublicite' => $_REQUEST['idPublicites']]);
         echo json_encode(['success' => true, 'message' => 'Publicité supprimée avec succès.']);
         exit;
     }

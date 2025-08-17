@@ -10,10 +10,10 @@
 </section>
 
 
-<section>
+<section class="sectionGuichetsAdministration">
     <?php foreach ($guichets as $guichet): ?>
         <?php if ($guichet["estActif"]): ?>
-            <div class="divGuichet">
+            <div class="divGuichet" data-id-guichet="<?php echo $guichet["idGuichet"]; ?>">
                 <div class="divParentStatistiqueStatut">
                 <div class="divParametresGuichet">
                     <?php echo "<p class='titreServiceAdmin'>" .$guichet["nom_guichet"]. "</p>"?>

@@ -1,5 +1,7 @@
 <?php
+
 namespace App\file\Modele\Repository;
+
 use App\file\Modele\DataObject\Guichets;
 use App\file\Modele\DataObject\AbstractDataObject;
 
@@ -8,7 +10,7 @@ class GuichetsRepository extends AbstractRepository
 {
     protected function construireDepuisTableauSQL(array $objetFormatTableau): Guichets
     {
-        $idService=(new ServiceRepository())->recupererParClePrimaire($objetFormatTableau["idService"]);
+        $idService = (new ServiceRepository())->recupererParClePrimaire($objetFormatTableau["idService"]);
         return new Guichets(
             $objetFormatTableau['idGuichet'],
             $objetFormatTableau['nom_guichet'],
@@ -31,7 +33,7 @@ class GuichetsRepository extends AbstractRepository
 
     protected function getNomsColonnes(): array
     {
-    return ["idGuichet", "nom_guichet", "statutGuichet" ,"idService" ,"estActif"];
+        return ["idGuichet", "nom_guichet", "statutGuichet", "idService", "estActif"];
     }
 
     protected function formatTableauSQL(AbstractDataObject $idGuichet): array
@@ -47,31 +49,45 @@ class GuichetsRepository extends AbstractRepository
     }
 
 
-    public function recupererGuichetsActif():array
+    public function recupererGuichetsActif(): array
     {
-        $sql="SELECT idGuichet FROM ".$this->getNomTable()." WHERE estActif='1';";
-        $pdoStatement=ConnexionBaseDeDonnees::getPdo();
-       $res= $pdoStatement->query($sql);
-       return  $res->fetchAll();
+        $sql = "SELECT idGuichet FROM " . $this->getNomTable() . " WHERE estActif='1';";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo();
+        $res = $pdoStatement->query($sql);
+        return $res->fetchAll();
     }
 
-    public function recupererGuichet():array
+    public function recupererGuichet(): array
     {
-        $sql="SELECT g.idGuichet, g.nom_guichet, s.nomService, a.nomAgent, g.statutGuichet, g.estActif,g.idService
+        $sql = "SELECT g.idGuichet, g.nom_guichet, s.nomService, a.nomAgent, g.statutGuichet, g.estActif,a.idService
               FROM guichets g
               LEFT JOIN agents a ON g.idGuichet = a.idGuichet
-              LEFT JOIN services s ON s.idService = g.idService";
-        $pdoStatement=ConnexionBaseDeDonnees::getPdo();
-        $res= $pdoStatement->query($sql);
-        return  $res->fetchAll();
+              LEFT JOIN services s ON s.idService = a.idService";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo();
+        $res = $pdoStatement->query($sql);
+        return $res->fetchAll();
     }
 
-    public function supprimerGuichet():bool
+    public function recupererAgentGuichet($idGuichet): array
     {
-        $sql="UPDATE ". $this::getNomTable() ." SET estActif=0 WHERE idGuichet=:idGuichetTag";
-        $pdoStatement=ConnexionBaseDeDonnees::getPdo()->prepare($sql);
-        $values= ["idGuichetTag" => $_REQUEST["idGuichet"]];
-        return  $pdoStatement->execute($values);
+        $sql = "SELECT a.nomAgent
+              FROM agents a
+              WHERE a.idGuichet=:idGuichetTag";
+        $values = array(
+            "idGuichetTag" => $idGuichet
+        );
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo();
+        $res = $pdoStatement->prepare($sql);
+        $res->execute($values);
+        return $res->fetchAll();
+    }
+
+    public function supprimerGuichet(): bool
+    {
+        $sql = "UPDATE " . $this::getNomTable() . " SET estActif=0 WHERE idGuichet=:idGuichetTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = ["idGuichetTag" => $_REQUEST["idGuichet"]];
+        return $pdoStatement->execute($values);
 
 
     }

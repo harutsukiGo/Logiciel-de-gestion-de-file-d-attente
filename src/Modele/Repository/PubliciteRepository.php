@@ -23,7 +23,7 @@ class PubliciteRepository extends AbstractRepository
 
         $typeEnum = match ($objetFormatTableau['type']) {
             'image' =>  enumPublicite::from('image'),
-            'video' =>  enumPublicite::from('vidéo'),
+            'vidéo' =>  enumPublicite::from('vidéo'),
         };
         return new Publicite(
             $objetFormatTableau['idPublicites'],
@@ -70,7 +70,8 @@ class PubliciteRepository extends AbstractRepository
         $sql = "UPDATE " . $this->getNomTable() . " SET ordre = ordre +1 WHERE idPublicites=:idPublicites";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values=["idPublicites"=>$idPublicites];
-        return $pdoStatement->execute($values);
+         $pdoStatement->execute($values);
+        return (new PubliciteRepository())->recupererParClePrimaire($idPublicites);
     }
 
     public function diminuerOrdre($idPublicites)
@@ -78,7 +79,8 @@ class PubliciteRepository extends AbstractRepository
         $sql = "UPDATE " . $this->getNomTable() . " SET ordre = ordre -1 WHERE idPublicites=:idPublicites";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values=["idPublicites"=>$idPublicites];
-        return $pdoStatement->execute($values);
+         $pdoStatement->execute($values);
+        return (new PubliciteRepository())->recupererParClePrimaire($idPublicites);
     }
 
     public function recupererPubOrderBy(): array

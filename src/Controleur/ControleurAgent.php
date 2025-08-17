@@ -105,9 +105,8 @@ class ControleurAgent extends ControleurGenerique
         $roleAgent = $_POST["roleAgent"];
         $guichetAgent = (new GuichetsRepository())->recupererParClePrimaire($_POST["idGuichet"]);
         $statutAgent = $_POST["statutAgent"];
-        $idServiceAgent = (new ServiceRepository())->recupererParClePrimaire($_POST["idService"]);
 
-        $agent = new Agents(null, $nomAgent, $emailAgent, $statutAgent, $loginAgent, $motDePasseAgent, $roleAgent, $guichetAgent, $idServiceAgent, 1);
+        $agent = new Agents(null, $nomAgent, $emailAgent, $statutAgent, $loginAgent, $motDePasseAgent, $roleAgent, $guichetAgent, 1);
 
         $agentCree = (new AgentRepository())->ajouterAutoIncrement($agent);
 
@@ -126,7 +125,6 @@ class ControleurAgent extends ControleurGenerique
             'loginAgent' => $agentCree->getLogin(),
             'motDePasse' => $agentCree->getMotDePasse(),
             'roleAgent' => $agentCree->getRole(),
-            'idService' => $idServiceAgent->getNomService(),
             'idGuichet' => $guichetAgent->getNomGuichet(),
             'estActif' => $agentCree->getEstActif()
         ]);
@@ -149,7 +147,7 @@ class ControleurAgent extends ControleurGenerique
         $statutAgent = $_POST["statutAgent"];
         $idServiceAgent = (new ServiceRepository())->recupererParClePrimaire($_POST["idService"]);
 
-        $agent = new Agents ($idAgent, $nomAgent, $emailAgent, $statutAgent, $loginAgent, $motDePasseAgent, $roleAgent, $guichetAgent, $idServiceAgent, 1);
+        $agent = new Agents ($idAgent, $nomAgent, $emailAgent, $statutAgent, $loginAgent, $motDePasseAgent, $roleAgent, $guichetAgent, 1);
 
         (new AgentRepository())->mettreAJour($agent);
 

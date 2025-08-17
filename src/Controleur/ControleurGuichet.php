@@ -2,9 +2,11 @@
 
 namespace App\file\Controleur;
 
+use App\file\Configuration\Guichet\PusherGuichet;
 use App\file\Modele\DataObject\Guichets;
 use App\file\Modele\Repository\GuichetsRepository;
 use App\file\Modele\Repository\ServiceRepository;
+use Pusher\Pusher;
 
 class ControleurGuichet extends ControleurGenerique
 {
@@ -22,13 +24,23 @@ class ControleurGuichet extends ControleurGenerique
 
     public static function creerGuichetAdministration()
     {
-        $nomGuichet = htmlspecialchars($_POST["nom_guichet"]);
+        $nomGuichet = $_POST["nom_guichet"];
         $statut = $_POST["statutGuichet"] ? 1 : 0;
         $idService = (new ServiceRepository())->recupererParClePrimaire($_POST["idService"]);
 
         $guichet = new Guichets(null, $nomGuichet, $statut, $idService, 1);
 
-        (new GuichetsRepository())->ajouter($guichet);
+        $guichetCree=(new GuichetsRepository())->ajouterAutoIncrement($guichet);
+        $nomAgent=(new GuichetsRepository())->recupererAgentGuichet($guichetCree->getIdGuichet());
+
+        $pusher = new PusherGuichet();
+        $pusher->trigger('guichet-channel','guichet-cree',[
+            'idGuichet' => $guichetCree->getIdGuichet(),
+            'nomGuichet' => $guichetCree->getNomGuichet(),
+            'statutGuichet' => $guichetCree->getStatutGuichet(),
+            'nomService' => $idService->getNomService(),
+            'nomAgent' => $nomAgent["nomAgent"],
+        ]);
 
         header('Content-Type: application/json');
         echo json_encode(['success' => true]);
@@ -45,6 +57,17 @@ class ControleurGuichet extends ControleurGenerique
 
         (new GuichetsRepository())->mettreAJour($guichet);
 
+        $nomAgent=(new GuichetsRepository())->recupererAgentGuichet($guichet->getIdGuichet());
+
+        $pusher = new PusherGuichet();
+        $pusher->trigger('guichet-channel','guichet-modifiee',[
+            'idGuichet' => $guichet->getIdGuichet(),
+            'nomGuichet' => $guichet->getNomGuichet(),
+            'statutGuichet' => $guichet->getStatutGuichet(),
+            'nomService' => $idService->getNomService(),
+            'nomAgent' => $nomAgent["nomAgent"],
+            'idServiceGuichet' => $idService->getIdService(),
+        ]);
         header('Content-Type: application/json');
         echo json_encode(['success' => true]);
         exit;
@@ -52,6 +75,9 @@ class ControleurGuichet extends ControleurGenerique
 
     public static function supprimerGuichetAdministration()
     {
-        (new GuichetsRepository())->supprimerGuichet();
+        (new GuichetsRepository())->supprimer($_REQUEST["idGuichet"]);
+        $pusher = new PusherGuichet();
+        $pusher->trigger('guichet-channel','guichet-supprime',[
+            'idGuichet' => $_REQUEST["idGuichet"]]);
     }
 }

@@ -46,7 +46,7 @@ function creerContenuService(service) {
     `;
 }
 
-async function ajouterServiceAuDOM(service) {
+function ajouterServiceAuDOM(service) {
     const sectionServices = document.querySelector(".sectionServiceAdministration");
     const divService = document.createElement('div');
     divService.className = 'divService';
@@ -69,6 +69,7 @@ function mettreAJourServiceDansDOM(service) {
         ligneService.innerHTML = creerContenuService(service);
     }
 }
+
 
 
 async function mettreAJourService(idService) {
