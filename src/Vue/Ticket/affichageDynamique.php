@@ -16,10 +16,8 @@
         <div class="ticketCourant">
             <h1 class="h1TicketCourant"></h1>
             <?php if (count($premierTicket) == 0): ?>
-                <p id='numTicketCourant'>Aucun tickets </p>
-                <p id="nomServiceCourant">Aucun service </p>
-                <p id="numeroGuichet">Aucun guichet </p>
-            <?php else: ?>
+                 <p id="nomServiceCourant">Aucun ticket </p>
+             <?php else: ?>
                 <?php foreach ($premierTicket as $ticket): ?>
                     <input type="hidden" id="idTicket" value="<?php echo $ticket['idTicket'] ?>">
                     <?php echo " <p id='numTicketCourant'> N° " . $ticket["num_ticket"] . "</p>" ?>

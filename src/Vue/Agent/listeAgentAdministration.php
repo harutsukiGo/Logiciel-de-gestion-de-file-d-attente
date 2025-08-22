@@ -1,6 +1,6 @@
 <?php /** @var Agents[] $agents */
 
-use App\file\Lib\ConnexionUtilisateur;
+use App\file\Lib\ConnexionAgent;
 use App\file\Modele\Repository\AgentRepository; ?>
 
 <section class="headerServiceAdministration">

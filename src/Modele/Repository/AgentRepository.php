@@ -65,13 +65,7 @@ class AgentRepository extends AbstractRepository
                 JOIN client_attentes c ON c.idTicket = t.idTicket
                 JOIN services s ON s.idService = c.idService
                 WHERE t.statutTicket = 'en attente'
-                  AND t.idAgent = :idAgentTag
-                  AND t.idTicket = (
-                    SELECT MIN(t2.idTicket)
-                    FROM tickets t2
-                    WHERE t2.statutTicket = 'en attente'
-                      AND t2.idAgent = :idAgentTag);
-";
+                  AND t.idAgent = :idAgentTag";
 
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = [
@@ -150,16 +144,6 @@ class AgentRepository extends AbstractRepository
         return $pdoStatement->fetchAll();
     }
 
-    public function supprimerAgent(): bool
-    {
-        $sql='UPDATE ' . $this->getNomTable() . ' SET estActif = 0 WHERE idAgent = :idAgentTag';
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
-        $values = [
-            "idAgentTag" => $_REQUEST['idAgent']
-        ];
-        return $pdoStatement->execute($values);
-    }
-
     public function recupererAgentActif()
     {
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query("SELECT * FROM " . $this->getNomTable()." WHERE estActif = '1'");
@@ -169,5 +153,27 @@ class AgentRepository extends AbstractRepository
             $objects[] = $this->construireDepuisTableauSQL($object);
         }
         return $objects;
+    }
+
+    public function retourneAgentPourUnService(int $idService):int
+    {
+        $sql = "SELECT idAgent FROM " . $this->getNomTable() . " WHERE idService = :idService";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = [
+            "idService" => $idService
+        ];
+        $pdoStatement->execute($values);
+        return $pdoStatement->fetchColumn();
+    }
+
+    public function retourneNbAgentParService(int $idService):int
+    {
+        $sql = "SELECT COUNT(*) FROM " . $this->getNomTable() . " WHERE idService = :idService";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = [
+            "idService" => $idService
+        ];
+        $pdoStatement->execute($values);
+        return $pdoStatement->fetchColumn();
     }
 }

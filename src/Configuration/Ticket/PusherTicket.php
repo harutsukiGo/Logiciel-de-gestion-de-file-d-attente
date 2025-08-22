@@ -1,9 +1,10 @@
 <?php
-namespace App\file\Configuration\Agent;
+
+namespace App\file\Configuration\Ticket;
 
 use Pusher\Pusher;
 
-class PusherAgent
+class PusherTicket
 {
     private $pusher;
 
@@ -15,9 +16,9 @@ class PusherAgent
         ];
 
         $this->pusher = new Pusher(
-            'd7bb9117b19bb62a9a43',
-            'c3bf220b54f125815bfb',
-            '2037939',
+            '0113c2d38580481c73f9',
+            '76b65f4902cfafbcbefb',
+            '2039045',
             $options
         );
     }

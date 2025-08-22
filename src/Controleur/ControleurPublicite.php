@@ -5,7 +5,6 @@ use App\file\Configuration\Publicite\PusherPublicite;
 use App\file\Modele\DataObject\enumPublicite;
 use App\file\Modele\DataObject\Publicite;
 use App\file\Modele\Repository\PubliciteRepository;
-use Pusher\Pusher;
 
 class ControleurPublicite extends ControleurGenerique
 {

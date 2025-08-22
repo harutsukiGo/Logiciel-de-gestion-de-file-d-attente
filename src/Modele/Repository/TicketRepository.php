@@ -28,6 +28,7 @@ class TicketRepository extends AbstractRepository
     {
         /** @var Ticket $objet */
         return [
+            "idTicketTag" => $objet->getIdTicket(),
             "num_ticketTag" => $objet->getNumTicket(),
             "date_heureTag" => $objet->getDateHeure()->format('Y-m-d H:i:s'),
             "statutTicketTag" => $objet->getStatutTicket(),
@@ -51,7 +52,7 @@ class TicketRepository extends AbstractRepository
 
     protected function getNomsColonnes(): array
     {
-        return ["num_ticket", "date_heure", "statutTicket", "idHistorique", "idAgent", "date_arrivee", "date_terminee"];
+        return ["idTicket","num_ticket", "date_heure", "statutTicket", "idHistorique", "idAgent", "date_arrivee", "date_terminee"];
     }
 
     public function mettreAJourHistorique(AbstractDataObject $historique, AbstractDataObject $ticket): void
@@ -76,11 +77,10 @@ class TicketRepository extends AbstractRepository
 
     public function recupererTickets(): array
     {
-        $sql = "SELECT t.idTicket,t.num_ticket, g.nom_guichet, s.nomService,t.statutTicket
+        $sql = "SELECT t.idTicket,t.num_ticket, s.nomService,t.statutTicket
             FROM tickets t
             JOIN client_attentes c ON c.idTicket = t.idTicket
             JOIN services s ON s.idService = c.idService
-            JOIN guichets g ON g.idService = s.idService
             WHERE t.statutTicket = 'en attente' 
           ";
 
@@ -96,12 +96,28 @@ class TicketRepository extends AbstractRepository
         JOIN services s ON s.idService = c.idService
         JOIN agents a ON a.idService = s.idService
         JOIN guichets g ON g.idGuichet = a.idGuichet
-        WHERE t.statutTicket = 'en attente'
-        ORDER BY t.idTicket ASC
-        LIMIT 1";
+        WHERE t.idTicket = 'en cours'
+         LIMIT 1";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query($sql);
 
         return $pdoStatement->fetchAll();
+    }
+
+    public function retourneTicketCourant(int $idTicket): ?array
+    {
+        $sql = "SELECT t.idTicket, t.num_ticket, g.nom_guichet, s.nomService
+        FROM tickets t
+        JOIN client_attentes c ON c.idTicket = t.idTicket
+        JOIN services s ON s.idService = c.idService
+        JOIN agents a ON a.idService = s.idService
+        JOIN guichets g ON g.idGuichet = a.idGuichet
+        WHERE t.idTicket = :idTicketTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = [
+            "idTicketTag" => $idTicket
+        ];
+        $pdoStatement->execute($values);
+        return $pdoStatement->fetch();
     }
 
     public function mettreAJourStatut(int $idTicket, string $staut): bool
@@ -189,5 +205,15 @@ class TicketRepository extends AbstractRepository
         return (int)$pdoStatement->fetchColumn();
     }
 
+    public function mettreAJourAgent(AbstractDataObject $agent,$idTicket): bool
+    {
+        $sql= "UPDATE " . $this->getNomTable() . " SET idAgent = :idAgentTag WHERE idTicket = :idTicketTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = [
+            "idAgentTag" => $agent->getIdAgent(),
+            "idTicketTag" => $idTicket
+        ];
+        return $pdoStatement->execute($values);
+    }
 
 }

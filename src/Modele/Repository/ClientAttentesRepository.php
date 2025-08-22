@@ -31,17 +31,18 @@ class ClientAttentesRepository extends AbstractRepository
 
     protected function getNomsColonnes(): array
     {
-        return ["idTicket", "idService", "statut", "dateArrive"];
+        return ["idClientAttentes","idTicket", "idService", "statut", "dateArrive"];
     }
 
     protected function formatTableauSQL(AbstractDataObject $idClientAttentes): array
     {
         /** @var ClientAttentes $idClientAttentes */
         return [
+            "idClientAttentesTag" => $idClientAttentes->getIdClientAttentes(),
             "idTicketTag" => $idClientAttentes->getIdTicket()->getIdTicket(),
             "idServiceTag" => $idClientAttentes->getIdService()->getIdService(),
             "statutTag" => $idClientAttentes->getStatut(),
-            "dateArriveTag" => $idClientAttentes->getDateArrive()->format('Y-m-d H:i:s')
+            "dateArriveTag" => $idClientAttentes->getDateArrive()->format('Y-m-d H:i:s'),
         ];
     }
 

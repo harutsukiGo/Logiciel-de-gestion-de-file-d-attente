@@ -11,7 +11,7 @@
                 <p>Tickets aujourd'hui</p>
                 <p class="nombreTicket">
                     <?php
-                    use App\file\Lib\ConnexionUtilisateur;
+                    use App\file\Lib\ConnexionAgent;
                     use App\file\Modele\Repository\ServiceRepository;
                     use App\file\Modele\Repository\TicketRepository;
                     echo (new TicketRepository())->compteTicket(); ?>
@@ -112,8 +112,8 @@
                     onclick="window.location.href='/fileAttente/web/controleurFrontal.php?action=affichageSalleAttente&controleur=ticket'">
                 Accéder au module</button>
         </div>
+        <?php if ( ConnexionAgent::estConnecte()): ?>
 
-        <?php if (ConnexionUtilisateur::estConnecte()): ?>
             <div class="interfaceAgent">
                 <div class="interfaceAgent-descriptionParent">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
@@ -134,30 +134,31 @@
                         <li>Historique</li>
                     </ul>
                 </div>
-                <button id="interfaceAgent-btn" onclick="window.location.href='/fileAttente/web/controleurFrontal.php?action=afficherAgent&controleur=agent&idAgent=<?php echo ConnexionUtilisateur::getIdAgentConnecte(); ?>'"> Accéder au module</button>            </div>
-
-            <div class="administration">
-                <div class="administration-descriptionParent">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
-                         stroke="purple" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                         class="lucide lucide-settings w-4 h-4">
-                        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
-                    <div class="administration-description">
-                        <p class="titre">Administration </p>
-                        <p>Poste de travail pour les agents</p>
+                <button id="interfaceAgent-btn" onclick="window.location.href='/fileAttente/web/controleurFrontal.php?action=afficherAgent&controleur=agent&idAgent=<?php echo ConnexionAgent::getIdAgentConnecte(); ?>'"> Accéder au module</button>            </div>
+            <?php if ( ConnexionAgent::estConnecte() &&ConnexionAgent::estAdministrateur()): ?>
+                <div class="administration">
+                    <div class="administration-descriptionParent">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                             stroke="purple" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-settings w-4 h-4">
+                            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                        <div class="administration-description">
+                            <p class="titre">Administration </p>
+                            <p>Poste de travail pour les agents</p>
+                        </div>
                     </div>
+                    <div class="administration-bulletPoint">
+                        <ul>
+                            <li>Configuration</li>
+                            <li>Statistiques</li>
+                            <li>Utilisateurs</li>
+                        </ul>
+                    </div>
+                    <button id="administration-btn" onclick="window.location.href='/fileAttente/web/controleurFrontal.php?action=afficherAdministration&controleur=administration'"> Accéder au module</button>
                 </div>
-                <div class="administration-bulletPoint">
-                    <ul>
-                        <li>Configuration</li>
-                        <li>Statistiques</li>
-                        <li>Utilisateurs</li>
-                    </ul>
-                </div>
-                <button id="administration-btn" onclick="window.location.href='/fileAttente/web/controleurFrontal.php?action=afficherAdministration&controleur=administration'"> Accéder au module</button>
-            </div>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 </section>

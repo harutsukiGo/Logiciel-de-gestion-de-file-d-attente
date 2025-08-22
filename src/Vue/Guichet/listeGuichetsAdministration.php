@@ -1,6 +1,7 @@
 <?php
 /** @var Guichets[] $guichets */ ?>
-<?php use App\file\Modele\DataObject\Guichets; ?>
+<?php use App\file\Modele\DataObject\Guichets;
+use App\file\Modele\Repository\GuichetsRepository; ?>
 
 <section class="headerServiceAdministration">
     <h2> Gestion des guichets</h2>
@@ -17,12 +18,18 @@
                 <div class="divParentStatistiqueStatut">
                 <div class="divParametresGuichet">
                     <?php echo "<p class='titreServiceAdmin'>" .$guichet["nom_guichet"]. "</p>"?>
-                    <?php if ($guichet["nomAgent"]==null):
-                    echo "<p class='nbPersonneAttenteAdmin'>" ."Aucun agent n'est attribué  ".  "</p>" ?>
+                    <?php $listeAgent= (new GuichetsRepository())->recupererAgentGuichet($guichet["idGuichet"]); ?>
+                     <?php if (count($listeAgent) == 0): ?>
+                    <?php echo "<p class='nbPersonneAttenteAdmin'> Aucun agent n'est attribué </p>" ?>
 
                     <?php else:?>
-                        <?php echo "<p class='nbPersonneAttenteAdmin'>" ."Agent : " . $guichet["nomAgent"] . "</p>" ?>
-                    <?php endif;?>
+                        <?php
+                            echo "<p class='nbPersonneAttenteAdmin'>Agents : ";
+                            $noms = array_map(fn($a) => $a["nomAgent"], $listeAgent);
+                            echo implode('<br> ', $noms);
+                            echo "</p>";
+                        ?>
+                     <?php endif;?>
 
 
                     <?php if ($guichet["nomService"]==null):

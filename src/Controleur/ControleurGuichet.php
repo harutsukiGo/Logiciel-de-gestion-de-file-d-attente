@@ -31,7 +31,7 @@ class ControleurGuichet extends ControleurGenerique
         $guichet = new Guichets(null, $nomGuichet, $statut, $idService, 1);
 
         $guichetCree=(new GuichetsRepository())->ajouterAutoIncrement($guichet);
-        $nomAgent=(new GuichetsRepository())->recupererAgentGuichet($guichetCree->getIdGuichet());
+        $liste=(new GuichetsRepository())->recupererAgentGuichet($guichetCree->getIdGuichet());
 
         $pusher = new PusherGuichet();
         $pusher->trigger('guichet-channel','guichet-cree',[
@@ -39,7 +39,7 @@ class ControleurGuichet extends ControleurGenerique
             'nomGuichet' => $guichetCree->getNomGuichet(),
             'statutGuichet' => $guichetCree->getStatutGuichet(),
             'nomService' => $idService->getNomService(),
-            'nomAgent' => $nomAgent["nomAgent"],
+            '$listeAgent' => $liste,
         ]);
 
         header('Content-Type: application/json');
@@ -57,7 +57,7 @@ class ControleurGuichet extends ControleurGenerique
 
         (new GuichetsRepository())->mettreAJour($guichet);
 
-        $nomAgent=(new GuichetsRepository())->recupererAgentGuichet($guichet->getIdGuichet());
+        $listeAgent=(new GuichetsRepository())->recupererAgentGuichet($guichet->getIdGuichet());
 
         $pusher = new PusherGuichet();
         $pusher->trigger('guichet-channel','guichet-modifiee',[
@@ -65,7 +65,7 @@ class ControleurGuichet extends ControleurGenerique
             'nomGuichet' => $guichet->getNomGuichet(),
             'statutGuichet' => $guichet->getStatutGuichet(),
             'nomService' => $idService->getNomService(),
-            'nomAgent' => $nomAgent["nomAgent"],
+            'listeAgent' => $listeAgent,
             'idServiceGuichet' => $idService->getIdService(),
         ]);
         header('Content-Type: application/json');

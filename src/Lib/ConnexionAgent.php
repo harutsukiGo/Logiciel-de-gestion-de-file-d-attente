@@ -5,29 +5,29 @@ namespace App\file\Lib;
 use App\file\Modele\HTTP\Session;
 use App\file\Modele\Repository\AgentRepository;
 
-class ConnexionUtilisateur
+class ConnexionAgent
 {
     private static string $cleConnexion = "_agentConnecte";
 
-    public static function connecter(string $loginUtilisateur): void
+    public static function connecter(string $loginAgent): void
     {
-        Session::getInstance()->enregistrer(ConnexionUtilisateur::$cleConnexion, $loginUtilisateur);
+        Session::getInstance()->enregistrer(ConnexionAgent::$cleConnexion, $loginAgent);
     }
 
     public static function estConnecte(): bool
     {
-        return Session::getInstance()->contient(ConnexionUtilisateur::$cleConnexion);
+        return Session::getInstance()->contient(ConnexionAgent::$cleConnexion);
     }
 
     public static function deconnecter(): void
     {
-        Session::getInstance()->supprimer(ConnexionUtilisateur::$cleConnexion);
+        Session::getInstance()->supprimer(ConnexionAgent::$cleConnexion);
     }
 
     public static function getIdAgentConnecte(): ?string
     {
-        if (ConnexionUtilisateur::estConnecte()) {
-            return Session::getInstance()->lire(ConnexionUtilisateur::$cleConnexion);
+        if (ConnexionAgent::estConnecte()) {
+            return Session::getInstance()->lire(ConnexionAgent::$cleConnexion);
         } else {
             return null;
         }
@@ -45,7 +45,7 @@ class ConnexionUtilisateur
 
     public static function estAdministrateur(): bool
     {
-        $agent = (new AgentRepository())->recupererParClePrimaire(ConnexionUtilisateur::getIdAgentConnecte());
+        $agent = (new AgentRepository())->recupererParClePrimaire(ConnexionAgent::getIdAgentConnecte());
         return $agent->getRole() == 'administrateur';
     }
 }

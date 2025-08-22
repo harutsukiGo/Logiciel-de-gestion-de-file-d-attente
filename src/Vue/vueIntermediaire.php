@@ -7,6 +7,7 @@
         <?php
         /** @var string $titre */
         echo $titre; ?></title>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script type="module" src="/fileAttente/ressources/js/script.js"></script>
     <link rel="stylesheet" href="/fileAttente/ressources/css/style.css">
 </head>

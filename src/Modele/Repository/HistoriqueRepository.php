@@ -52,20 +52,6 @@ class HistoriqueRepository extends AbstractRepository
         ];
     }
 
-    public function ajouterHistorique(AbstractDataObject $objet): ?AbstractDataObject
-    {
-        try {
-            $sql = "INSERT INTO " . $this->getNomTable() . " (" . join(",", $this->getNomsColonnes()) . ") VALUES (:" . join("Tag, :", $this->getNomsColonnes()) . "Tag)";
-            $creerObject = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
-            $creerObject->execute($this->formatTableauSQL($objet));
-            $pdo = ConnexionBaseDeDonnees::getPdo();
-            $dernierID = $pdo->lastInsertId();
-            return $this->recupererParClePrimaire($dernierID);
-        } catch (PDOException $e) {
-            return null;
-        }
-    }
-
     public function recupererHistoriqueParAgent($idAgent): array
     {
         $sql = "SELECT num_ticket, nomService, historique.date_heure  
@@ -95,4 +81,5 @@ class HistoriqueRepository extends AbstractRepository
         }
 
     }
+
 }

@@ -10,10 +10,11 @@ async function appelerSuivant() {
     if (!ticket || ticket.length === 0) {
         return;
     }
+
     const div = document.getElementById("infoTicketCourant");
     div.textContent = "";
     let date = new Date();
-     await mettreAJourTicket(ticket[0].idTicket, "en cours");
+     await mettreAJourEnCours(ticket[0].idTicket);
     await mettreAJourStatutClient(ticket[0].idTicket, "en cours");
     await mettreAJourStatutHistorique(ticket[0].idHistorique, "en cours");
     await mettreAJourTicketDateArrivee(ticket[0][0]);
@@ -76,6 +77,11 @@ async function mettreAJourTicket(idTicket, statut) {
         method: "GET"
     })
 }
+async function mettreAJourEnCours(idTicket) {
+    await fetch(`/fileAttente/web/controleurFrontal.php?action=mettreEnCoursTicket&controleur=ticket&idTicket=${idTicket}`, {
+        method: "GET"
+    });
+}
 
 async function recuperePremierTicketAgent() {
     const idAgent = document.getElementById("idAgent");
@@ -127,8 +133,7 @@ async function simuler() {
     }
      if (await retourneNbTicketsAttente() >= 1) {
         const text = `Le ticket numéro ${numTicket.textContent}, pour le service ${nomService.textContent}, est attendu au guichet numéro ${numGuichet.value}.`;
-
-        let voixSelectionnee = getVoixSelectionnee();
+         let voixSelectionnee = getVoixSelectionnee();
         if (!voixSelectionnee && speechSynthesis.getVoices().length === 0) {
             await new Promise(resolve => {
                 speechSynthesis.onvoiceschanged = () => {
@@ -142,9 +147,10 @@ async function simuler() {
             speech.setText(text);
             speech.setVoice(voixSelectionnee);
             speechSynthesis.cancel();
-            speech.speech.volume= parseFloat(localStorage.getItem('speechVolume'));
+            speech.speech.volume= speech.speech.volume = Number.isFinite(speech.speech.volume) ? speech.speech.volume : 1.0;
             speechSynthesis.speak(speech.speech);
         }
+
     }
 }
 
@@ -167,11 +173,63 @@ async function redirigerTicket() {
         await fetch("/fileAttente/web/controleurFrontal.php?action=mettreAJourServiceClient&controleur=clientAttentes&idTicket=" + idTicket.value + "&idService=" + service.value, {
             method: "GET"
         });
+        
     } catch (e) {
         console.error("Erreur lors de la redirection du ticket");
     }
 }
 
+function mettreAJourFileAttente(ticket) {
+    const divParent = document.getElementById(`fileAttenteAgent${ticket.idAgent}`);
+    if (divParent) {
+         const divEnfant = document.createElement("div");
+        divEnfant.className = "divFilAttente";
+        divEnfant.dataset.idTicket = ticket.idTicket;
+        divEnfant.innerHTML= creerConteneurTicket(ticket);
+        divParent.appendChild(divEnfant);
+        const label=document.getElementById('numTicketRedirection');
+        const option =document.createElement('option');
+        option.textContent = ticket.numTicket;
+        option.value =ticket.idTicket;
+        option.id=`inputIdTicket${ticket.idTicket}`;
+        label.append(option);
+    }
+ }
+
+
+function creerConteneurTicket(ticket) {
+    if (ticket == null) {
+        return `<p>Aucun ticket en attente</p>`;
+    } else {
+        return `
+                <div class="divNumTicket">
+                    <span>${ticket.numTicket}</span>
+                </div>
+                <p class="nomServiceAgent">${ticket.nomService}</p>
+        `;
+    }
+}
+
+function supprimerTicket(ticket) {
+    const divTicket= document.querySelector(`[data-id-ticket='${ticket.idTicket}']`)
+    const option = document.getElementById(`inputIdTicket${ticket.idTicket}`);
+     if (divTicket && option) {
+        divTicket.remove();
+        option.remove();
+    }
+}
+
+function afficherTicketCourant(ticket) {
+    const div = document.querySelector(".ticketCourant");
+    if (div){
+        div.innerHTML = `
+        <p class="numTicketCourant">N°${ticket.numTicket}</p>
+        <p class="nomServiceCourant">${ticket.nomService}</p>
+        <p class="statutCourant">${ticket.nomGuichet}</p>`;
+    }
+
+
+}
 export {
     appelerSuivant,
     terminerTicket,
@@ -184,5 +242,8 @@ export {
     redirigerTicket,
     retourneNbTicketsAttente,
     setHtmlInitial,
-    simuler
+    simuler,
+    mettreAJourFileAttente,
+    supprimerTicket,
+    afficherTicketCourant
 };

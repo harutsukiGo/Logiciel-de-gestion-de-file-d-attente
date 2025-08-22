@@ -94,14 +94,4 @@ class PubliciteRepository extends AbstractRepository
         }
         return $objects;
     }
-
-    public function supprimerPublicite(): bool
-    {
-        $sql='UPDATE ' . $this->getNomTable() . ' SET estActif = 0 WHERE idPublicites = :idPublicitesTag';
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
-        $values = [
-            "idPublicitesTag" => $_REQUEST['idPublicites']
-        ];
-        return $pdoStatement->execute($values);
-    }
 }

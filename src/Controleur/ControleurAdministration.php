@@ -9,7 +9,7 @@ class ControleurAdministration extends ControleurGenerique
 {
     public static function afficherAdministration()
     {
-        $agents= (new AgentRepository())->recuperer();
+        $agents= (new AgentRepository())->recupererAgentActif();
         $services= (new ServiceRepository())->recupererServices();
         ControleurGenerique::afficherVue('vueGenerale.php', [
             "titre" => "Interface Administration",

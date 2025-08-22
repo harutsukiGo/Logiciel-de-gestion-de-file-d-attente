@@ -3,7 +3,7 @@
 namespace App\file\Controleur;
 
 use App\file\Configuration\Agent\PusherAgent;
-use App\file\Lib\ConnexionUtilisateur;
+use App\file\Lib\ConnexionAgent;
 use App\file\Lib\MotDePasse;
 use App\file\Modele\DataObject\Agents;
 use App\file\Modele\Repository\AgentRepository;
@@ -20,13 +20,13 @@ class ControleurAgent extends ControleurGenerique
         $tickets = (new AgentRepository())->afficherFileAttente($_REQUEST["idAgent"]);
         ControleurGenerique::afficherVue('vueGenerale.php', [
             "titre" => "Interface Agent",
-            "cheminCorpsVue" => "Agent/vueInterfaceAgent.php", "agent" => (new AgentRepository())->recupererParClePrimaire(ConnexionUtilisateur::getIdAgentConnecte()), "tickets" => $tickets, "historique" => $historique, "services" => $services
+            "cheminCorpsVue" => "Agent/vueInterfaceAgent.php", "agent" => (new AgentRepository())->recupererParClePrimaire(ConnexionAgent::getIdAgentConnecte()), "tickets" => $tickets, "historique" => $historique, "services" => $services
         ]);
     }
 
     public static function mettreAJourStatutAgent()
     {
-        (new AgentRepository())->mettreAJourStatut(ConnexionUtilisateur::getIdAgentConnecte(), $_REQUEST["statut"]);
+        (new AgentRepository())->mettreAJourStatut(ConnexionAgent::getIdAgentConnecte(), $_REQUEST["statut"]);
     }
 
     public static function recupereTicketAgent()
@@ -38,7 +38,7 @@ class ControleurAgent extends ControleurGenerique
 
     public static function recupererFileAttente()
     {
-        (new AgentRepository())->afficherFileAttente(ConnexionUtilisateur::getIdAgentConnecte());
+        (new AgentRepository())->afficherFileAttente(ConnexionAgent::getIdAgentConnecte());
     }
 
     public static function afficherAuthentification()
@@ -67,7 +67,7 @@ class ControleurAgent extends ControleurGenerique
             ControleurAgent::redirectionVersURL("?action=afficherAuthentification&controleur=agent");
             return;
         }
-        ConnexionUtilisateur::connecter($agent->getIdAgent());
+        ConnexionAgent::connecter($agent->getIdAgent());
 
         ControleurAgent::redirectionVersURL("?action=afficherDetail&controleur=agent&idAgent=" . $agent->getIdAgent());
     }
@@ -83,7 +83,7 @@ class ControleurAgent extends ControleurGenerique
 
     public static function deconnecter()
     {
-        ConnexionUtilisateur::deconnecter();
+        ConnexionAgent::deconnecter();
         ControleurAgent::redirectionVersURL("?action=afficherAccueil&controleur=accueil");
     }
 
@@ -104,9 +104,10 @@ class ControleurAgent extends ControleurGenerique
         $motDePasseAgent = MotDePasse::hacher($_POST["motDePasseAgent"]);
         $roleAgent = $_POST["roleAgent"];
         $guichetAgent = (new GuichetsRepository())->recupererParClePrimaire($_POST["idGuichet"]);
+        $idService = (new ServiceRepository())->recupererParClePrimaire($_POST["idService"]);
         $statutAgent = $_POST["statutAgent"];
 
-        $agent = new Agents(null, $nomAgent, $emailAgent, $statutAgent, $loginAgent, $motDePasseAgent, $roleAgent, $guichetAgent, 1);
+        $agent = new Agents(null, $nomAgent, $emailAgent, $statutAgent, $loginAgent, $motDePasseAgent, $roleAgent, $guichetAgent, $idService,1);
 
         $agentCree = (new AgentRepository())->ajouterAutoIncrement($agent);
 
@@ -126,6 +127,7 @@ class ControleurAgent extends ControleurGenerique
             'motDePasse' => $agentCree->getMotDePasse(),
             'roleAgent' => $agentCree->getRole(),
             'idGuichet' => $guichetAgent->getNomGuichet(),
+            'idService' => $idService->getNomService(),
             'estActif' => $agentCree->getEstActif()
         ]);
 
@@ -147,7 +149,7 @@ class ControleurAgent extends ControleurGenerique
         $statutAgent = $_POST["statutAgent"];
         $idServiceAgent = (new ServiceRepository())->recupererParClePrimaire($_POST["idService"]);
 
-        $agent = new Agents ($idAgent, $nomAgent, $emailAgent, $statutAgent, $loginAgent, $motDePasseAgent, $roleAgent, $guichetAgent, 1);
+        $agent = new Agents ($idAgent, $nomAgent, $emailAgent, $statutAgent, $loginAgent, $motDePasseAgent, $roleAgent, $guichetAgent, $idServiceAgent,1);
 
         (new AgentRepository())->mettreAJour($agent);
 

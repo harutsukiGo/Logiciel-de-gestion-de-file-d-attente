@@ -43,7 +43,8 @@ function getVoixSelectionnee() {
     if (!isNaN(indexVoix) && indexVoix >= 0 && indexVoix < voices.length) {
         return voices[indexVoix];
     }
-    return null;
+    const voixFr = voices.find(voice => voice.lang === "fr-FR");
+    return voixFr || null;
 }
 
 

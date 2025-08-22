@@ -73,16 +73,6 @@ class ServiceRepository extends AbstractRepository
          return $pdoStatement->fetchColumn();
     }
 
-    public function supprimerService()
-    {
-            $sql='UPDATE ' . $this->getNomTable() . ' SET estActif = 0 WHERE idService = :idServiceTag';
-            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
-            $values = [
-                "idServiceTag" => $_REQUEST['idService']
-            ];
-              $pdoStatement->execute($values);
-              return $_REQUEST['idService'];
-    }
 
     public function recupererServices():array
     {

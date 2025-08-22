@@ -2,7 +2,7 @@
 /** @var Agents $agent */
 
 use App\file\Controleur\ControleurTicket;
-use App\file\Lib\ConnexionUtilisateur;
+use App\file\Lib\ConnexionAgent;
 use App\file\Modele\DataObject\Agents;
 use App\file\Modele\DataObject\Historique;
 use App\file\Modele\DataObject\Service;
@@ -113,7 +113,7 @@ use App\file\Modele\DataObject\Ticket;
                             <select id="numTicketRedirection">
                                 <?php /** @var Ticket[] $tickets * */ ?>
                                 <?php foreach ($tickets as $ticket): ?>
-                                    <option id="inputIdTicket" value="<?php echo $ticket["idTicket"]; ?>">
+                                    <option id="inputIdTicket<?php echo $ticket["idTicket"]?>" value="<?php echo $ticket["idTicket"]; ?>">
                                         <?php echo $ticket["num_ticket"]; ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -155,7 +155,7 @@ use App\file\Modele\DataObject\Ticket;
                 <h2> Session actuelle</h2>
                 <div class="divSessionActuel">
                     <span> Début session :</span>
-                    <span><?php echo ConnexionUtilisateur::retourneHeureConnexionAgent() ?></span>
+                    <span><?php echo ConnexionAgent::retourneHeureConnexionAgent() ?></span>
                 </div>
                 <div class="divSessionActuel">
                     <span> Clients servis :</span>
@@ -164,32 +164,26 @@ use App\file\Modele\DataObject\Ticket;
                 </div>
                 <div class="divSessionActuel">
                     <span> Temps moyen :</span>
-                    <span> <?php echo ConnexionUtilisateur::tempsMoyen() ?></span>
+                    <span> <?php echo ConnexionAgent::tempsMoyen() ?></span>
                 </div>
             </div>
 
 
-            <div>
+            <div class="listeTicketsATraiter">
                 <?php
                 /** @var Ticket[] $tickets */
                 ?>
-                <div class="fileAttenteAgent">
+                <div class="fileAttenteAgent" id="fileAttenteAgent<?php echo (new ConnexionAgent())->getIdAgentConnecte()?>">
                     <h2> File d'attente</h2>
-                    <?php if (count($tickets) == 0): ?>
-                        <p>Aucun ticket en attente</p>
-
-                    <?php else: ?>
-                        <?php foreach ($tickets as $ticket): ?>
-                            <div class="divFilAttente">
+                         <?php foreach ($tickets as $ticket): ?>
+                            <div class="divFilAttente" data-id-ticket="<?php echo $ticket["idTicket"]?>">
                                 <div class="divNumTicket">
                                     <span><?php echo $ticket["num_ticket"]; ?></span>
                                 </div>
                                 <p class="nomServiceAgent"><?php echo $ticket["nomService"] ?> </p>
                             </div>
                         <?php endforeach; ?>
-
-                    <?php endif; ?>
-                </div>
+                 </div>
             </div>
 
             <?php

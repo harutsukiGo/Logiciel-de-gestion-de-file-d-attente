@@ -1,5 +1,7 @@
 <?php
-use App\file\Lib\ConnexionUtilisateur;
+
+use App\file\Controleur\ControleurGenerique;
+use App\file\Lib\ConnexionAgent;
 use App\file\Modele\Repository\AgentRepository;
  ob_start();
 ?>
@@ -12,8 +14,9 @@ use App\file\Modele\Repository\AgentRepository;
         <?php
         /** @var string $titre*/
         echo $titre;?></title>
-    <script type="module" src="/fileAttente/ressources/js/script.js"></script>
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+
+    <script type="module" src="/fileAttente/ressources/js/script.js"></script>
 
     <link rel="stylesheet" href="/fileAttente/ressources/css/style.css">
 </head>
@@ -46,14 +49,14 @@ use App\file\Modele\Repository\AgentRepository;
                     <line x1="12" x2="12" y1="17" y2="21"></line>
                 </svg>
                 Affichage salle</a></div>
-        <?php if (ConnexionUtilisateur::estConnecte()):
-            echo "<div><a href='/fileAttente/web/controleurFrontal.php?action=afficherAgent&controleur=agent&idAgent=" . ConnexionUtilisateur::getIdAgentConnecte() . "'> <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-user w-4 h-4'><path d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'></path><circle cx='12' cy='7' r='4'></circle></svg> Interface agent</a></div>";?>
-            <?php if (ConnexionUtilisateur::estAdministrateur()):?>
+        <?php if (ConnexionAgent::estConnecte()):
+            echo "<div><a href='/fileAttente/web/controleurFrontal.php?action=afficherAgent&controleur=agent&idAgent=" . ConnexionAgent::getIdAgentConnecte() . "'> <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-user w-4 h-4'><path d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'></path><circle cx='12' cy='7' r='4'></circle></svg> Interface agent</a></div>";?>
+            <?php if (ConnexionAgent::estAdministrateur()):?>
             <?php echo '<div><a href="/fileAttente/web/controleurFrontal.php?action=afficherAdministration&controleur=administration"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings w-4 h-4"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>Administration</a></div>';?>
         <?php endif;?>
         <?php endif;?>
     </nav>
-    <?php if(!ConnexionUtilisateur::estConnecte()):?>
+    <?php if(!ConnexionAgent::estConnecte()):?>
         <div class="connexion"><a
                     href="/fileAttente/web/controleurFrontal.php?action=afficherAuthentification&controleur=agent">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -71,8 +74,8 @@ use App\file\Modele\Repository\AgentRepository;
                 <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
             </svg>
-            <a href='/fileAttente/web/controleurFrontal.php?action=afficherDetail&controleur=agent&idAgent=<?php echo ConnexionUtilisateur::getIdAgentConnecte(); ?>'>
-                Agent <?php echo (new AgentRepository())->recupererParClePrimaire(ConnexionUtilisateur::getIdAgentConnecte())->getNomAgent()?></a>
+            <a href='/fileAttente/web/controleurFrontal.php?action=afficherDetail&controleur=agent&idAgent=<?php echo ConnexionAgent::getIdAgentConnecte(); ?>'>
+                Agent <?php echo (new AgentRepository())->recupererParClePrimaire(ConnexionAgent::getIdAgentConnecte())->getNomAgent()?></a>
         </div>
     <?php endif;?>
 </header>

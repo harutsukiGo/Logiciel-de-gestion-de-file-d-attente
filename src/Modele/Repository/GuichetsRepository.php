@@ -51,7 +51,7 @@ class GuichetsRepository extends AbstractRepository
 
     public function recupererGuichetsActif(): array
     {
-        $sql = "SELECT idGuichet FROM " . $this->getNomTable() . " WHERE estActif='1';";
+        $sql = "SELECT idGuichet FROM " . $this->getNomTable() . " WHERE estActif='1' ;";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo();
         $res = $pdoStatement->query($sql);
         return $res->fetchAll();
@@ -59,10 +59,9 @@ class GuichetsRepository extends AbstractRepository
 
     public function recupererGuichet(): array
     {
-        $sql = "SELECT g.idGuichet, g.nom_guichet, s.nomService, a.nomAgent, g.statutGuichet, g.estActif,a.idService
+        $sql = "SELECT  g.idGuichet, g.nom_guichet, s.nomService,g.statutGuichet, g.estActif,g.idService
               FROM guichets g
-              LEFT JOIN agents a ON g.idGuichet = a.idGuichet
-              LEFT JOIN services s ON s.idService = a.idService";
+              LEFT JOIN services s ON s.idService = g.idService;";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo();
         $res = $pdoStatement->query($sql);
         return $res->fetchAll();
@@ -72,7 +71,7 @@ class GuichetsRepository extends AbstractRepository
     {
         $sql = "SELECT a.nomAgent
               FROM agents a
-              WHERE a.idGuichet=:idGuichetTag";
+              WHERE a.idGuichet=:idGuichetTag AND a.estActif=1;";
         $values = array(
             "idGuichetTag" => $idGuichet
         );
@@ -82,13 +81,4 @@ class GuichetsRepository extends AbstractRepository
         return $res->fetchAll();
     }
 
-    public function supprimerGuichet(): bool
-    {
-        $sql = "UPDATE " . $this::getNomTable() . " SET estActif=0 WHERE idGuichet=:idGuichetTag";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
-        $values = ["idGuichetTag" => $_REQUEST["idGuichet"]];
-        return $pdoStatement->execute($values);
-
-
-    }
 }

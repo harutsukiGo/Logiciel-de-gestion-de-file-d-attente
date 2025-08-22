@@ -33,7 +33,10 @@ import {
     redirigerTicket,
     retourneNbTicketsAttente,
     setHtmlInitial,
-    simuler
+    simuler,
+    mettreAJourFileAttente,
+    supprimerTicket,
+    afficherTicketCourant
 } from './ticket.js';
 
 import {
@@ -106,7 +109,9 @@ window.mettreAJourTicketDateTerminee = mettreAJourTicketDateTerminee;
 window.reinitialiserInterface = reinitialiserInterface;
 window.retourneNbTicketsAttente = retourneNbTicketsAttente;
 window.setHtmlInitial = setHtmlInitial;
-
+window.mettreAJourFileAttente=mettreAJourFileAttente;
+window.supprimerTicket=supprimerTicket;
+window.afficherTicketCourant=afficherTicketCourant;
 
 window.modalService = modalService;
 window.ajouterService = ajouterService;
@@ -158,10 +163,16 @@ document.addEventListener("DOMContentLoaded", () => {
         encrypted: true
     });
 
+    const pusherTicket=new Pusher('0113c2d38580481c73f9', {
+        cluster: 'eu',
+        encrypted: true
+    })
+
     const servicesChannel = pusherService.subscribe('service-channel');
     const agentsChennel = pusherAgent.subscribe('agent-channel');
     const publiciteChannel = pusherPublicite.subscribe('publicite-channel');
     const guichetChannel=pusherGuichet.subscribe('guichet-channel');
+    const ticketChannel= pusherTicket.subscribe('ticket-channel');
 
     servicesChannel.bind('service-cree', function (data) {
             console.log('Événement service-cree reçu:', data);
@@ -231,5 +242,28 @@ document.addEventListener("DOMContentLoaded", () => {
     guichetChannel.bind('guichet-supprime', function (data) {
         console.log('guichet-supprime:', data);
         supprimerGuichetDuDOM(data);
+    })
+
+    ticketChannel.bind('ticket-cree', function (data) {
+        console.log('ticket-cree:', data);
+        mettreAJourFileAttente(data);
+    })
+    ticketChannel.bind('ticket-termine', function (data) {
+        console.log('ticket-suprime:', data);
+        supprimerTicket(data);
+    })
+
+    ticketChannel.bind('ticket-redirige', function (data) {
+        console.log('ticket-modifie:', data);
+        mettreAJourFileAttente(data);
+    })
+
+    ticketChannel.bind('ticket-supprimeRedirige', function (data) {
+        console.log('suppression du ticket initial:', data);
+        supprimerTicket(data);
+    })
+    ticketChannel.bind('ticket-affichage', function (data) {
+        console.log('Nouveau ticket courant', data);
+        afficherTicketCourant(data);
     })
 });

@@ -2,7 +2,8 @@
 
 namespace App\file\Controleur;
 
-use App\file\Lib\ConnexionUtilisateur;
+use App\file\Configuration\Ticket\PusherTicket;
+use App\file\Lib\ConnexionAgent;
 use App\file\Modele\DataObject\ClientAttentes;
 use App\file\Modele\DataObject\Historique;
 use App\file\Modele\DataObject\Ticket;
@@ -23,7 +24,14 @@ class ControleurTicket extends ControleurGenerique
             return;
         }
         $date = new DateTime('now', new DateTimeZone('Europe/Paris'));
-        $agent = (new AgentRepository())->recupererParClePrimaire((new ControleurTicket)->recupereAgentRandom());
+        $nbAgent = (new AgentRepository())->retourneNbAgentParService($_REQUEST['idService']);
+
+        if ($nbAgent >= 2 || $nbAgent == 0) {
+            $agent = (new AgentRepository())->recupererParClePrimaire((new ControleurTicket())->recupereAgentRandom());
+        } else {
+            $agent = (new AgentRepository())->recupererParClePrimaire((new AgentRepository())->retourneAgentPourUnService($_REQUEST['idService']));
+
+        }
 
         $ticket = new Ticket(
             null,
@@ -37,6 +45,14 @@ class ControleurTicket extends ControleurGenerique
         );
 
         $ticketInsere = (new TicketRepository())->ajouterAutoIncrement($ticket);
+        $pusher = new PusherTicket();
+        $pusher->trigger("ticket-channel", "ticket-cree", [
+            "numTicket" => $ticketInsere->getNumTicket(),
+            "nomService" => (new ServiceRepository())->recupererParClePrimaire($_REQUEST['idService'])->getNomService(),
+            "idService" => $_REQUEST['idService'],
+            "idTicket" => $ticketInsere->getIdTicket(),
+             "idAgent" => $agent->getIdAgent(),
+        ]);
 
         if (!$ticketInsere) {
             return;
@@ -80,6 +96,7 @@ class ControleurTicket extends ControleurGenerique
         $service = (new ServiceRepository())->recupererServices();
         $tickets = (new TicketRepository())->recupererTickets();
         $premierTicket = (new TicketRepository())->retournePlusPetitTicket();
+
         ControleurGenerique::afficherVue('vueIntermediaire.php', [
             "titre" => "Affichage salle d'attente",
             "cheminCorpsVue" => "Ticket/affichageDynamique.php", "service" => $service, "tickets" => $tickets, "premierTicket" => $premierTicket,
@@ -96,6 +113,23 @@ class ControleurTicket extends ControleurGenerique
     public static function mettreAJourStatutTicket(): void
     {
         (new TicketRepository())->mettreAJourStatut($_REQUEST['idTicket'], $_REQUEST['statutTicket']);
+        $pusher = new PusherTicket();
+        $pusher->trigger("ticket-channel", "ticket-termine",
+            ["idTicket" => $_REQUEST['idTicket']]);
+    }
+
+    public static function mettreEnCoursTicket()
+    {
+        (new TicketRepository())->mettreAJourStatut($_REQUEST['idTicket'], 'en cours');
+        $ticket = (new TicketRepository())->retourneTicketCourant($_REQUEST['idTicket']);
+        $pusher = new PusherTicket();
+        $pusher->trigger("ticket-channel", "ticket-affichage", [
+            "idTicket" => $_REQUEST["idTicket"],
+            "numTicket" => $ticket["num_ticket"],
+            "idService" => $ticket["idService"],
+            "nomService" => $ticket["nomService"],
+            "nomGuichet" => $ticket["nom_guichet"],
+        ]);
     }
 
     public static function mettreAJourDateArriveeTicket()
@@ -115,12 +149,12 @@ class ControleurTicket extends ControleurGenerique
         echo json_encode($premierTicket);
     }
 
-    public static function premiereLettre(string $chaine): string
+    public function premiereLettre(string $chaine): string
     {
         return strtoupper($chaine[0]) . str_pad(random_int(0, 999), 3, '0', STR_PAD_LEFT);
     }
 
-    public static function recupereAgentRandom()
+    public function recupereAgentRandom()
     {
         $agents = (new AgentRepository())->recupererAgentActif();
 
@@ -134,7 +168,7 @@ class ControleurTicket extends ControleurGenerique
 
     public static function compterClientServi(): int
     {
-        return (new TicketRepository())->compterNombreClient(ConnexionUtilisateur::getIdAgentConnecte());
+        return (new TicketRepository())->compterNombreClient(ConnexionAgent::getIdAgentConnecte());
     }
 
 }

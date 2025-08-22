@@ -72,7 +72,10 @@ function creerConteneurGuichet(guichet) {
                <div class="divParentStatistiqueStatut">
                 <div class="divParametresGuichet">
                     <p class='titreServiceAdmin'>${guichet.nomGuichet}</p>
-                     <p class='nbPersonneAttenteAdmin'>${guichet.nomAgent ? "Agent : " + guichet.nomAgent : "Aucun agent attribué"}</p>
+                    ${guichet.listeAgent && guichet.listeAgent.length > 0
+                         ? guichet.listeAgent.map(nomAgent => `<p class='nbPersonneAttenteAdmin'>Agent : ${nomAgent}</p>`).join("")
+                         : `<p class='nbPersonneAttenteAdmin'>Aucun agent n'est attribué</p>`
+                     }                     
                     <p class='nbPersonneAttenteAdmin'>${guichet.nomService ? "Service : " + guichet.nomService : "Aucun service n'est attribué"}</p>
                 </div>
             <div class='${guichet.statutGuichet ? "statutTermine" :"statutInactifAdmin" }'>${guichet.statutGuichet ? "Actif" : "Inactif"} </div>
